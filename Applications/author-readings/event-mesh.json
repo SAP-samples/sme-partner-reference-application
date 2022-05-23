@@ -1,0 +1,33 @@
+{
+    "options": {
+        "management": true,
+        "messagingrest": true,
+        "messaging": true
+    },
+    "rules": {
+        "queueRules": {
+            "publishFilter": [
+                "sap/byd/project/*", 
+                "${namespace}/*" 
+            ],
+            "subscribeFilter": [
+                "sap/byd/project/*", 
+                "${namespace}/*"                
+            ]
+        },
+        "topicRules": {
+            "publishFilter": [
+                "sap/byd/project/*", 
+                "${namespace}/*"
+            ],
+            "subscribeFilter": [
+                "sap/byd/project/*", 
+                "${namespace}/*"
+            ]
+        }
+    },
+    "version": "1.1.0",
+    "authorities": [
+        "$ACCEPT_GRANTED_AUTHORITIES"
+    ]
+}

@@ -1,0 +1,62 @@
+{
+    "scopes": [
+        {
+            "name": "$XSAPPNAME.AuthorReadingManagerRole",
+            "description": "AuthorReadingManagerRole"
+        },
+        {
+            "name": "$XSAPPNAME.AuthorReadingAdminRole",
+            "description": "AuthorReadingAdminRole"
+        },
+        {
+            "name": "$XSAPPNAME.emcallback",
+            "description": "Event Mesh Callback Access",
+            "grant-as-authority-to-apps": ["$XSSERVICENAME(author-readings-eventmesh)"]
+        },
+        {
+            "name": "$XSAPPNAME.emmanagement",
+            "description": "Event Mesh Management Access"
+        }        
+    ],
+    "attributes": [],
+    "role-templates": [
+        {
+            "name": "AuthorReadingManagerRole",
+            "description": "generated",
+            "scope-references": [
+                "$XSAPPNAME.AuthorReadingManagerRole"
+            ],
+            "attribute-references": []
+        },
+        {
+            "name": "AuthorReadingAdminRole",
+            "description": "generated",
+            "scope-references": [
+                "$XSAPPNAME.AuthorReadingAdminRole"
+            ],
+            "attribute-references": []
+        },
+        {
+            "name": "emmanagement",
+            "description": "Event Mesh Management Access",
+            "scope-references": ["$XSAPPNAME.emmanagement"],
+            "attribute-references": []
+        }        
+    ],
+    "role-collections": [
+        {
+            "name": "AuthorReadingManagerRoleCollection",
+            "description": "Author Reading Manager",
+            "role-template-references": [
+                "$XSAPPNAME.AuthorReadingManagerRole"
+            ]
+        },
+        {
+            "name": "AuthorReadingAdminRoleCollection",
+            "description": "Author Readings Administrator",
+            "role-template-references": [
+                "$XSAPPNAME.AuthorReadingAdminRole"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,116 @@
+{
+    "name": "author-readings",
+    "version": "1.0.0",
+    "description": "SAP-SME Partner Reference Application",
+    "repository": "https://github.com/SAP-samples/sme-partner-reference-application",
+    "author": "SAP",
+    "license": "SAP SAMPLE CODE LICENSE",
+    "dependencies": {
+        "@sap/cds": "^5.9.4",
+        "express": "4.17.1",
+        "hdb": "0.19.1",
+        "passport": "^0.5.2",
+        "cors": "^2.8.5",
+        "request": "^2.88.2",
+        "@sap/xb-msg-amqp-v100": "^0.9.51",
+        "@sap/audit-logging": "^5.1.0"
+    },
+    "devDependencies": {
+        "@sap/ux-specification": "^1.96.9",
+        "chai": "^4.3.4",
+        "chai-http": "^4.3.0",
+        "mocha": "^9.2.2",
+        "sqlite3": "^5.0.2"
+    },
+    "engines": {
+        "node": "^14"
+    },
+    "scripts": {
+        "start": "cds run",
+        "test": "mocha 'test/*.test.js' --recursive --timeout 10000 --exit",
+        "undeploy": "cf undeploy author-readings --delete-services --delete-service-keys"
+    },
+    "cds": {
+        "features": {
+            "fetch_csrf": true,
+            "audit_personal_data": true
+        },
+        "requires": {
+            "db": {
+                "kind": "sql"
+            },
+            "uaa": {
+                "kind": "xsuaa"
+            },
+            "byd_khproject": {
+                "kind": "odata-v2",
+                "model": "srv/external/byd_khproject",
+                "[sandbox]": {
+                    "credentials": {
+                        "url": "https://{{byd-hostname}}/sap/byd/odata/cust/v1/khproject/",
+                        "authentication": "BasicAuthentication",
+                        "username": "{{user}}",
+                        "password": "{{password}}"
+                    }
+                },
+                "[production]": {
+                    "credentials": {
+                        "destination": "byd",
+                        "path": "/sap/byd/odata/cust/v1/khproject"
+                    }
+                }
+            },
+            "byd_khproject_tech_user": {
+                "kind": "odata-v2",
+                "model": "srv/external/byd_khproject_tech_user",
+                "[sandbox]": {
+                    "credentials": {
+                        "url": "https://{{byd-hostname}}/sap/byd/odata/cust/v1/khproject/",
+                        "authentication": "BasicAuthentication",
+                        "username": "{{user}}",
+                        "password": "{{password}}"
+                    }
+                },
+                "[production]": {
+                    "credentials": {
+                        "destination": "byd-tech-user",
+                        "path": "/sap/byd/odata/cust/v1/khproject"
+                    }
+                }
+            },
+            "outbound_messaging": {
+                "kind": "enterprise-messaging-shared",
+                "format": "cloudevents",
+                "publishPrefix": "sap/samples/authorreadings/",
+                "webhook": {
+                    "waitingPeriod": 60000,
+                    "qos": 0
+                }
+            },
+            "byd_messaging": {
+                "kind": "enterprise-messaging-shared",
+                "queue": {
+                    "name": "sap/samples/authorreadings/bydprojectevents"
+                },
+                "webhook": {
+                    "waitingPeriod": 60000,
+                    "qos": 0
+                }
+            },
+            "audit-log": {
+                "[sandbox]": {
+                    "kind": "audit-log-to-console"
+                },
+                "[production]": {
+                    "kind": "audit-log-service"
+                }
+            }
+        },
+        "hana": {
+            "deploy-format": "hdbtable"
+        }
+    },
+    "sapux": [
+        "app/authorreadingmanager"
+    ]
+}
