@@ -440,7 +440,7 @@ BAS: Enhance the implementation of the CAP services in file `./application/autho
     },
     ```
 
-6. Add system message in file `./application/author-readings/srv/i18n/i18n.properties`: 
+6. Add system message in file `./application/author-readings/srv/i18n/messages.properties`: 
     ```javascript
     ACTION_CREATE_PROJECT_DRAFT=Projects cannot be created for draft author readings
     ```
@@ -557,7 +557,7 @@ BAS: Edit the Fiori Element annotations of the web app in file `./app/authorread
     ```
     > Note: We dynamically control the visibility of the button *Create Project* based on the value of the transient field *createProjectEnabled*.    
 
-BAS: Edit language dependend labels in file `./srv/i18n/i18n.properties`:
+BAS: Edit language dependend labels in file `./db/i18n/i18n.properties`:
 
 4. Add labels for project fields and the button to create projects:
     ```
@@ -663,28 +663,28 @@ author-readings-destination-service*.
 
 2. On the destination instance UI, open menu item *Destinations* and create a *New Destination* with the following field values:
 
-	| Parameter name:   | Value:    | 
-	| :---              | :---      |
-	| *Name*:           | *byd*     | 
-	| *Type*:           | *HTTP*    |
-	| *Description*:    | Enter a destination description, for example "*ByD 123456 with principal propagation*" |
-	| *URL*:            | *https://{{ByD-hostname}}* for example “*https://my123456.sapbydesign.com*” |
-	| *Proxy Type*:     | *Internet* |
-	| *Authentication*: | *OAuth2SAMLBearerAssertion* |
-	| *Audience*:       | Enter the **ByD service provider name** |
-	| *AuthnContextClassRef*: | *urn:none* |
-	| *Client Key*:     | Enter the **ByD OAuth Client ID** |
-	| *Token Service URL*: | *https://{{ByD-hostname}}/sap/bc/sec/oauth2/token* |
-	| *Token Service User*: | Enter the **ByD OAuth Client ID** |
-	| *Token Service Password*: | Enter the **ByD OAuth Client Secret** |
+ | Parameter name:           | Value:                                                                                 |
+ | :------------------------ | :------------------------------------------------------------------------------------- |
+ | *Name*:                   | *byd*                                                                                  |
+ | *Type*:                   | *HTTP*                                                                                 |
+ | *Description*:            | Enter a destination description, for example "*ByD 123456 with principal propagation*" |
+ | *URL*:                    | *https://{{ByD-hostname}}* for example “*https://my123456.sapbydesign.com*”            |
+ | *Proxy Type*:             | *Internet*                                                                             |
+ | *Authentication*:         | *OAuth2SAMLBearerAssertion*                                                            |
+ | *Audience*:               | Enter the **ByD service provider name**                                                |
+ | *AuthnContextClassRef*:   | *urn:none*                                                                             |
+ | *Client Key*:             | Enter the **ByD OAuth Client ID**                                                      |
+ | *Token Service URL*:      | *https://{{ByD-hostname}}/sap/bc/sec/oauth2/token*                                     |
+ | *Token Service User*:     | Enter the **ByD OAuth Client ID**                                                      |
+ | *Token Service Password*: | Enter the **ByD OAuth Client Secret**                                                  |
 
     Enter the Additional Properties:
     
-	| Property name:    | Value:    | 
-	| :---              | :---      |
-	| *nameIdFormat*:   | *urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress* |
-	| *scope*:          | Enter the **ByD OAuth Scope** |
-	| *userIdSource*:   | *email* |
+ | Property name:  | Value:                                                   |
+ | :-------------- | :------------------------------------------------------- |
+ | *nameIdFormat*: | *urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress* |
+ | *scope*:        | Enter the **ByD OAuth Scope**                            |
+ | *userIdSource*: | *email*                                                  |
 
     > Note: You may need to upload the ByD server certificate into the destination service for SSL authentication using the link *Upload and Delete Certificates* on the destinations screen. You can download the ByD server certificate from the brower (Open the ByD UI and view the site information; then display and export the certificate details into a ".cer"-file).
 
@@ -692,16 +692,16 @@ BTP provider subaccount: Create destination "byd-tech-user" to connect to ByD by
 
 3. On the destination instance UI, open menu item *Destinations* and create a *New Destination* with the following field values:
 
-	| Parameter name:   | Value:    | 
-	| :---              | :---      |
-	| *Name*:           | *byd-tech-user*     | 
-	| *Type*:           | *HTTP*    |
-	| *Description*:    | Enter a destination description, for example "*ByD 123456 technical user*" |
-	| *URL*:            | *https://{{ByD-hostname}}* for example “*https://my123456.sapbydesign.com*” |
-	| *Proxy Type*:     | *Internet* |
-	| *Authentication*: | *BasicAuthentication* |
-	| *User*:           | Enter the **ByD Communication User ID** |
-	| *Password*:       | Enter the **ByD Communication User Password** |
+ | Parameter name:   | Value:                                                                      |
+ | :---------------- | :-------------------------------------------------------------------------- |
+ | *Name*:           | *byd-tech-user*                                                             |
+ | *Type*:           | *HTTP*                                                                      |
+ | *Description*:    | Enter a destination description, for example "*ByD 123456 technical user*"  |
+ | *URL*:            | *https://{{ByD-hostname}}* for example “*https://my123456.sapbydesign.com*” |
+ | *Proxy Type*:     | *Internet*                                                                  |
+ | *Authentication*: | *BasicAuthentication*                                                       |
+ | *User*:           | Enter the **ByD Communication User ID**                                     |
+ | *Password*:       | Enter the **ByD Communication User Password**                               |
 
     > Note: Destinations in the BTP subaccount are deleted and the system raises the error code 409 (Conflict), if the user used for deployment (user logged-in at BTP Cloud Foundry) does not have the authorization to edit destinations. Always make sure your deployment user has the authorization to edit destinations.
 
@@ -713,14 +713,14 @@ At runtime we dynamically assemble the parameterized URL to launch the ByD proje
 
 4. Open the menu item *Connectivity* of the BTP provider subaccount, click on *Destinations* and create a *New Destination* with the following field values:
 
-	| Parameter name:   | Value:    | 
-	| :---              | :---      |
-	| *Name*:           | *byd-url*     | 
-	| *Type*:           | *HTTP*    |
-	| *Description*:    | Enter a destination description, for example "*ByD 123456 URL*" |
-	| *URL*:            | *https://{{ByD-hostname-for-SSO}}* for example “*https://my123456-sso.sapbydesign.com*” |
-	| *Proxy Type*:     | *Internet* |
-	| *Authentication*: | *NoAuthentication* |
+ | Parameter name:   | Value:                                                                                  |
+ | :---------------- | :-------------------------------------------------------------------------------------- |
+ | *Name*:           | *byd-url*                                                                               |
+ | *Type*:           | *HTTP*                                                                                  |
+ | *Description*:    | Enter a destination description, for example "*ByD 123456 URL*"                         |
+ | *URL*:            | *https://{{ByD-hostname-for-SSO}}* for example “*https://my123456-sso.sapbydesign.com*” |
+ | *Proxy Type*:     | *Internet*                                                                              |
+ | *Authentication*: | *NoAuthentication*                                                                      |
 
     > Note: Observe, that the desination "byd-url" is created directly in the subaccount, whereas the other destinations for OData connections are created in the destination service instance.
 

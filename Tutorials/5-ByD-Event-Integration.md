@@ -73,10 +73,10 @@ In environments like Cloud Foundry, it takes some time until the route of the ap
 
 The error strategy is specified in parameter "qos":
 
-| qos value:    | Description:  |
-| :---          | :---          |
-| 0	            | At most once, there is no retry. The message will be lost if the webhook is not active. |
-| 1	            | At least once, acknowledgement is expected from the webhook endpoint. |
+| qos value: | Description:                                                                            |
+| :--------- | :-------------------------------------------------------------------------------------- |
+| 0          | At most once, there is no retry. The message will be lost if the webhook is not active. |
+| 1          | At least once, acknowledgement is expected from the webhook endpoint.                   |
 
 Edit the file `xs-security.json`: 
 
@@ -173,9 +173,12 @@ Create a new file `event-mesh.json` in the root folder of the application with t
     > Note: In result the BTP app can publish events with the namespace "*sap/samples/authorreadings*", and subscribe to events with the namespace "*sap/byd/project*".
 
 8. Enable local testing using:
-    a. Run command `cf env author-readings-srv` to get the environment properties.
-    b. Add a new file `default-env.json` to the project root folder.
-    b. Copy the sections referring to the properties `VCAP_SERVICES` and `VCAP_APPLICATION` into the new file, enclose the two property names by double quotes, and embrace it all by curly brackets. In result the file content should look like
+   
+    1. Run command `cf env author-readings-srv` to get the environment properties.
+
+    2. Add a new file `default-env.json` to the project root folder.
+   
+    3. Copy the sections referring to the properties `VCAP_SERVICES` and `VCAP_APPLICATION` into the new file, enclose the two property names by double quotes, and embrace it all by curly brackets. In result the file content should look like
         ```json
         {
             "VCAP_SERVICES": {
@@ -186,8 +189,7 @@ Create a new file `event-mesh.json` in the root folder of the application with t
             }
         }                
         ```
-    c. Now you can test locally in BAS using the command `cds watch profile --sandbox`.
-
+    4. Now you can test locally in BAS using the command `cds watch profile --sandbox`.
 
 ### Enhance the service implementation to emit events
 
@@ -219,9 +221,17 @@ Enhance the implementation of service `AuthorReadingManager` to subscribe to eve
 
 ### Build and deploy
 
-Run command `npm install` to install the messaging npm packages. 
+Build and deploy your application:
 
-Build and deploy the application and observe that the message client `authorreadings` is available at event mesh application.
+1. Login to cloud foundry: Run command `cf login`, enter your user/password and select the BTP provider subaccount for the application.
+
+2. Run command `npm install` to install the messaging npm packages.
+
+3. Build the project by selecting `Build MTA Project` in the context menu of file `mta.yaml`. 
+
+4. Deploy the application by selecting `Deploy MTA Archive` in the context menu of file `./mta_archives/author-readings_1.0.0.mtar`.
+
+Observe, that the message client `authorreadings` is now available in the event mesh application.
 
 > Note: The first deployment of the application with the event mesh creates event mesh artifacts (message client, queue and service instance) and may take some time (very likely more than 10 minutes).
 
@@ -238,12 +248,12 @@ BTP provider subaccount:
 ### Create the message client for ByD
 
 BTP provider subaccount: Open menu item *Instances and Subscriptions* and create a new instance of service *Event Mesh* with the following data:
-    - Service: Event Mesh
-	- Plan: default
-	- Runtime: Cloud Foundry
-	- Space: Choose the space created as runtime for the app
-    - Instance name: Something meaningful referring to the ByD tenant and event mesh, for exmaple "byd-eventmesh"
-As parameters use the following json:
+- Service: *Event Mesh*
+- Plan: *default*
+- Runtime: *Cloud Foundry*
+- Space: Choose the space created as runtime for the app
+- Instance name: Something meaningful referring to the ByD tenant and event mesh, for exmaple "byd-eventmesh"
+- As parameters use the following json:
     ```json
     {
         "options": {
@@ -279,42 +289,46 @@ Open the event mesh application and the message client "byd" and create a queue 
 
 On the queue *sap/byd/project/projectupdate* use the action *Queue Subscriptions* and subscribe to the topic "*sap/byd/project/ProjectUpdated*".
 
-### Configure the ByD to emit event notifications for projects
+### Configure ByD to emit event notifications for projects
 
 BTP provider subaccount: Open menu item *Instances and Subscriptions* the event mesh instance `byd-eventmesh` and create a service key with *Service Key Name*: "*byd-eventmesh-key*".
 
 Get required information from the event mesh instance to configure ByD event notifications:
+1. Open the event mesh instance service key (the json document). 
+2. In the json document navigate to node `messaging` and search for the entry with protocol `httprest`. 
+3. Take note of the values of the elements **clientid**, **clientsecret**, **tokenendpoint** and **uri**.
 
-Event mesh instance service key: Navigate in the json to "messaging" and search for the entry with protocol "httprest". 
-Take note of **clientid**, **clientsecret**, **tokenendpoint** and **uri**.
 Assemble the topic endpoint by the following steps:
-	1. Get the topic name (incl. namespace) from the Event Mesh Application: "sap/byd/project/ProjectUpdated"
-	2. Replace "/" by "%2f" and get "sap%2fbyd%2fproject%2fProjectUpdated"
-	3. Concatenate the uri and "messagingrest/v1/topics/{{topic_name}}/messages": 
-"https://enterprise-messaging-pubsub.cfapps.eu10.hana.ondemand.com/messagingrest/v1/topics/{{topics_name}}/messages"
-	4. Replace {{topics_name}} by the queue name incl. the "%2f"-syntax and get the topic endpoint.
+1. Get the topic name (incl. namespace) from the Event Mesh Application: `sap/byd/project/ProjectUpdated`
+2. Replace "/" by "%2f" and get `sap%2fbyd%2fproject%2fProjectUpdated`
+3. Concatenate the uri and `messagingrest/v1/topics/{{topic_name}}/messages` and get  
+`https://enterprise-messaging-pubsub.cfapps.eu10.hana.ondemand.com/messagingrest/v1/topics/{{topics_name}}/messages`
+4. Replace *{{topics_name}}* by the queue name incl. the "%2f"-syntax and get the topic endpoint.
 
-Take note of the **topic endpoint**: "https://enterprise-messaging-pubsub.cfapps.eu10.hana.ondemand.com/messagingrest/v1/topics/sap%2fbyd%2fproject%2fProjectUpdated/messages"
+Take note of the **topic endpoint**: 
+`https://enterprise-messaging-pubsub.cfapps.eu10.hana.ondemand.com/messagingrest/v1/topics/sap%2fbyd%2fproject%2fProjectUpdated/messages`
 
 > Note: Why Topic and not queue? Typically an events publishing system emits event notifications into a topic. One or more queues can subscribe to a topic. Messages in a queue are consumed, whereas messages in a topic stay available for multiple subscribers (they are deleted after a retention time).
 
 Configure event notification in ByD:
 
 Open ByD work center view *Application and User Management - Event Notification* and create an event notification with the following information:
+
 Subscriber is the SAP Event Mesh instance for the ByD system:
-    - Name: Some meaningful name, e.g. "BTP app Author Readings"
-    - Endpoint: **topic endpoint**
-    - Authentication Method: *OAuth 2.0*
-        - Grant Type: Client Credentials
-        - Access Token URL: **tokenendpoint**
-		- Client ID: **clientid** 
-		- Client Secret: **clientsecret** 
-	- Additional http-headers:
-		- x-qos = 0
+- Name: Some meaningful name, e.g. "BTP app Author Readings"
+- Endpoint: **topic endpoint**
+- Authentication Method: *OAuth 2.0*
+    - Grant Type: *Client Credentials*
+    - Access Token URL: **tokenendpoint**
+    - Client ID: **clientid** 
+    - Client Secret: **clientsecret** 
+- Additional http-headers:
+    - *x-qos = 0*
+
 Add a subscription for
-	- Business Object: Project
-	- Business Object Node: Root
-	- Update
+- Business Object: *Project*
+- Business Object Node: *Root*
+- Select *Update* to subscribe to all project updates
 
 ### Test the event-based integration
 

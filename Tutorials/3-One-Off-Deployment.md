@@ -203,6 +203,7 @@ TODO --> link to complete file!!!
 
 In this step we enable citizen users to build AppGyver applications that connect to the OData services of our BTP application as backend.
 In general Appgyver expects the server to handle Cross Origin Request Sharing (CORS). However, by default CAP services do not allow cross origin requests.
+
 Therefore we enhance the default bootstrapping by some custom logic to allow AppGyver applications to access the OData services (compare https://cap.cloud.sap/docs/node.js/cds-serve).
 
 Create a file *server.js* in the the root folder of the application to define allowed request origins for CORS checks. In our example we allow all origins for simplicity; for productive use specific origins shall be listed and allowed only.
@@ -372,11 +373,11 @@ IAS Admin UI:
 	
 2. Open menu item *User Groups* and add user groups that represent typical user roles and enter a unique (technical) *Name* and a meaningful "Display Name*, for example:
 
-	| Name: | Display name: |
-	| :---  | :---          |
-	| admin | Administrator |
-	| author_reading_manager | Author Reading Manager |
-	| author_reading_participant | Author Reading Participant |
+ | Name:                      | Display name:              |
+ | :------------------------- | :------------------------- |
+ | admin                      | Administrator              |
+ | author_reading_manager     | Author Reading Manager     |
+ | author_reading_participant | Author Reading Participant |
 
 3. Open menu item *Applications*, open the application referring to the BTP subaccount with your application, and navigate to *Assertion Attributes*. 
 Check if the *User Attribute* "Groups" is already mapped to the *Assertion Attribute* "groups". If not, then add the attribute mapping.
