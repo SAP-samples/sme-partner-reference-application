@@ -25,23 +25,23 @@ The corresponding entity is encoded in the filename by concatenating the namespa
 
 > Copy the [Tutorial Initial Data](../Applications/author-readings/db/data/) into your project.
 
-## Add Localization Content
-
-You can add language specific content by adding standard properties files to your project in corresponding i18n folders. In CAP projects these are distributed to different locations depending on where the texts are added. Have also a look into the [CAP i18n Guide](https://cap.cloud.sap/docs/guides/i18n).
-
-The project structure looks roughly like this:
-
-- `/app/authorreadingmanager/webapp/i18n` to annotate user interface elements
-- `/db/i18n` to annotate entity models
-- `/srv/i18n` to annotate service definitions
-
-> Copy the [Tutorial i18n Files](../Applications/author-readings/db/i18n/) into your project.
-
 ## Define Services
 
 After you have defined the entity model a set of [CAP Services](https://cap.cloud.sap/docs/guides/providing-services) must be defined to add business logic and external APIs to the application. All service definitions must be located in the `/srv` folder. Therefore create a new file `/srv/service-models.cds`.
 
 > Copy the [Service Definition](../Applications/author-readings/srv/service-models.cds) into your project.
+
+## Add Localization Content
+
+Language specific content such as labels and texts are stored in properties-files in i18n-folders.
+
+Our app is based on the CAP default settings:
+- All labels used in the entity model, service model and the web application are stored in `i18n.properties` files in folder `./db/i18n`.
+- All system message texts are store in `messages.properties` files in folder `./srv/i18n`.
+
+For non-default languages just append the ISO-code of the language to the file name, for example `i18n_de.properties` and `messages_de.properties`.
+
+> Copy the tutorial i18n files](../Applications/author-readings/db/i18n/) into your project.
 
 ## Create Business Logic
 
