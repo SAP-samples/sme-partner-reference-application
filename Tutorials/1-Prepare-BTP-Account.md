@@ -8,39 +8,43 @@ Furthermore you should have access to a github organization to create a new gith
 
 ### Create Subaccount
 
-At first navigate to your *BTP Global Account* and create a new Subaccount with name `AuthorReadings`.
-> BTP Cockpit: https://cockpit.eu10.hana.ondemand.com/cockpit
-
-<img src="./resources/Subaccount.png" width="30%">
+At first navigate to your *BTP Global Account* and create a new *Multi-Environment*-Subaccount with name `AuthorReadings` and provider *Amazon Web Services (AWS)*.
 
 ### Enable Cloud Foundry Runtime
 By default Cloud Foundry is disabled for new BTP Subaccounts. That is because not every BTP Subaccount is meant for application development.
 
-<img src="./resources/enableCF1.png" width="50%">
+<img src="./resources/enableCF1.png" width="40%">
 
-Enable Cloud Foundry using the proposed standard settings.
+Enable Cloud Foundry using the proposed standard settings:
 
-<img src="./resources/enableCF2.png" width="60%">
+| Property       | Value                              |
+| :------------- | :--------------------------------- |
+| Environment:   | Cloud Foundry Runtime              |
+| Plan:          | *standard*                         |
+| Landscape:     | choose an appropiate AWS landscape |
+| Instance Name: | *authorreadings*                   |
+| Org Name:      | *authorreadings*                   |
 
 ### Enable SAP Business Application Studio
 
-After creating a new Subaccount, only the standard services appear in the entitlements list. To enable SAP Business Application Studio, assign an according entitlement to the newly created BTP Subaccount.
+After creating a new BTP Subaccount, only the standard services appear in the entitlements list. To enable *SAP Business Application Studio*, assign an according entitlement to the newly created BTP Subaccount.
 
 For this navigate to the BTP Global Account and go to *Entitlements* and *Entity Assignments*. Open the value help on the *Select Entities* field and mark the corresponding BTP Subaccount.
-<img src="./resources/enableBAS1.png" width="70%">
+<img src="./resources/enableBAS1.png" width="50%">
 
 Press on *Configure Entitlements* and then *Add Service Plans*
-<img src="./resources/enableBAS2.png" width="80%">
 
-Press on *Add 1 Service Plan* and *Save*
+<img src="./resources/enableBAS2.png" width="50%">
 
-Navigate back to your BTP Subaccount. The *SAP Business Application Studio* is now available in the list of Entitlements. Create an instance of this service within the BTP Subaccount by going to the *Service Marketplace* and look for SAP Business Application Studio and press *Create*.
+Press on *Add 1 Service Plan* and *Save*.
+
+Navigate back to your BTP Subaccount. The *SAP Business Application Studio* is now available in the list of Entitlements. Create an instance of this service within the BTP Subaccount by going to the *Service Marketplace* and look for *SAP Business Application Studio* and press *Create*.
 
 <img src="./resources/enableBAS3.png" width="50%">
 
 The instance appears in the list of subscriptions.
 
-<img src="./resources/enableBAS4.png" width="80%">
+<img src="./resources/enableBAS4.png" width="50%">
 
 Just starting it will result in an *Access Denied* because the user roles are not yet assigned for this service instance. To do so, go to *Security* and *Users*. Select your user and and go to the assigned *Role Collections*. Select all 3 roles of *SAP Business Application Studio* and confirm the assignment.
 
@@ -52,11 +56,14 @@ Three role collections have been added by *SAP Business Application Studio* alre
 
 Now you can start the *SAP Business Application Studio*. If the access is denied wait some seconds and try again.
 
-<img src="./resources/startBAS.png" width="70%">
+<img src="./resources/startBAS.png" width="50%">
 
 After starting the development environment, create a new *Dev Space* for the development of this tutorial. Name it `AuthorReadings` and choose to create a *Full Stack Cloud Application*.
 
 <img src="./resources/startBAS2.png" width="25%">
 
 ## Setup GIT repository
-Create a new github repository in a github organization of your choice and link the newly created *Development Space* to it by doing a *git clone* to this SME Partner Reference Application repository.
+
+Create a new github repository in a github organization of your choice as code repository of your own project and link it with your *Dev Space*.
+
+Alternatively you can clone this repository into your *Dev Space* to deploy and run the sample application as provided in this repository.
