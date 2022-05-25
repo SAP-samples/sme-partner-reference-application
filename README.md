@@ -53,9 +53,13 @@ We are using the *Business Application Studio* as standardized development envir
 
 ## Download and Installation
 
-Deploy and run the sample application as provided.
+You can start your journey following two paths:
 
-Re-build the app following the tutorials.
+1. Deploy and run the sample application as provided in this respository following the tutorial "Deploy the Sample Application as provided in a Customer BTP Account".
+
+2. Re-build the application from scratch following tutorial "Build a full-stack BTP Application with One-off Deployment in a Customer BTP Account".
+
+After deployment of the application you may follow the tutorial "A Guided Tour to explore the Capabilities of the Sample Application" to visit the sample scenario end-to-end.
 
 ## Tutorials
 
@@ -69,6 +73,10 @@ Re-build the application from scratch following a guided tour and a progressive 
     5. [Event-based Integration with SAP Business ByDesign](Tutorials/5-ByD-Event-Integration.md)
     6. [Manage Data Privacy](Tutorials/6-Manage-Data-Privacy.md)
     7. [Test, Trace and Debug](Tutorials/7-Test-Trace-Debug.md)
+
+2. Deploy the Sample Application in a Customer BTP Account
+
+3. A Guided Tour to explore the Capabilities of the Sample Application
 
 Related resources:
 - [SAP Cloud Application Programming Model](https://cap.cloud.sap/docs/)
