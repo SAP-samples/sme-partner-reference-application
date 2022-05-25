@@ -26,6 +26,7 @@ Features of the author reading application:
 4. Synchronize the status of the author reading event with the status of the associated project
 
 Additionally, the sample showcases qualities relevant for enterprise-grade partner applications, supported by BTP services and programming models:
+
 5. Standardized online development using the *Business Application Studio*
 6. State-of-the-art web application development based on HTML5, NodeJS and HANA Cloud
 7. UIs that fit to the SAP standard based on metadata-driven floorplan patterns, and out-of-the-box theming and personalization
