@@ -16,10 +16,14 @@ With this repository we want to provide guidance for SME partners to extend SAP 
 **About the sample application "Author Readings":**
 
 Assume you are an event manager and your job is to organize and run author readings and poetry slams for reading clubs, book fairs and other occasions. 
+
 Your company is running its business on an cloud ERP system provided by SAP and you mostly use the project management work center to plan and staff events, to collect costs and to purchase required equipments. 
-Additionally an SAP partner provided a side-by-side application named "Author Reading Managment" to publish author reading events and to register event participants and visitors. It was in particular important for you to separate the event publishing and participant registration from your ERP system for security and compliance reasons. Nevertheless, as a power user working in both systems you requested a seamless user experience and navigation between the SAP system and the partner application.
+Additionally an SAP partner provided a side-by-side application named "Author Reading Managment" to publish author reading events and to register event participants and visitors. 
+
+It was in particular important for you to separate the event publishing and participant registration from your ERP system for security and compliance reasons. Nevertheless, as a power user working in both systems you requested a seamless user experience and navigation between the SAP system and the partner application.
 
 Features of the author reading application:
+
 1. Create and change author reading events; publish and block author readings
 2. Add and remove participants; confirm and cancel participations
 3. Create projects and display project data - here, ERP authorizations must apply in the partner application as well!
