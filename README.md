@@ -70,13 +70,13 @@ After deployment of the application you may follow the tutorial "A Guided Tour t
 Re-build the application from scratch following a guided tour and a progressive development approach.
 
 1. Build a full-stack BTP Application with One-off Deployment in a Customer BTP Account
-    1. [Prepare the BTP Account](Tutorials/1-Prepare-BTP-Account.md) 
-    2. [Develop the Core of the BTP Application](Tutorials/2-Develop-Core-Application.md)
-    3. [One-off Deployment](Tutorials/3-One-Off-Deployment.md)
-    4. [Integration with SAP Business ByDesign](Tutorials/4-ByD-Integration.md)
-    5. [Event-based Integration with SAP Business ByDesign](Tutorials/5-ByD-Event-Integration.md)
-    6. [Manage Data Privacy](Tutorials/6-Manage-Data-Privacy.md)
-    7. [Test, Trace and Debug](Tutorials/7-Test-Trace-Debug.md)
+    1. [Prepare the BTP Account](Tutorials/01-Prepare-BTP-Account.md) 
+    2. [Develop the Core of the BTP Application](Tutorials/02-Develop-Core-Application.md)
+    3. [One-off Deployment](Tutorials/03-One-Off-Deployment.md)
+    4. [Integration with SAP Business ByDesign](Tutorials/04-ByD-Integration.md)
+    5. [Event-based Integration with SAP Business ByDesign](Tutorials/05-ByD-Event-Integration.md)
+    6. [Manage Data Privacy](Tutorials/06-Manage-Data-Privacy.md)
+    7. [Test, Trace and Debug](Tutorials/07-Test-Trace-Debug.md)
 
 2. Deploy the Sample Application in a Customer BTP Account
 
