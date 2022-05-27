@@ -15,7 +15,7 @@ At first navigate to your *BTP Global Account* and create a new *Multi-Environme
 ### Enable Cloud Foundry Runtime
 By default Cloud Foundry is disabled for new BTP Subaccounts. That is because not every BTP Subaccount is meant for application development.
 
-<img src="./resources/enableCF1.png" width="40%">
+<img src="./resources/enableCF1.png" width="50%">
 
 Enable Cloud Foundry using the proposed standard settings:
 
@@ -32,6 +32,7 @@ Enable Cloud Foundry using the proposed standard settings:
 After creating a new BTP Subaccount, only the standard services appear in the entitlements list. To enable *SAP Business Application Studio*, assign an according entitlement to the newly created BTP Subaccount.
 
 For this navigate to the BTP Global Account and go to *Entitlements* and *Entity Assignments*. Open the value help on the *Select Entities* field and mark the corresponding BTP Subaccount.
+
 <img src="./resources/enableBAS1.png" width="50%">
 
 Press on *Configure Entitlements* and then *Add Service Plans*
