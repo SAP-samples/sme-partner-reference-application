@@ -100,7 +100,7 @@ Add to `package.json`
 ## Configure project deployment config files:
 
 Adjust and configure the destination-content module in file `./mta.yaml`. Here you define destinations and service keys for the destinations. After the MTA app has been deployed, you will see two destinations `html_repo_host` and `…_uaa_fiori` in your subaccount.
-> Note: that the service name `authorreadingmanager` which we defined in `manifest.json` file.
+> Note that the service name `authorreadingmanager` of the web app matches the service name used in file `manifest.json` of the web app.
 
 ```yml
 modules:
@@ -136,8 +136,8 @@ modules:
     no-source: true
 ```
 
-Add the destination service resource in file `mta.yaml`. Here you define destination resource to the route as defined in web application configuration file `./app/authorreadingmanager/xs-app.json`.
-> Note: that the name `launchpad` of the route in `xs-app.json` should match with the destination service resource name in `mta.yaml` file
+Add the destination service resource in file `mta.yaml`. Here you define destination resource for the route as defined in web application configuration file `./app/authorreadingmanager/xs-app.json`.
+> Note that the name `launchpad` of the route in `xs-app.json` should match with the destination service resource name in file `mta.yaml`.
 
 ```yml
 resources:
@@ -172,7 +172,7 @@ resources:
   - name: srv-api
 ```
 
-After all the above project configuration changes to the project configuration file `mta.yml`, the file would look like [this](../Applications/author-readings/mta.yaml).
+After all the above changes are applied in file `mta.yml`, the file would look like [the mta-file of the sample application](../Applications/author-readings/mta.yaml).
 
 ## Enable additional request origins (CORS)
 
@@ -210,14 +210,18 @@ Enhance the file `package.json` with the dependency:
 ```
 
 ## Deploy to Cloud Foundry
-In order to deploy the application is has to be built first. For that first login to your Cloud Foundry Org and Space. This is done by opending the command line, set the API (e.g. `https://api.cf.eu10.hana.ondemand.com`) by typing `cf api <api>`. Login with your username and password and select the newly created organization and space (runtime) of your BTP Subaccount.
 
-After that the *MTA Project* needs to be built. This is done by right-click on the `mta.yml` of your project and select *Build*.
+1. Open a new terminal and login to cloud foundry: Run command `cf login`, enter the CF API of your environment (for example *https://api.cf.eu10.hana.ondemand.com*), enter your development user/password, select org of the BTP provider subaccount for the application (*authorreadings*), and select the CF space (*runtime*).
 
-Last deploy the application by selecting Deploy MTA Archive in the context menu of file ./mta_archives/author-readings_1.0.0.mtar.
+2. Navigate to the sub-folder with the sample application using command `cd Applications/author-readings`.
 
-You can find details on how to deploy the application to the Cloud Foundry Runtime [here](
-https://cap.cloud.sap/docs/guides/deployment/to-cf).
+3. Run command `npm install` to install the messaging npm packages.
+
+4. Build the project by selecting `Build MTA Project` in the context menu of file `mta.yaml`. 
+
+5. Deploy the application by selecting `Deploy MTA Archive` in the context menu of file `./mta_archives/author-readings_1.0.0.mtar`.
+
+You can find details on how to deploy the application to the Cloud Foundry Runtime [here](https://cap.cloud.sap/docs/guides/deployment/to-cf).
 
 ## Configure the Launchpad
 

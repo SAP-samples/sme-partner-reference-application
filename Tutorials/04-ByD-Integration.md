@@ -663,45 +663,45 @@ author-readings-destination-service*.
 
 2. On the destination instance UI, open menu item *Destinations* and create a *New Destination* with the following field values:
 
- | Parameter name:           | Value:                                                                                 |
- | :------------------------ | :------------------------------------------------------------------------------------- |
- | *Name*:                   | *byd*                                                                                  |
- | *Type*:                   | *HTTP*                                                                                 |
- | *Description*:            | Enter a destination description, for example "*ByD 123456 with principal propagation*" |
- | *URL*:                    | *https://{{ByD-hostname}}* for example “*https://my123456.sapbydesign.com*”            |
- | *Proxy Type*:             | *Internet*                                                                             |
- | *Authentication*:         | *OAuth2SAMLBearerAssertion*                                                            |
- | *Audience*:               | Enter the **ByD service provider name**                                                |
- | *AuthnContextClassRef*:   | *urn:none*                                                                             |
- | *Client Key*:             | Enter the **ByD OAuth Client ID**                                                      |
- | *Token Service URL*:      | *https://{{ByD-hostname}}/sap/bc/sec/oauth2/token*                                     |
- | *Token Service User*:     | Enter the **ByD OAuth Client ID**                                                      |
- | *Token Service Password*: | Enter the **ByD OAuth Client Secret**                                                  |
+    | Parameter name:           | Value:                                                                                 |
+    | :------------------------ | :------------------------------------------------------------------------------------- |
+    | *Name*:                   | *byd*                                                                                  |
+    | *Type*:                   | *HTTP*                                                                                 |
+    | *Description*:            | Enter a destination description, for example "*ByD 123456 with principal propagation*" |
+    | *URL*:                    | *https://{{ByD-hostname}}* for example “*https://my123456.sapbydesign.com*”            |
+    | *Proxy Type*:             | *Internet*                                                                             |
+    | *Authentication*:         | *OAuth2SAMLBearerAssertion*                                                            |
+    | *Audience*:               | Enter the **ByD service provider name**                                                |
+    | *AuthnContextClassRef*:   | *urn:none*                                                                             |
+    | *Client Key*:             | Enter the **ByD OAuth Client ID**                                                      |
+    | *Token Service URL*:      | *https://{{ByD-hostname}}/sap/bc/sec/oauth2/token*                                     |
+    | *Token Service User*:     | Enter the **ByD OAuth Client ID**                                                      |
+    | *Token Service Password*: | Enter the **ByD OAuth Client Secret**                                                  |
 
     Enter the Additional Properties:
     
- | Property name:  | Value:                                                   |
- | :-------------- | :------------------------------------------------------- |
- | *nameIdFormat*: | *urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress* |
- | *scope*:        | Enter the **ByD OAuth Scope**                            |
- | *userIdSource*: | *email*                                                  |
+    | Property name:  | Value:                                                   |
+    | :-------------- | :------------------------------------------------------- |
+    | *nameIdFormat*: | *urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress* |
+    | *scope*:        | Enter the **ByD OAuth Scope**                            |
+    | *userIdSource*: | *email*                                                  |
 
     > Note: You may need to upload the ByD server certificate into the destination service for SSL authentication using the link *Upload and Delete Certificates* on the destinations screen. You can download the ByD server certificate from the brower (Open the ByD UI and view the site information; then display and export the certificate details into a ".cer"-file).
 
-BTP provider subaccount: Create destination "byd-tech-user" to connect to ByD by a technical user:
+BTP provider subaccount: Create a destination "byd-tech-user" to connect to ByD by a technical user:
 
 3. On the destination instance UI, open menu item *Destinations* and create a *New Destination* with the following field values:
 
- | Parameter name:   | Value:                                                                      |
- | :---------------- | :-------------------------------------------------------------------------- |
- | *Name*:           | *byd-tech-user*                                                             |
- | *Type*:           | *HTTP*                                                                      |
- | *Description*:    | Enter a destination description, for example "*ByD 123456 technical user*"  |
- | *URL*:            | *https://{{ByD-hostname}}* for example “*https://my123456.sapbydesign.com*” |
- | *Proxy Type*:     | *Internet*                                                                  |
- | *Authentication*: | *BasicAuthentication*                                                       |
- | *User*:           | Enter the **ByD Communication User ID**                                     |
- | *Password*:       | Enter the **ByD Communication User Password**                               |
+    | Parameter name:   | Value:                                                                      |
+    | :---------------- | :-------------------------------------------------------------------------- |
+    | *Name*:           | *byd-tech-user*                                                             |
+    | *Type*:           | *HTTP*                                                                      |
+    | *Description*:    | Enter a destination description, for example "*ByD 123456 technical user*"  |
+    | *URL*:            | *https://{{ByD-hostname}}* for example “*https://my123456.sapbydesign.com*” |
+    | *Proxy Type*:     | *Internet*                                                                  |
+    | *Authentication*: | *BasicAuthentication*                                                       |
+    | *User*:           | Enter the **ByD Communication User ID**                                     |
+    | *Password*:       | Enter the **ByD Communication User Password**                               |
 
     > Note: Destinations in the BTP subaccount are deleted and the system raises the error code 409 (Conflict), if the user used for deployment (user logged-in at BTP Cloud Foundry) does not have the authorization to edit destinations. Always make sure your deployment user has the authorization to edit destinations.
 
@@ -713,14 +713,14 @@ At runtime we dynamically assemble the parameterized URL to launch the ByD proje
 
 4. Open the menu item *Connectivity* of the BTP provider subaccount, click on *Destinations* and create a *New Destination* with the following field values:
 
- | Parameter name:   | Value:                                                                                  |
- | :---------------- | :-------------------------------------------------------------------------------------- |
- | *Name*:           | *byd-url*                                                                               |
- | *Type*:           | *HTTP*                                                                                  |
- | *Description*:    | Enter a destination description, for example "*ByD 123456 URL*"                         |
- | *URL*:            | *https://{{ByD-hostname-for-SSO}}* for example “*https://my123456-sso.sapbydesign.com*” |
- | *Proxy Type*:     | *Internet*                                                                              |
- | *Authentication*: | *NoAuthentication*                                                                      |
+    | Parameter name:   | Value:                                                                                  |
+    | :---------------- | :-------------------------------------------------------------------------------------- |
+    | *Name*:           | *byd-url*                                                                               |
+    | *Type*:           | *HTTP*                                                                                  |
+    | *Description*:    | Enter a destination description, for example "*ByD 123456 URL*"                         |
+    | *URL*:            | *https://{{ByD-hostname-for-SSO}}* for example “*https://my123456-sso.sapbydesign.com*” |
+    | *Proxy Type*:     | *Internet*                                                                              |
+    | *Authentication*: | *NoAuthentication*                                                                      |
 
     > Note: Observe, that the desination "byd-url" is created directly in the subaccount, whereas the other destinations for OData connections are created in the destination service instance.
 
@@ -735,6 +735,7 @@ As last step we add the BTP application for author readings and BTP admin apps t
 Create mashup for the BTP application "Author Readings":
 
 1. BTP provider subaccount: Open the *Launchpad Site Manager* by launching the application *Launchpad Service* from your section *Instance and Subscriptions* in your BTP subaccount. On the launchpad, open the context menu of the tile "Author Readings" and take note of the URL as **BTP Application URL**.
+
 2. ByD: Open work center view *Application and User Management - Mashup Authoring* and create a new URL mashup with the following data:
 	- *Port Binding Type*: Select *1 - Without Port Binding*
 	- *Mashup Name*: "Author Readings"
@@ -742,7 +743,7 @@ Create mashup for the BTP application "Author Readings":
 	- *URL*: Enter the URL of the web application taken from the launchpad site (**BTP Application URL**)
 	- *HTTP Method*: Select *Get*
 
-> Note: The URL of the web application as provided in the BTP provider subaccount under *HTML5 Applications* does not route request via the managed application router of the SAP Launchpad service and hence user attributes are not propagated to the application. You may encounter this by observing a login user "Default User" and the fact that the single sign-on does not work. Furthermore, any integration with ByD using principal propagation/SAML bearer authentication does not work and return the error message "Bad gateway".
+    > Note: The URL of the web application as provided in the BTP provider subaccount under *HTML5 Applications* does not route request via the managed application router of the SAP Launchpad service and hence user attributes are not propagated to the application. You may encounter this by observing a login user "Default User" and the fact that the single sign-on does not work. Furthermore, any integration with ByD using principal propagation/SAML bearer authentication does not work and return the error message "Bad gateway".
 
 Create a mashup for the IAS Admin app:
 
@@ -756,6 +757,7 @@ Create a mashup for the IAS Admin app:
 Create a mashup for the Event Mesh app:
 
 4. BTP provider subaccount: Get the URL of the Event Mesh application: Open menu item *Instances and Subscriptions* and pick the URL of the *Application* "Event Mesh".
+
 5. ByD: Open work center view *Application and User Management - Mashup Authoring* and create a new URL mashup with the following data:
 	- *Port Binding Type*: Select *1 - Without Port Binding*
 	- *Mashup Name*: "Event Mesh"
@@ -766,6 +768,7 @@ Create a mashup for the Event Mesh app:
 Create a mashup for the Audit Log app:
 
 6. BTP provider subaccount: Get the URL of the Audit log viewer: Open menu item *Instances and Subscriptions* and pick the URL of the *Application* "Audit Log Viewer Service".
+
 7. ByD: Open work center view *Application and User Management - Mashup Authoring* and create a new URL mashup with the following data:
 	- *Port Binding Type*: Select *1 - Without Port Binding*
 	- *Mashup Name*: "Audit Log"
@@ -776,6 +779,7 @@ Create a mashup for the Audit Log app:
 Add the BTP apps to the ByD Launchpad:
 	
 8. ByD: Open work center view *Home - My Launchpad* and start the personalization mode by selecting *Start Personalization Mode* from the *Me Area* menu in the top shell bar. Choose the best fitting launchpad group (or create a new group), click on "+", and pin the tiles refering to the mashups created above from the mashup gallery to the launchpad. Finally, save and stop the peronalization mode.
+
 9. Test frontend SSO: Open ByD using the SSO-URL (following the pattern https://myXXXXXX-sso.sapbydesign.com/)and login using your IAS user. Then launch the BTP application via the ByD launchpad. No additional authentication should be required.
 
-<img src="./resources/byd_launchpad.jpg" width="80%">
+<img src="./resources/byd_launchpad.jpg" width="100%">

@@ -89,8 +89,6 @@ resources:
 
 ## BTP Configuration
 
-### One-off deployment
-
 BTP provider subaccount:
 
 Add the required entitlements to the BTP provider subaccount:
@@ -103,23 +101,11 @@ Create an instance of the audit log viewer:
 To actually be able to view logs additional authorizations must be added:
 1. Open the menu item *Role Collections* and create a new role collection with name `AuditLog`.
 2. Edit the role colection and 
-    a. Add the roles *Auditlog_Auditor* for both applications: *Auditlog Management* and *Audit Log Viewer*.
-    b. Add the user group "Author_Readings_Admin".
+    1. Add the roles *Auditlog_Auditor* for both applications: *Auditlog Management* and *Audit Log Viewer*.
+    2. Add the user group "Author_Readings_Admin".
 
 Run command `npm install` to install the audit log npm packages. 
 
 Build and deploy the application and observe that an audit log service instance has been created.
 
 See chapter [ByD Integration](../04-byd-integration/index.md) to add the audit log viewer to the ByD launchpad.
-
-### Multi tenancy
-
-Add entitlement to the BTP **Provider** Account:
-- service `Auditlog Service` with plan `standard` to write logs
-
-Add entitlement to the BTP **Subscriber** Account:
-- service `Auditlog Service` with plan `standard` to write logs
-- service `Audit Log Viewer Service` with plan `default (Application)` to view logs
-
-To actually be able to view logs additional authorizations must be added. 
-Use role template `Auditlog_Auditor` and add both roles `Auditlog Management` and `Audit Log Viewer` to the role collections.

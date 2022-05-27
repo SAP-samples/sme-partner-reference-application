@@ -54,7 +54,7 @@ We use this subaccount to host the *SAP Business Application Studio* (BAS), whic
 
 BTP Cockpit (subaccount level): Navigate to *Instances and Subscriptions*, open the *SAP Business Application Studio* and create a new *Dev Space* with kind *Full Stack Cloud Application*.
 
-Start and open the dev space and clone this GitHub repository (https://github.com/SAP-samples/sme-partner-reference-application).
+Start and open the BAS dev space and use the tile "*Clone from Git*" on the *Welcome*-view to clone this GitHub repository (https://github.com/SAP-samples/sme-partner-reference-application).
 
 Build and deploy your application:
 
