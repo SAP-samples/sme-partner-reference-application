@@ -59,11 +59,11 @@ We are using the *Business Application Studio* as standardized development envir
 
 You can start your journey following two paths:
 
-1. Deploy and run the sample application as provided in this respository following the tutorial "Deploy the Sample Application as provided in a Customer BTP Account".
+1. Deploy and run the sample application as provided in this respository following the tutorial "*Deploy the Sample Application as provided in a Customer BTP Account*".
 
-2. Re-build the application from scratch following tutorial "Build a full-stack BTP Application with One-off Deployment in a Customer BTP Account".
+2. Re-build the application from scratch following tutorial "*Build a full-stack BTP Application with One-off Deployment in a Customer BTP Account*".
 
-After deployment of the application you may follow the tutorial "A Guided Tour to explore the Capabilities of the Sample Application" to visit the sample scenario end-to-end.
+After deployment of the application you may follow the tutorial "*A Guided Tour to explore the Capabilities of the Sample Application*" to visit the sample scenario end-to-end.
 
 ## Tutorials
 
@@ -78,9 +78,9 @@ Re-build the application from scratch following a guided tour and a progressive 
     6. [Manage Data Privacy](Tutorials/06-Manage-Data-Privacy.md)
     7. [Test, Trace and Debug](Tutorials/07-Test-Trace-Debug.md)
 
-2. Deploy the Sample Application in a Customer BTP Account
+2. [Deploy the Sample Application in a Customer BTP Account](Tutorials/20-Deploy-Sample-Application.md)
 
-3. A Guided Tour to explore the Capabilities of the Sample Application
+3. [A Guided Tour to explore the Capabilities of the Sample Application](Tutorials/30-Guided-Tour.md)
 
 Related resources:
 - [SAP Cloud Application Programming Model](https://cap.cloud.sap/docs/)
