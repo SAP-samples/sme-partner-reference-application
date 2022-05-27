@@ -1,8 +1,8 @@
-## One-Off Deployment
+# One-off Deployment
 
 Deploy the application into a subaccount of the customer BTP global account and integrate the subaccount with the customer identity provider (IDP) for authentication.
 
-### Setup the BTP Subaccount
+## Setup the BTP Subaccount
 
 BTP Cockpit (Global account):
 
@@ -24,7 +24,7 @@ Open *Entity Assignments* and assign quotas for the following entities to your s
 
 > Note: The value help may not offer an item referring to "Cloud Foundry". In this case select "Application runtime" and save the change, the name of item in the list of entity assignment is changed to "Cloud Foundry Runtime". 
 
-### Enable Cloud Foundry
+## Enable Cloud Foundry
 
 BTP Cockpit (subaccount):
 
@@ -39,7 +39,7 @@ Create Space - authorreadings-runtime
     - Add CF Org members
 	- Add CF space members
 
-### Create a HANA database
+## Create a HANA database
 
 BTP Cockpit (subaccount):
 
@@ -49,7 +49,7 @@ Open the Cloud Foundry space, navigate to SAP HANA Cloud and create a HANA datab
    - Enter a password
    - Save
 
-### Subscribe Lauchpad application
+## Subscribe Lauchpad application
 
 BTP Cockpit (subaccount):
 
@@ -99,7 +99,7 @@ Add to `package.json`
 }
 ```
 
-#### Configure project deployment config files:
+## Configure project deployment config files:
 
 Adjust and configure the destination-content module in file `./mta.yaml`. Here you define destinations and service keys for the destinations. After the MTA app has been deployed, you will see two destinations `html_repo_host` and `…_uaa_fiori` in your subaccount.
 > Note: that the service name `authorreadingmanager` which we defined in manifest.json file
@@ -199,7 +199,7 @@ resources:
 
 TODO --> link to complete file!!!
 
-#### Enable additional request origins
+## Enable additional request origins (CORS)
 
 In this step we enable citizen users to build AppGyver applications that connect to the OData services of our BTP application as backend.
 In general Appgyver expects the server to handle Cross Origin Request Sharing (CORS). However, by default CAP services do not allow cross origin requests.

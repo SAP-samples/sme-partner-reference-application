@@ -1,3 +1,5 @@
+# Develop the Core of the BTP Application
+
 ## Initialize New CAP-based Project
 To start a new development project initialize it with the *Core Data Services (CDS)* by opening the command line and type `cds init author-readings`. This creates a folder with name `author-readings` and a set of files to start a CAP project. Navigate into the new folder by typing `cd author-readings`.
 

@@ -1,9 +1,9 @@
-## Manage Data Privacy
+# Manage Data Privacy
 
 Using the audit log you can ensure your application is compliant to data privacy requirements.
 For more information see: [Cloud Application Programming - Managing Data Privacy](https://cap.cloud.sap/docs/guides/data-privacy).
 
-### Application enablement (same for one-off and multi tenancy)
+## Application enablement (same for one-off and multi tenancy)
 
 Open file `./srv/service-models.cds` and add the annotations for the audit log:
 ```javascript
@@ -87,9 +87,9 @@ resources:
     service-plan: standard 
 ```
 
-### BTP Configuration
+## BTP Configuration
 
-#### One-off deployment
+### One-off deployment
 
 BTP provider subaccount:
 
@@ -112,7 +112,7 @@ Build and deploy the application and observe that an audit log service instance 
 
 See chapter [ByD Integration](../04-byd-integration/index.md) to add the audit log viewer to the ByD launchpad.
 
-#### Multi tenancy
+### Multi tenancy
 
 Add entitlement to the BTP **Provider** Account:
 - service `Auditlog Service` with plan `standard` to write logs

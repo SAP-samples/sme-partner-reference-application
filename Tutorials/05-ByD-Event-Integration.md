@@ -1,6 +1,6 @@
-## Event-based Integration via SAP Event Mesh
+# Event-based Integration with SAP Business ByDesign
 
-In this chapter we enhance the BTP application by event-based integration capabilties for two use cases:
+In this chapter we enhance the BTP application by event-based integration capabilties ustilizing the *SAP Event Mesh* for two use cases:
 
 1. The BTP application shall emit event notifications similar to SAP ERP systems.
 
@@ -8,7 +8,7 @@ In this chapter we enhance the BTP application by event-based integration capabi
 
 The scenario will follow the publish/subscribe model. The event from ByD would be published as event mesh Topic. The CAP application would subscribe for this Topic programmatically. As a publisher of the event ByD doesn't know the consumer, hence it is published to a Topic. There could be multiple consumers to this Event. The Consuming CAP application, will receive this event via webhook. The Event Mesh will do a http POST call to the webhook url with the event payload.
 
-### Setup the BTP provider subaccount
+## Setup the BTP provider subaccount
 
 SAP BTP Cockpit (global acccount level): Open menu item *Entity Assignment* and add the service plans 
 - *Event Mesh*, service plan *Default*
@@ -20,7 +20,7 @@ BTP provider subaccount: Open menu item *Security* > *Users*: Assign the role co
 
 BTP subaccount: Open menu item *Role Collections* and add the user group "author_reading_manager" to role collection "*Enterprise Messaging Administrator*".
 
-### Setup project configurations
+## Setup project configurations
 
 BAS: Open the project and add the following configurations:
 
@@ -191,7 +191,7 @@ Create a new file `event-mesh.json` in the root folder of the application with t
         ```
     4. Now you can test locally in BAS using the command `cds watch profile --sandbox`.
 
-### Enhance the service implementation to emit events
+## Enhance the service implementation to emit events
 
 Enhance the implementation of service `AuthorReadingManager` to emit event notification if a author reading gets published or blocked.
 
@@ -211,7 +211,7 @@ Enhance the implementation of service `AuthorReadingManager` to emit event notif
     reuse.emitAuthorReadingEvent(req, id, "AuthorReadingPublished")
     ```
 
-### Enhance the service implementation to consume ByD events
+## Enhance the service implementation to consume ByD events
 
 Enhance the implementation of service `AuthorReadingManager` to subscribe to event notifications emitted by ByD, read adidtional ByD project data and update the status of the author reading.
 
@@ -219,7 +219,7 @@ Enhance the implementation of service `AuthorReadingManager` to subscribe to eve
 
 1. Enhance the service implementation in file `service-implementation.js` by the code in section "*// Event-based integration with ByD*".
 
-### Build and deploy
+## Build and deploy
 
 Build and deploy your application:
 
@@ -235,7 +235,7 @@ Observe, that the message client `authorreadings` is now available in the event 
 
 > Note: The first deployment of the application with the event mesh creates event mesh artifacts (message client, queue and service instance) and may take some time (very likely more than 10 minutes).
 
-### Configure the message client for outbound messages
+## Configure the message client for outbound messages
 
 Add the queue for the outbound messages emitted by the BTP application.
 
@@ -245,7 +245,7 @@ BTP provider subaccount:
 3. Create a new queue with the *Queue Name* "authorreadingevents".
 4. On the queue use the action *Queue Subscriptions* and subscribe to the topics "*sap/samples/authorreadings/AuthorReadingPublished*" and "*sap/samples/authorreadings/AuthorReadingBlocked*".
 
-### Create the message client for ByD
+## Create the message client for ByD
 
 BTP provider subaccount: Open menu item *Instances and Subscriptions* and create a new instance of service *Event Mesh* with the following data:
 - Service: *Event Mesh*
@@ -289,7 +289,7 @@ Open the event mesh application and the message client "byd" and create a queue 
 
 On the queue *sap/byd/project/projectupdate* use the action *Queue Subscriptions* and subscribe to the topic "*sap/byd/project/ProjectUpdated*".
 
-### Configure ByD to emit event notifications for projects
+## Configure ByD to emit event notifications for projects
 
 BTP provider subaccount: Open menu item *Instances and Subscriptions* the event mesh instance `byd-eventmesh` and create a service key with *Service Key Name*: "*byd-eventmesh-key*".
 
@@ -329,7 +329,3 @@ Add a subscription for
 - Business Object: *Project*
 - Business Object Node: *Root*
 - Select *Update* to subscribe to all project updates
-
-### Test the event-based integration
-
-TODO
