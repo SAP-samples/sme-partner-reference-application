@@ -118,7 +118,7 @@ Add entitlement to the BTP **Provider** Account:
 - service `Auditlog Service` with plan `standard` to write logs
 
 Add entitlement to the BTP **Subscriber** Account:
-- service `Auditlog Service` with plan `standard` to write logs (TODO: maybe, try out)
+- service `Auditlog Service` with plan `standard` to write logs
 - service `Audit Log Viewer Service` with plan `default (Application)` to view logs
 
 To actually be able to view logs additional authorizations must be added. 
