@@ -88,12 +88,13 @@ Create and configure a launchpad site as described in chapter [Configure the Lau
 
 ## Configure Authentication and Authorization
 
-Setup trust between the BTP subaccount and the *SAP Identity Authentication Service* and end user authorizations following the steps in chapter [Configure Authentication and Authorization](03-One-Off-Deployment.md#configure-authentication-and-authorization).
+Setup trust between the BTP subaccount and the *SAP Identity Authentication Service* and setup end user authorizations following the steps in chapter [Configure Authentication and Authorization](03-One-Off-Deployment.md#configure-authentication-and-authorization).
 
-BTP subaccount: Open menu item *Role Collections* and add the user group `Author_Reading_Admin` to role collections:
+BTP subaccount: Open menu item *Role Collections* and add the user group `Author_Reading_Admin` additionally to the role collections:
 - *Enterprise Messaging Administrator*
 - *Enterprise Messaging Developer* (required to test event notifications and to review the data payload of event notifications)
 - *AuditLog*
+- *Launchpad_Admin*
 
 ## Configure Single Sign-on for ByD
 

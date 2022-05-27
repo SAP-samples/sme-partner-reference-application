@@ -355,7 +355,7 @@ BTP subaccount:
     | Role Collection: | User Groups: |
 	| :---  | :---          |
 	| AuthorReadingManagerRoleCollection | Author_Reading_Manager |
-	| AuthorReadingAdminRoleCollection | Author_Reading_Admin, Launchpad_Admin, Subaccount Administrator |
+	| AuthorReadingAdminRoleCollection | Author_Reading_Admin |
 
 ### Login to the BTP Application and test Single Sign-on
 
