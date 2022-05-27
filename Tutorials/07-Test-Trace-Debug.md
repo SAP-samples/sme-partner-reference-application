@@ -4,7 +4,7 @@ When developing a productive application further topics like finding and analysi
 
 ## Test
 
-The application can be manually tested locally easily as long as no event-based integration to ByD has been added. 
+The application can be manually tested locally as long as no Event Mesh based integration has been added. 
 
 1. Edit the sandbox credentials in file `package.json`:
     ```json
@@ -58,7 +58,7 @@ After adding the event-based integration with ByD
 
 ## Tracing
 
-You may consider adding log statements to the service implementations, for example 
+You may consider adding log statements to the service implementations, such as for example 
 ```javascript
 console.log("Author reading " + authorReadingIdentifier +" is blocked via event message");
 console.log("Event message log updated");
