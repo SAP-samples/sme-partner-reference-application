@@ -6,12 +6,14 @@
 
 ## Description
 
-The *SME Partner Reference Application* provides a "golden path" to build, run and integrate full-stack cloud applications on the *SAP Business Technology Platform* in the market for small and midsize enterprizes.
+The *SME Partner Reference Application* provides a "golden path" to build, run and integrate full-stack cloud applications on the *SAP Business Technology Platform* .
 
-With this repository we want to provide guidance for SME partners to extend SAP ERP solutions by side-by-side cloud applications running on the *SAP Business Technology Platform* (BTP). This guidance comprises
+With this repository we want to provide guidance for SAP partners in the market for small and midsize enterprizes (SME) to extend SAP ERP solutions by side-by-side cloud applications running on the *SAP Business Technology Platform* (BTP). This guidance comprises
 - an opinionated pre-selection of BTP components with architecture guidance tailored for the SME market, 
 - best practices ("golden paths") to build, deploy and provision full-stack BTP applications, and
 - we pay special attention to the interoperability and integration with cloud ERP solutions such as *SAP Business ByDesign* and *S/4HANA Cloud*.
+
+The repository includes a sample application that is ready to deploy and run, and tutorials to re-build the sample application from scratch following a progressive development approach. 
 
 **About the sample application "Author Readings":**
 
@@ -20,33 +22,35 @@ Assume you are an event manager and your job is to organize and run author readi
 Your company is running its business on an cloud ERP system provided by SAP and you mostly use the project management work center to plan and staff events, to collect costs and to purchase required equipments. 
 Additionally an SAP partner provided a side-by-side application named "Author Reading Managment" to publish author reading events and to register event participants and visitors. 
 
-It was in particular important for you to separate the event publishing and participant registration from your ERP system for security and compliance reasons. Nevertheless, as a power user working in both systems you requested a seamless user experience and navigation between the SAP system and the partner application.
+It was in particular important for you to separate the event publishing and participant registration from your ERP system for security and compliance reasons. Nevertheless, as a power user working in both systems you asked the partner to ensure a seamless user experience and navigation between the SAP system and the partner application.
 
 Features of the author reading application:
 
 1. Create and change author reading events; publish and block author readings
 2. Add and remove participants; confirm and cancel participations
-3. Create projects and display project data - here, ERP authorizations must apply in the partner application as well!
-4. Synchronize the status of the author reading event with the status of the associated project
+3. Calculate the number of free seats and block overbookings
+4. One-click creation of projects for reading events and a preview of project information on the author reading UI (here, ERP authorizations must apply in the partner application as well!)
+5. ERP users shall be able to launch the author reading app on their ERP launchpad, and it shall be possible to navigate from author readings to the associated project in the ERP system
+6. Synchronize the status of the author reading event with the status of the associated project
 
 Additionally, the sample showcases qualities relevant for enterprise-grade partner applications, supported by BTP services and programming models:
 
-5. Standardized online development using the *Business Application Studio*
-6. State-of-the-art web application development based on HTML5, NodeJS and HANA Cloud
-7. UIs that fit to the SAP standard based on metadata-driven floorplan patterns, and out-of-the-box theming and personalization
-8. A draft concept to allow users to change data in multiple steps without publishing incomplete changes
-9. Enterprise-grade security by single sign-on and authentication in line with SAP product standards and a role-based authorization concept
-10. Enterprise-ready compliance by personal data management and audit log
-12. Seamless frontend and back-channel integration with SAP ERP solutions
-13.	Delivering “open solutions”: The app is integration-ready by Web APIs and business events inline with SAP technology alignments
-14. Extensible by citizen user tools (AppGyver) to add web apps and mobile apps for customer specific use cases and user groups (planned)
-15. Deployment as one-off and multi-customer solution (planned) 
+7. Standardized online development environment using the *Business Application Studio*
+8. State-of-the-art web application architecture based on HTML5, NodeJS and HANA Cloud
+9. UIs that fit to the SAP standard based on metadata-driven floorplan patterns, and out-of-the-box theming and personalization
+10. A draft concept to allow users to change data in multiple steps without publishing incomplete changes
+11. Enterprise-grade security by single sign-on and authentication in line with SAP product standards, and a role-based authorization concept
+12. Enterprise-ready compliance by personal data management and audit log
+13. Seamless frontend and back-channel integration with SAP ERP solutions
+14.	Delivering “open solutions”: The app is integration-ready by Web APIs and business events inline with SAP technology alignments
+15. Extensible by citizen user tools (AppGyver) to add web apps and mobile apps for customer specific use cases and user groups (planned)
+16. Deployment as one-off and multi-customer solution (planned) 
 
 ## Requirements
 
 The application is based on the *SAP Business Technology Platform* (BTP) and SAP Cloud ERP Solutions. Therefore you need 
 - administrative access to a BTP account with entitlements for *SAP Business Application Studio*, *Cloud Foundry Runtime*, *SAP HANA Cloud*, *SAP HANA Schemas & HDI Containers*, *Launchpad Service*, *SAP Event Mesh*, *Auditlog Service*, *Audit Log Viewer Service*,
-- access to a *SAP Business ByDesign* tenant and authorizations for work center *Application and User Management* and *Project Management*,
+- access to a *SAP Business ByDesign* tenant and authorizations for work centers *Application and User Management* and *Project Management*,
 - admin access to an *SAP Identity Authentication Service* tenant (IAS) that is assigned to the same customer ID as the BTP global account.
 
 We are using the *Business Application Studio* as standardized development environment and *Github* as code repository.
@@ -81,6 +85,8 @@ Re-build the application from scratch following a guided tour and a progressive 
 Related resources:
 - [SAP Cloud Application Programming Model](https://cap.cloud.sap/docs/)
 - [SAP Discovery Center](https://discovery-center.cloud.sap/missionssearch)
+- [ByD API Overview](https://blogs.sap.com/2019/09/26/sap-business-bydesign-an-api-overview/)
+- [ByD OData API Usage Samples](https://blogs.sap.com/2019/02/27/sap-business-bydesign-api-usage-samples/)
 
 ## Known Issues
 
