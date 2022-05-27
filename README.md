@@ -42,7 +42,7 @@ Additionally, the sample showcases qualities relevant for enterprise-grade partn
 11. Enterprise-grade security by single sign-on and authentication in line with SAP product standards, and a role-based authorization concept
 12. Enterprise-ready compliance by personal data management and audit log
 13. Seamless frontend and back-channel integration with SAP ERP solutions
-14.	Delivering “open solutions”: The app is integration-ready by Web APIs and business events inline with SAP technology alignments
+14.	Delivering “open solutions” by integration-ready OData APIs and business events inline with SAP technology alignments
 15. Extensible by citizen user tools (AppGyver) to add web apps and mobile apps for customer specific use cases and user groups (planned)
 16. Deployment as one-off and multi-customer solution (planned) 
 
