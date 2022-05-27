@@ -34,7 +34,7 @@ Open the subaccount *Overview* and enable Cloud Foundry:
 - Instance Name: authorreadings
 - Org Name: auhtorreadings
 
-Create Space - *runtime*
+Create Space (*runtime*)
 - keep standard roles
 - Add CF Org members
 - Add CF space members
@@ -210,18 +210,18 @@ Enhance the file `package.json` with the dependency:
 ```
 
 ## Deploy to Cloud Foundry
-In order to deploy the application is has to be built first. For that first login to your Cloud Foundry Org and Space. This is done by opending the command line, set the API (e.g. https://api.cf.eu10.hana.ondemand.com) by typing `cf api <api>`. Login with your username and password and select the newly created organization and space (runtime) of your BTP Subaccount.
+In order to deploy the application is has to be built first. For that first login to your Cloud Foundry Org and Space. This is done by opending the command line, set the API (e.g. `https://api.cf.eu10.hana.ondemand.com`) by typing `cf api <api>`. Login with your username and password and select the newly created organization and space (runtime) of your BTP Subaccount.
 
 After that the *MTA Project* needs to be built. This is done by right-click on the `mta.yml` of your project and select *Build*.
 
-Last the deployment itself needs to be started by right click on the generated `mta_archives/author-readings_1.0.0.mtar` and select build.
+Last deploy the application by selecting Deploy MTA Archive in the context menu of file ./mta_archives/author-readings_1.0.0.mtar.
 
 You can find details on how to deploy the application to the Cloud Foundry Runtime [here](
 https://cap.cloud.sap/docs/guides/deployment/to-cf).
 
 ## Configure the Launchpad
 
-Once you have deployed your application successfully, the included Web application is available as HTML5 Application and ready to be added to a Launchpad site.
+Once you have deployed your application successfully, the included Web Application is available as HTML5 Application and ready to be added to a Launchpad site.
 
 1. Open the *Launchpad Site Manager* by launching the application *Launchpad Service* from your section *Instance and Subscriptions* in your BTP subaccount.
 
@@ -231,7 +231,7 @@ Once you have deployed your application successfully, the included Web applicati
 
 3. Select the content provider *HTML5 Apps* and fetch any updates of your Web application by clicking the fetch updated content icon. The HTML5 Apps content provider should now expose the latest version of the Web application. 
 
-<img src="./resources/launchpad_sitemanager1.jpg" width="80%">
+<img src="./resources/launchpad_sitemanager1.jpg" width="90%">
 
 > Note: You need to update the content provider whenever you changed the Web application.
 
@@ -249,11 +249,11 @@ Once you have deployed your application successfully, the included Web applicati
 
 8. Save the group.
 
-<img src="./resources/launchpad_sitemanager3.jpg" width="80%">
+<img src="./resources/launchpad_sitemanager3.jpg" width="90%">
 
 **Assign the Web application to the default role:**
 
-In this step, you’ll assign your app to the "Everyone" role. This is a default role - content assigned to this role is visible to all users.
+In this step, you’ll assign your app to the "Everyone" role. This is a default role - the content assigned to this role is visible to all users.
 
 9. Open the *Content Manager* and navigate to sheet *My Content*.
 
@@ -360,5 +360,3 @@ Launch your BTP application and select the IAS tenant as IDP.
 > Note: The first attempt to open the app may fail with an authorization error message if the user has not yet been replicated from the IAS tenant to the BTP subaccount (latest at this point this replication is triggered and executed atomatically). The second login attempt to open the app should be successful always.
 
 You may deactivate the "Default Identity Provider" (which refers to the SAP ID Service) in the trust center of your BTP subaccount.
-
-

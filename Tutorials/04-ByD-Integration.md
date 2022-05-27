@@ -652,7 +652,7 @@ The system should return the record with the project ID and the ByD project deta
 
 ### Deploy the application
 
-TODO
+See [Deploy to Cloud Foundry](03-One-Off-Deployment.md#deploy-to-cloud-foundry).
 
 ### Setup Destinations to connect to ByD
 
