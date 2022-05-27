@@ -18,7 +18,7 @@ BTP provider subaccount: Open menu item *Service Marketplace* and create an inst
 
 BTP provider subaccount: Open menu item *Security* > *Users*: Assign the role collections for the event mesh to your development user.   
 
-BTP subaccount: Open menu item *Role Collections* and add the user group "author_reading_manager" to role collection "*Enterprise Messaging Administrator*".
+BTP subaccount: Open menu item *Role Collections* and add the user group "Author_Reading_Manager" to role collection "*Enterprise Messaging Administrator*".
 
 ## Setup project configurations
 

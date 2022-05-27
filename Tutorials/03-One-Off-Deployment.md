@@ -32,7 +32,7 @@ Open the subaccount *Overview* and enable Cloud Foundry:
 - Plan: standard
 - Landscape: cf-eu10
 - Instance Name: authorreadings
-- Org Name: auhtorreadings
+- Org Name: authorreadings
 
 Create Space (*runtime*)
 - keep standard roles
