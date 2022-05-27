@@ -29,25 +29,25 @@ Open *Entity Assignments* and assign quotas for the following entities to your s
 BTP Cockpit (subaccount):
 
 Open the subaccount *Overview* and enable Cloud Foundry:
-    - Plan: standard
-    - Landscape: cf-eu10
-    - Instance Name: authorreadings
-    - Org Name: auhtorreadings
+- Plan: standard
+- Landscape: cf-eu10
+- Instance Name: authorreadings
+- Org Name: auhtorreadings
 
-Create Space - authorreadings-runtime
-    - keep standard roles
-    - Add CF Org members
-	- Add CF space members
+Create Space - *runtime*
+- keep standard roles
+- Add CF Org members
+- Add CF space members
 
 ## Create a HANA database
 
 BTP Cockpit (subaccount):
 
 Open the Cloud Foundry space, navigate to SAP HANA Cloud and create a HANA database: 
-   - Choose CF Organization + Space
-   - Instance Name: authorreadings-db
-   - Enter a password
-   - Save
+- Choose CF Organization + Space
+- Instance Name: authorreadings-db
+- Enter a password
+- Save
 
 ## Subscribe Lauchpad application
 
@@ -55,20 +55,19 @@ BTP Cockpit (subaccount):
 
 Open the *Service Marketplace* and select the *Launchpad Service*.
 Create a subscription of the *Launchpad Service* with
-    - Service: *Launchpad*
-    - Plan: *standard - Subscription*
+- Service: *Launchpad*
+- Plan: *standard - Subscription*
 
 Open *Users* and add the role collection *Launchpad_Admin* to your user.
 
 > Note: The SAP Launchpad provides the managed application router, which we are using to manage application authentication and tokens. You need to subscribe the Launchpad service before deploying your application to ensure that the Web app can be published as "HTML5 Application".
-
 
 ***Prepare project configuration (make adjustments) for Cloud Foundry deployments***
 
 Next, let’s make some adjustments so that the app can be deployed to Cloud Foundry as a central Launchpad content.
 
 Configure web app to connect to the app services. Define a route in the web app: Open file `./app/authorreadingmanager/xs-app.json` and add the following route at position 1 (the order matters! The most specific one should be in the beginning)
-> Note: We will define the destination “cap-launchpad” later as part of project configuration mta.yml file 
+> Note: We will define the destination “cap-launchpad” later as part of project configuration `mta.yml` file 
 
 ```json
 "routes": [
@@ -77,8 +76,7 @@ Configure web app to connect to the app services. Define a route in the web app:
     "csrfProtection": false,
     "source": "^/authorreadingmanager/",
     "destination": "launchpad"
-  },
-  ...
+  }
 ]
 ```
 		
@@ -102,102 +100,79 @@ Add to `package.json`
 ## Configure project deployment config files:
 
 Adjust and configure the destination-content module in file `./mta.yaml`. Here you define destinations and service keys for the destinations. After the MTA app has been deployed, you will see two destinations `html_repo_host` and `…_uaa_fiori` in your subaccount.
-> Note: that the service name `authorreadingmanager` which we defined in manifest.json file
+> Note: that the service name `authorreadingmanager` which we defined in `manifest.json` file.
 
-
-TODO: copy from current file
 ```yml
 modules:
 - name: author-readings-destination-content
-   type: com.sap.application.content
-   requires:
-   - name: author-readings-destination-service
-      parameters:
+  type: com.sap.application.content
+  requires:
+  - name: author-readings-destination-service
+    parameters:
       content-target: true
-   - name: author-readings-repo-host
-      parameters:
+  - name: author-readings-repo-host
+    parameters:
       service-key:
-         name: author-readings-repo-host-key
-   - name: author-readings-uaa
-      parameters:
+        name: author-readings-repo-host-key
+  - name: author-readings-uaa
+    parameters:
       service-key:
-         name: author-readings-uaa-key
-   parameters:
-      content:
-         instance:
-            destinations:
-            - Name: readingeventmanager_CAE_PoC_GP_repo_host
-               ServiceInstanceName: CAE-PoC-GP-html5-srv
-               ServiceKeyName: CAE-PoC-GP-repo-host-key
-               sap.cloud.service: readingeventmanager
-            - Name: readingeventmanager_uaa_fiori
-               Authentication: OAuth2UserTokenExchange
-               ServiceInstanceName: CAE-PoC-GP-uaa-srv
-               ServiceKeyName: CAE-PoC-GP-uaa-key
-               sap.cloud.service: readingeventmanager
-            existing_destinations_policy: ignore
-   build-parameters:
-      no-source: true
+        name: author-readings-uaa-key
+  parameters:
+    content:
+      instance:
+        destinations:
+        - Name: authorreadingmanager-repo-host-dest
+          ServiceInstanceName: author-readings-html5-srv
+          ServiceKeyName: author-readings-repo-host-key
+          sap.cloud.service: authorreadingmanager
+        - Authentication: OAuth2UserTokenExchange
+          Name: authorreadingmanager-uaa-fiori-dest
+          ServiceInstanceName: author-readings-uaa
+          ServiceKeyName: author-readings-uaa-key
+          sap.cloud.service: authorreadingmanager
+        existing_destinations_policy: ignore
+  build-parameters:
+    no-source: true
 ```
 
-Add the destination service resource in file ./mta.yaml ,Here you define destination resource to the route defined in web application configuration file `./app/authorreadingmanager/xs-app.json`.
+Add the destination service resource in file `mta.yaml`. Here you define destination resource to the route as defined in web application configuration file `./app/authorreadingmanager/xs-app.json`.
 > Note: that the name `launchpad` of the route in `xs-app.json` should match with the destination service resource name in `mta.yaml` file
 
 ```yml
-- Authentication: NoAuthentication
-  Name: launchpad
-  ProxyType: Internet
-  Type: HTTP
-  URL: ~{srv-api/srv-url}
-  HTML5.DynamicDestination: true
-  HTML5.ForwardAuthToken: true
+resources:
+- name: author-readings-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: true
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          - Authentication: NoAuthentication
+            Name: launchpad
+            ProxyType: Internet
+            Type: HTTP
+            URL: ~{srv-api/srv-url}
+            HTML5.DynamicDestination: true
+            HTML5.ForwardAuthToken: true
 ```
-
-Add the destination service resource in file `./mta.yaml` ,Here you define destination resource to the route defined in web application configuration file./app/readingeventmanager/xs-app.json
   
-Add service api as a required dependency of the destination in file `./mta.yaml`:
+Add the service api as a required dependency of the destination in file `./mta.yaml`:
 
 ```yml
-requires:
+resources:
+- name: author-readings-destination-service
+  requires:
   - name: srv-api
 ```
 
-> Note: after the above changes the destination resource in mta.yml file will look like below : 
-	
-```yml
-resources:
-- name: CAE-PoC-GP-dest-srv
-   type: org.cloudfoundry.managed-service
-   parameters:
-      config:
-      HTML5Runtime_enabled: true
-      init_data:
-         instance:
-            destinations:
-            - Authentication: NoAuthentication
-               Name: ui5
-               ProxyType: Internet
-               Type: HTTP
-               URL: https://ui5.sap.com
-            - Authentication: NoAuthentication
-               Name: cap-launchpad
-               ProxyType: Internet
-               Type: HTTP
-               URL: ~{srv-api/srv-url}
-               HTML5.DynamicDestination: true
-               HTML5.ForwardAuthToken: true
-               existing_destinations_policy: update
-      version: 1.0.0
-      service: destination
-      service-name: CAE-PoC-GP-dest-srv
-      service-plan: lite
-   requires:
-   - name: srv-api
-```
-
-> Note: after all the above project configuration changes to the project configuration file `mta.yml`, the file would look like below:
-
-TODO --> link to complete file!!!
+After all the above project configuration changes to the project configuration file `mta.yml`, the file would look like [this](../Applications/author-readings/mta.yaml).
 
 ## Enable additional request origins (CORS)
 
@@ -206,7 +181,7 @@ In general Appgyver expects the server to handle Cross Origin Request Sharing (C
 
 Therefore we enhance the default bootstrapping by some custom logic to allow AppGyver applications to access the OData services (compare https://cap.cloud.sap/docs/node.js/cds-serve).
 
-Create a file *server.js* in the the root folder of the application to define allowed request origins for CORS checks. In our example we allow all origins for simplicity; for productive use specific origins shall be listed and allowed only.
+Create a file [`server.js`](../Applications/author-readings/server.js) in the the root folder of the application to define allowed request origins for CORS checks. In our example we allow all origins for simplicity; for productive use specific origins shall be listed and allowed only.
 
 ```javascript
 // Define allowed access origins for CORS checks.
@@ -226,31 +201,23 @@ cds.on('listening', () => {
 module.exports = cds.server // delegate to default server.js
 ```
 
-Enhance the file *package.json* by the dependency:
+Enhance the file `package.json` with the dependency:
 
 ```json
-    "dependencies": {
+"dependencies": {
 	"cors": "^2.8.5"
-    },
+}
 ```
 
 ## Deploy to Cloud Foundry
+In order to deploy the application is has to be built first. For that first login to your Cloud Foundry Org and Space. This is done by opending the command line, set the API (e.g. https://api.cf.eu10.hana.ondemand.com) by typing `cf api <api>`. Login with your username and password and select the newly created organization and space (runtime) of your BTP Subaccount.
 
-https://cap.cloud.sap/docs/guides/deployment/to-cf
+After that the *MTA Project* needs to be built. This is done by right-click on the `mta.yml` of your project and select *Build*.
 
-go to application folder
+Last the deployment itself needs to be started by right click on the generated `mta_archives/author-readings_1.0.0.mtar` and select build.
 
-login to console
-CF API https://api.cf.eu10.hana.ondemand.com
-CF Login
-- select org and space
-
-select build MTA_Project from context menu on mta.yaml file.
-
-Result:
-Services
-HTML5 Application
-
+You can find details on how to deploy the application to the Cloud Foundry Runtime [here](
+https://cap.cloud.sap/docs/guides/deployment/to-cf).
 
 ## Configure the Launchpad
 
