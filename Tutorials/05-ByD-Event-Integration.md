@@ -179,7 +179,7 @@ Create a new file `event-mesh.json` in the root folder of the application with t
     2. Add a new file `default-env.json` to the project root folder.
    
     3. Copy the sections referring to the properties `VCAP_SERVICES` and `VCAP_APPLICATION` into the new file, enclose the two property names by double quotes, and embrace it all by curly brackets. In result the file content should look like
-        ```json
+        ```javascript
         {
             "VCAP_SERVICES": {
                 //content            

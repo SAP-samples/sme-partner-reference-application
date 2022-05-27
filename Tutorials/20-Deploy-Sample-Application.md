@@ -39,12 +39,12 @@ We use this subaccount to host the *SAP Business Application Studio* (BAS), whic
     - Choose CF Organization + Space
     - Instance Name: `authorreadings-db`
 
-4. BTP Cockpit (subaccount level): Navigate to the *Service Marketplace* and subscribe/create instances of the following entities: 
+6. BTP Cockpit (subaccount level): Navigate to the *Service Marketplace* and subscribe/create instances of the following entities: 
     - *SAP Business Application Studio*, service plan *standard-edition (Application)*
     - *Event Mesh*, service plan *Standard (Application)*.
+    - *Launchpad Service*, service plan *standard (Application)*
 
-
-8. BTP Cockpit (subaccount level): Navigate to the *Security* > *Users* and assign the following role collections to the development user:
+7. BTP Cockpit (subaccount level): Navigate to the *Security* > *Users* and assign the following role collections to the development user:
     - All 3 roles of *SAP Business Application Studio*
     - All role collections refering to the Event Mesh and Enterprise Messaging respectively
     - Role collection *Launchpad_Admin*
@@ -54,15 +54,19 @@ We use this subaccount to host the *SAP Business Application Studio* (BAS), whic
 
 BTP Cockpit (subaccount level): Navigate to *Instances and Subscriptions*, open the *SAP Business Application Studio* and create a new *Dev Space* with kind *Full Stack Cloud Application*.
 
+Start and open the dev space and clone this GitHub repository (https://github.com/SAP-samples/sme-partner-reference-application).
+
 Build and deploy your application:
 
-1. Login to cloud foundry: Run command `cf login`, enter your development user/password and select the BTP provider subaccount for the application.
+1. Open a new terminal and login to cloud foundry: Run command `cf login`, enter your development user/password and select the BTP provider subaccount for the application.
 
-2. Run command `npm install` to install the messaging npm packages.
+2. Navigate to the sub-folder with the sample application using command `cd Applications/author-readings`.
 
-3. Build the project by selecting `Build MTA Project` in the context menu of file `mta.yaml`. 
+3. Run command `npm install` to install the messaging npm packages.
 
-4. Deploy the application by selecting `Deploy MTA Archive` in the context menu of file `./mta_archives/author-readings_1.0.0.mtar`.
+4. Build the project by selecting `Build MTA Project` in the context menu of file `mta.yaml`. 
+
+5. Deploy the application by selecting `Deploy MTA Archive` in the context menu of file `./mta_archives/author-readings_1.0.0.mtar`.
 
 Observe, that the message client `authorreadings` is now available in the event mesh application.
 
@@ -70,22 +74,25 @@ Observe, that the message client `authorreadings` is now available in the event 
 
 ## Configure the Event Mesh
 
-Create and configure the message client for outbound messages of the BTP app as decribed in chapter [Configure the message client for outbound messages](05-ByD-Event-Integration.md#configure-the-message-client-for-outbound-messages).
+Create and configure the message client for outbound messages of the BTP app as described in chapter [Configure the message client for outbound messages](05-ByD-Event-Integration.md#configure-the-message-client-for-outbound-messages).
 
-Create and configure the message client for ByD as decribed in chapter [Create the message client for ByD](05-ByD-Event-Integration.md#create-the-message-client-for-byd).
+Create and configure the message client for ByD as described in chapter [Create the message client for ByD](05-ByD-Event-Integration.md#create-the-message-client-for-byd).
 
-Configure ByD to emit event notifications for projects as decribed in chapter [Configure ByD to emit event notifications for projects](05-ByD-Event-Integration.md#configure-byd-to-emit-event-notifications-for-projects).
+Configure ByD to emit event notifications for projects as described in chapter [Configure ByD to emit event notifications for projects](05-ByD-Event-Integration.md#configure-byd-to-emit-event-notifications-for-projects).
 
 ## Configure the Launchpad
 
-Create and configure a launchpad site as decribed in chapter [Configure the Launchpad](03-One-Off-Deployment.md#configure-the-launchpad).
+Create and configure a launchpad site as described in chapter [Configure the Launchpad](03-One-Off-Deployment.md#configure-the-launchpad).
+
+> Note: The launchpad service has already been subscribed in chapter "*Setup BTP Subaccount*".
 
 ## Configure Authentication and Authorization
 
 Setup trust between the BTP subaccount and the *SAP Identity Authentication Service* and end user authorizations following the steps in chapter [Configure Authentication and Authorization](03-One-Off-Deployment.md#configure-authentication-and-authorization).
 
-BTP subaccount: Open menu item *Role Collections* and add the user group `Author_Reading_Manager` to role collections:
+BTP subaccount: Open menu item *Role Collections* and add the user group `Author_Reading_Admin` to role collections:
 - *Enterprise Messaging Administrator*
+- *Enterprise Messaging Developer* (required to test event notifications and to review the data payload of event notifications)
 - *AuditLog*
 
 ## Configure Single Sign-on for ByD

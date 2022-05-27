@@ -340,18 +340,22 @@ IAS Admin UI:
 	
 2. Open menu item *User Groups* and add user groups that represent typical user roles and enter a unique (technical) *Name* and a meaningful "Display Name*, for example:
 
- | Name:                      | Display name:              |
- | :------------------------- | :------------------------- |
- | admin                      | Administrator              |
- | author_reading_manager     | Author Reading Manager     |
- | author_reading_participant | Author Reading Participant |
+    | Name:                      | Display name:              |
+    | :------------------------- | :------------------------- |
+    | Author_Reading_Manager     | Author Reading Manager     |
+    | Author_Reading_Admin       | Author Reading Administrator |
 
 3. Open menu item *Applications*, open the application referring to the BTP subaccount with your application, and navigate to *Assertion Attributes*. 
 Check if the *User Attribute* "Groups" is already mapped to the *Assertion Attribute* "groups". If not, then add the attribute mapping.
 
 BTP subaccount:
 	
-4. Open menu item *Role Collections* and add the user groups (using the unique technical name of the user group) to the role collections that shall be assigned to the respective users with the use group, for example: add user group "author_reading_manager" to role collection "AuthorReadingManagerRoleCollection"; add the user group "admin" to the role collections "AuthorReadingAdminRoleCollection", "Launchpad_Admin" and "Subaccount Administrator".
+4. Open menu item *Role Collections* and add the user groups (using the unique technical name of the user group) to the role collections that shall be assigned to the respective users with the use group:
+
+    | Role Collection: | User Groups: |
+	| :---  | :---          |
+	| AuthorReadingManagerRoleCollection | Author_Reading_Manager |
+	| AuthorReadingAdminRoleCollection | Author_Reading_Admin, Launchpad_Admin, Subaccount Administrator |
 
 ### Login to the BTP Application and test Single Sign-on
 
