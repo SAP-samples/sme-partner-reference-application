@@ -37,14 +37,15 @@ Additionally, the sample showcases qualities relevant for enterprise-grade partn
 
 7. Standardized online development environment using the *Business Application Studio*
 8. State-of-the-art web application architecture based on HTML5, NodeJS and HANA Cloud
-9. UIs that fit to the SAP standard based on metadata-driven floorplan patterns, and out-of-the-box theming and personalization
-10. A draft concept to allow users to change data in multiple steps without publishing incomplete changes
-11. Enterprise-grade security by single sign-on and authentication in line with SAP product standards, and a role-based authorization concept
-12. Enterprise-ready compliance by personal data management and audit log
-13. Seamless frontend and back-channel integration with SAP ERP solutions
-14.	Delivering “open solutions” by integration-ready OData APIs and business events inline with SAP technology alignments
-15. Extensible by citizen user tools (AppGyver) to add web apps and mobile apps for customer specific use cases and user groups (planned)
-16. Deployment as one-off and multi-customer solution (planned) 
+9. Model-driven development based on the *SAP Cloud Application Programming Model* (CAP), *SAP Core Data Services* (CDS) and *Fiori Elements*
+10. User experiences that fit to the SAP standard based on standard SAP floorplan patterns, and out-of-the-box theming and personalization
+11. A draft concept to allow users to change data in multiple steps without publishing incomplete changes
+12. Enterprise-grade security by authentication and role-based authorizations in line with SAP product standards and technology alignments
+13. Enterprise-ready compliance by personal data management and audit log
+14. Seamless and secure frontend and back-channel integration with SAP ERP solutions
+15.	Delivering “open solutions” by integration-ready OData APIs and business events following SAP technology alignments
+16. Extensible by citizen user tools (AppGyver) to add web apps and mobile apps for customer specific use cases and user groups (planned)
+17. Deployment as one-off and multi-customer solution (planned) 
 
 ## Requirements
 
