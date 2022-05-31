@@ -19,8 +19,8 @@ The repository includes a sample application that is ready to deploy and run, an
 
 Assume you are an event manager and your job is to organize and run author readings and poetry slams for reading clubs, book fairs and other occasions. 
 
-Your company is running its business on an cloud ERP system provided by SAP and you mostly use the project management work center to plan and staff events, to collect costs and to purchase required equipments. 
-Additionally an SAP partner provided a side-by-side application named "Author Reading Managment" to publish author reading events and to register event participants and visitors. 
+Your company is running its business on an cloud ERP system provided by SAP and you mostly use the project management work center to plan and staff events, to collect costs and to purchase required equipment. 
+Additionally an SAP partner provided a side-by-side application named "Author Reading Management" to publish author reading events and to register event participants and visitors. 
 
 It was in particular important for you to separate the event publishing and participant registration from your ERP system for security and compliance reasons. Nevertheless, as a power user working in both systems you asked the partner to ensure a seamless user experience and navigation between the SAP system and the partner application.
 
