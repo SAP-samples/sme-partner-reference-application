@@ -108,4 +108,4 @@ Run command `npm install` to install the audit log npm packages.
 
 Build and deploy the application and observe that an audit log service instance has been created.
 
-See chapter [ByD Integration](../04-byd-integration/index.md) to add the audit log viewer to the ByD launchpad.
+See chapter [ByD Integration](04-ByD-Integration.md) to add the audit log viewer to the ByD launchpad.

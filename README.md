@@ -4,7 +4,7 @@
 
 ## Description
 
-The *SME Partner Reference Application* provides a "golden path" to build, run and integrate full-stack cloud applications on the *SAP Business Technology Platform* .
+The *SME Partner Reference Application* provides a "golden path" to build, run and integrate full-stack cloud applications on the *SAP Business Technology Platform*.
 
 With this repository we want to provide guidance for SAP partners in the market for small and midsize enterprizes (SME) to extend SAP ERP solutions by side-by-side cloud applications running on the *SAP Business Technology Platform* (BTP). This guidance comprises
 - an opinionated pre-selection of BTP components with architecture guidance tailored for the SME market, 
@@ -21,6 +21,8 @@ Your company is running its business on an cloud ERP system provided by SAP and 
 Additionally an SAP partner provided a side-by-side application named "Author Reading Management" to publish author reading events and to register event participants and visitors. 
 
 It was in particular important for you to separate the event publishing and participant registration from your ERP system for security and compliance reasons. Nevertheless, as a power user working in both systems you asked the partner to ensure a seamless user experience and navigation between the SAP system and the partner application.
+
+<img src="./Tutorials/resources/readme_sample-use-case.jpg" width="80%">
 
 Features of the author reading application:
 
@@ -66,7 +68,7 @@ After deployment of the application you may follow the tutorial "*A Guided Tour 
 
 ## Tutorials
 
-Re-build the application from scratch following a guided tour and a progressive development approach.
+Re-build, deploy and run the sample application from scratch following a guided tour and a progressive development approach.
 
 1. Build a full-stack BTP Application with One-off Deployment in a Customer BTP Account
     1. [Prepare the BTP Account](Tutorials/01-Prepare-BTP-Account.md) 
