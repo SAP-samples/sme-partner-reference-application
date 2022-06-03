@@ -47,6 +47,9 @@ Additionally, the sample showcases qualities relevant for enterprise-grade partn
 16. Extensible by citizen user tools (AppGyver) to add web apps and mobile apps for customer specific use cases and user groups (planned)
 17. Deployment as one-off and multi-customer solution (planned) 
 
+Does this sample application meet your needs as an SAP partner?
+Your feedback and ideas are welcome and we are looking forward to a vivid conversation about the *SME Partner Reference Application* in our [SAP Community](https://blogs.sap.com/2022/06/03/build-and-run-cloud-applications-on-the-sap-btp/).
+
 ## Requirements
 
 The application is based on the *SAP Business Technology Platform* (BTP) and SAP Cloud ERP Solutions. Therefore you need 
