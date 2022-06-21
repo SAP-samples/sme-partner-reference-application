@@ -11,7 +11,7 @@ Have a look at the [CAP Command Line Interface Documentation](https://cap.cloud.
 
 The entity model represents actually the relational database model of the application. All entities (tables), their relations (associations) and additional meta data (annotations) are maintained in the entitiy models. See also [CAP Documentation of Entity Models](https://cap.cloud.sap/docs/guides/domain-models).
 
-The CAP Programming Model defines that all Entity Models (Domain Models) must be stored in the `/db` folder of the project. Therefore let's create a new file `/db/entity-model.cds` and add our appliation entities.
+The CAP Programming Model defines that all Entity Models (Domain Models) must be stored in the `/db` folder of the project. Therefore let's create a new file `/db/entity-models.cds` and add our appliation entities.
 
 Within a `.cds` file you can specify a namespace, which is used to structure the entities and avoid too long names when using them. Reuse components can be included adding a `using` statement. You can define as many entities as required by using the `entity` keyword.
 
