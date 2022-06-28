@@ -31,7 +31,7 @@ The corresponding entity is encoded in the filename by concatenating the namespa
 
 After you have defined the entity model a set of [CAP Services](https://cap.cloud.sap/docs/guides/providing-services) must be defined to add business logic and external APIs of the application. All service definitions must be located in the `/srv` folder. Therefore create a new file `/srv/service-models.cds`.
 
-> Copy the [Service Definition](../Applications/author-readings/srv/service-models.cds) into your project.
+> Copy the [Service Definition](../Applications/author-readings/srv/service-models.cds) into your project. You may need to commend out service model parts that refer to the API-led integration with the ERP solution; compare [Service Definition w/o remote services](../Applications/author-readings/srv/service-models_without_ERP-integration.backup).
 
 ## Add Localization Content
 
