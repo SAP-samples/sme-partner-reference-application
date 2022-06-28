@@ -87,6 +87,8 @@ Re-build, deploy and run the sample application from scratch following a guided 
 
 3. [A Guided Tour to explore the Capabilities of the Sample Application](Tutorials/30-Guided-Tour.md)
 
+4. Adopt the BTP Application for Multi-Tenant Deployment
+
 Related resources:
 - [SAP Cloud Application Programming Model](https://cap.cloud.sap/docs/)
 - [SAP Discovery Center](https://discovery-center.cloud.sap/missionssearch)
