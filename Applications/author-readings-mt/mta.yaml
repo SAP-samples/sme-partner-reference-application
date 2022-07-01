@@ -1,6 +1,6 @@
 _schema-version: "3.1"
 ID: author-readings
-description: SAP Demo Application
+description: SAP Sample Application
 version: 1.0.0
 
 # -------------------------------------------------------------------------
@@ -16,52 +16,44 @@ modules:
   - name: author-readings-db
   - name: author-readings-uaa
   - name: author-readings-destination-service
-  - name: author-readings-eventmesh
-  - name: author-readings-auditlog  
+  - name: author-readings-auditlog 
+  - name: author-readings-registry 
   provides:
   - name: srv-api
     properties:
       srv-url: ${default-url}
+  - name: mtx-api
+    properties:
+      mtx-url: ${default-url}
   parameters:
     buildpack: nodejs_buildpack
-
-# DB deployer module
-- name: author-readings-db-deployer
-  type: hdb
-  path: gen/db
-  requires:
-  - name: author-readings-db
-  - name: author-readings-uaa
+  properties:
+    SUBSCRIPTION_URL: ${protocol}://\${tenant_subdomain}-${default-uri}
+    SUBSCRIPTION_URL_REPLACEMENT_RULES: [ [ '-srv', '' ] ]
+      
+# Application router module
+- name: author-readings
+  type: approuter.nodejs
+  path: app/ 
   parameters:
-    buildpack: nodejs_buildpack
-
-# App UI content deployer module (upload web app content into the HTML5 application repository)
-- name: author-readings-app-content
-  type: com.sap.application.content
-  path: .
+    keep-existing-routes: true
+    disk-quota: 256M
+    memory: 256M
   requires:
-  - name: author-readings-repo-host
-    parameters:
-      content-target: true
-  build-parameters:
-    build-result: resources
-    requires:
-    - artifacts:
-      - authorreadingmanager.zip
-      name: authorreadingmanager
-      target-path: resources/
-
-# App UI resources module
-- name: authorreadingmanager
-  type: html5
-  path: app/authorreadingmanager
-  build-parameters:
-    build-result: dist
-    builder: custom
-    commands:
-    - npm install
-    - npm run build:cf
-    supported-platforms: []
+    - name: srv-api
+      group: destinations
+      properties:
+        name: srv-api # Compare ./app/xs-app.json
+        url: ~{srv-url}
+        forwardAuthToken: true
+    - name: author-readings-uaa
+    - name: mtx-api
+      group: destinations
+      properties:
+        name: mtx-api 
+        url: ~{mtx-url}
+  properties:
+    TENANT_HOST_PATTERN: "^(.*)-${default-uri}"
 
 # Destination content module (define destinations with service keys)
 - name: author-readings-destination-content
@@ -70,10 +62,6 @@ modules:
   - name: author-readings-destination-service
     parameters:
       content-target: true
-  - name: author-readings-repo-host
-    parameters:
-      service-key:
-        name: author-readings-repo-host-key
   - name: author-readings-uaa
     parameters:
       service-key:
@@ -82,10 +70,6 @@ modules:
     content:
       instance:
         destinations:
-        - Name: authorreadingmanager-repo-host-dest
-          ServiceInstanceName: author-readings-html5-srv
-          ServiceKeyName: author-readings-repo-host-key
-          sap.cloud.service: authorreadingmanager
         - Authentication: OAuth2UserTokenExchange
           Name: authorreadingmanager-uaa-fiori-dest
           ServiceInstanceName: author-readings-uaa
@@ -102,20 +86,12 @@ resources:
 
 # Database
 - name: author-readings-db
-  type: com.sap.xs.hdi-container
-  parameters:
-    service: hana
-    service-plan: hdi-shared
-  properties:
-    hdi-service-name: ${service-name}
-
-# HTML5 app repository
-- name: author-readings-repo-host
   type: org.cloudfoundry.managed-service
   parameters:
-    service: html5-apps-repo
-    service-name: author-readings-html5-srv
-    service-plan: app-host
+    service: service-manager
+    service-plan: container
+  properties:
+    hdi-service-name: ${service-name}
 
 # Destination service
 - name: author-readings-destination-service
@@ -151,23 +127,12 @@ resources:
   type: org.cloudfoundry.managed-service
   parameters:
     config:
-      tenant-mode: dedicated
-      xsappname: author-readings-${space}
+      tenant-mode: shared
+      xsappname: author-readings-${space}  # App name + CF space name
     path: ./xs-security.json
     service: xsuaa
     service-name: author-readings-uaa
     service-plan: application
-
-# Event Mesh service
-- name: author-readings-eventmesh
-  type: org.cloudfoundry.managed-service
-  parameters:
-    path: ./event-mesh.json
-    config:
-      emname: "authorreadings" 
-      namespace: "sap/samples/authorreadings"
-    service: enterprise-messaging
-    service-plan: default
 
 # Audit log service
 - name: author-readings-auditlog
@@ -175,6 +140,27 @@ resources:
   parameters:
     service: auditlog
     service-plan: standard 
+
+# Service registry
+- name: author-readings-registry
+  type: org.cloudfoundry.managed-service
+  requires:
+    - name: mtx-api
+  parameters:
+    service: saas-registry
+    service-plan: application
+    config:
+      xsappname: author-readings-${space}
+      appName: author-readings-${space}
+      displayName: author-readings
+      description: SAP Sample Application.
+      category: 'Category'
+      appUrls:
+        getDependencies: ~{mtx-api/mtx-url}/mtx/v1/provisioning/dependencies
+        onSubscription: ~{mtx-api/mtx-url}/mtx/v1/provisioning/tenant/{tenantId}
+        onSubscriptionAsync: false
+        onUnSubscriptionAsync: false
+        callbackTimeoutMillis: 300000
 
 # -------------------------------------------------------------------------
 # Parameters
