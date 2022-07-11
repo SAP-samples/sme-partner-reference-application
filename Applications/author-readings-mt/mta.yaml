@@ -46,6 +46,12 @@ modules:
     - name: srv-multi-tenancy
     - name: author-readings-auditlog
     - name: author-readings-registry
+    - name: author-readings-html5-runtime    
+  provides:
+  - name: app-binding
+    properties:
+      app-fqdn: ${approuter-url}.${domain}
+      app-url: https://~{app-binding/app-fqdn}      
   properties:
     TENANT_HOST_PATTERN: "^(.*).${app-url}.${domain}"
 
@@ -90,30 +96,36 @@ modules:
   - name: mtx-srv-api # required by consumers of CAP services (e.g. approuter)
     properties:
       mtx-srv-url: ${protocol}://${mtx-srv-url}.${domain} # ${default-url}
-                
-# Destination Module (destinations to connect to cloud ERP solutions)
-- name: author-readings-destination-content
+
+# App UI Content Deployer Module (deploy web app content into the HTML5 application repository)
+- name: author-readings-app-deployer
   type: com.sap.application.content
+  path: gen
   requires:
-  - name: author-readings-destination-service
+  - name: author-readings-html5-repo-host
     parameters:
       content-target: true
   - name: author-readings-uaa
-    parameters:
-      service-key:
-        name: author-readings-uaa-key
-  parameters:
-    content:
-      instance:
-        destinations:
-        - Authentication: OAuth2UserTokenExchange
-          Name: authorreadingmanager-uaa-fiori-dest
-          ServiceInstanceName: author-readings-uaa
-          ServiceKeyName: author-readings-uaa-key
-          sap.cloud.service: authorreadingmanager
-        existing_destinations_policy: ignore
   build-parameters:
-    no-source: true
+    build-result: resources
+    requires:
+    - artifacts:
+      - authorreadingmanager.zip
+      name: authorreadingmanager
+      target-path: resources/
+
+# App UI Resource Module
+- name: authorreadingmanager
+  type: html5
+  path: app/authorreadingmanager
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+
 
 # -------------------------------------------------------------------------
 #  Resources
@@ -121,7 +133,7 @@ modules:
 
 resources:
 
-# Database
+# Service Manager
 - name: author-readings-service-manager
   type: org.cloudfoundry.managed-service
   parameters:
@@ -134,30 +146,8 @@ resources:
 - name: author-readings-destination-service
   type: org.cloudfoundry.managed-service
   parameters:
-    config:
-      HTML5Runtime_enabled: true
-      init_data:
-        instance:
-          destinations:
-          - Authentication: NoAuthentication
-            Name: ui5
-            ProxyType: Internet
-            Type: HTTP
-            URL: https://ui5.sap.com
-          - Authentication: NoAuthentication
-            Name: launchpad
-            ProxyType: Internet
-            Type: HTTP
-            URL: ~{srv-api/srv-url}
-            HTML5.DynamicDestination: true
-            HTML5.ForwardAuthToken: true
-          existing_destinations_policy: update
-      version: 1.0.0
     service: destination
-    service-name: author-readings-destination-service
     service-plan: lite
-  requires:
-  - name: srv-api
 
 # UAA service
 - name: author-readings-uaa
@@ -165,36 +155,50 @@ resources:
   parameters:
     config:
       tenant-mode: shared
-      xsappname: author-readings-${space}  # App name + CF space name
+      xsappname: ${xsappname}  
     path: ./xs-security.json
     service: xsuaa
     service-name: author-readings-uaa
-    service-plan: application
+    service-plan: broker
 
-# Audit log service
+# Audit Log service
 - name: author-readings-auditlog
   type: org.cloudfoundry.managed-service
   parameters:
     service: auditlog
-    service-plan: standard 
+    service-plan: oauth2 
 
-# Service registry
+# Service Registry
 - name: author-readings-registry
   type: org.cloudfoundry.managed-service
   requires:
-    - name: mtx-api
+    - name: app-binding
   parameters:
     service: saas-registry
     service-plan: application
     config:
-      xsappname: author-readings-${space}
-      appName: author-readings-${space}
-      displayName: author-readings
-      description: SAP Sample Application.
+      xsappname: ${xsappname}
+      appName: ${xsappname}
+      displayName: ${displayname}
+      description: ${displayname}
       category: 'Category'
       appUrls:
-        getDependencies: ~{mtx-api/mtx-url}/mtx/v1/provisioning/dependencies
-        onSubscription: ~{mtx-api/mtx-url}/mtx/v1/provisioning/tenant/{tenantId}
-        onSubscriptionAsync: false
-        onUnSubscriptionAsync: false
+        getDependencies: ~{app-binding/app-url}/mtx/v1/provisioning/dependencies
+        onSubscription: ~{app-binding/app-url}/mtx/v1/provisioning/tenant/{tenantId}
         callbackTimeoutMillis: 300000
+
+# HTML5 Runtime
+- name: author-readings-html5-runtime
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-plan: app-runtime
+
+# HTML5 Repository service
+- name: author-readings-html5-repo-host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-plan: app-host
+    config:
+      sizeLimit: 10

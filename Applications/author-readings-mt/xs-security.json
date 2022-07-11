@@ -22,15 +22,7 @@
           {
             "name": "$XSAPPNAME.mtdeployment",
             "description": "Deploy applications"
-          },
-          {
-            "name": "$XSAPPNAME.ExtendCDS",
-            "description": "Extend CDS applications"
-          },
-          {
-            "name": "$XSAPPNAME.ExtendCDSdelete",
-            "description": "Extend CDS applications with undeployments"
-          }        
+          }
     ],
     "attributes": [],
     "role-templates": [
@@ -58,21 +50,7 @@
               "$XSAPPNAME.mtdeployment",
               "$XSAPPNAME.mtcallback"
             ]
-          },
-          {
-            "name": "ExtensionDeveloper",
-            "description": "Extend application",
-            "scope-references": [
-              "$XSAPPNAME.ExtendCDS"
-            ]
-          },
-          {
-            "name": "ExtensionDeveloperUndeploy",
-            "description": "Undeploy extension",
-            "scope-references": [
-              "$XSAPPNAME.ExtendCDSdelete"
-            ]
-          }     
+          }
     ],
     "role-collections": [
         {
