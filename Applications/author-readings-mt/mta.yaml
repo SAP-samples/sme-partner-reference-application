@@ -1,40 +1,36 @@
 _schema-version: "3.1"
 ID: author-readings
-description: SAP Sample Application
+description: "SME Partner Reference Sample Application"
 version: 1.0.0
 
+parameters:
+  displayname: SME Partner Reference Sample Application
+  xsappname: author-reading-${org}-${space}
+  app-url: ${org}-${space}
+  approuter-url: ${app-url}-approuter
+  srv-url: ${app-url}-srv
+  mtx-srv-url: ${app-url}-mtx-srv
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true
+  
+build-parameters:
+  before-all:
+  - builder: custom
+    commands:
+    - npm ci --production
+    - npx -p @sap/cds-dk cds build --production
+
+
 # -------------------------------------------------------------------------
-# Modules
+#  Modules 
+# -------------------------------------------------------------------------
 
 modules:
 
-# Service module
-- name: author-readings-srv
+# Application Router Module
+- name: author-readings-approuter
   type: nodejs
-  path: gen/srv
-  requires:
-  - name: author-readings-db
-  - name: author-readings-uaa
-  - name: author-readings-destination-service
-  - name: author-readings-auditlog 
-  - name: author-readings-registry 
-  provides:
-  - name: srv-api
-    properties:
-      srv-url: ${default-url}
-  - name: mtx-api
-    properties:
-      mtx-url: ${default-url}
-  parameters:
-    buildpack: nodejs_buildpack
-  properties:
-    SUBSCRIPTION_URL: ${protocol}://\${tenant_subdomain}-${default-uri}
-    SUBSCRIPTION_URL_REPLACEMENT_RULES: [ [ '-srv', '' ] ]
-      
-# Application router module
-- name: author-readings
-  type: approuter.nodejs
-  path: app/ 
+  path: approuter 
   parameters:
     keep-existing-routes: true
     disk-quota: 256M
@@ -43,19 +39,59 @@ modules:
     - name: srv-api
       group: destinations
       properties:
-        name: srv-api # Compare ./app/xs-app.json
+        name: srv-api # Compare ./app/authorreadingmanager/xs-app.json
         url: ~{srv-url}
         forwardAuthToken: true
     - name: author-readings-uaa
-    - name: mtx-api
-      group: destinations
-      properties:
-        name: mtx-api 
-        url: ~{mtx-url}
+    - name: srv-multi-tenancy
+    - name: author-readings-auditlog
+    - name: author-readings-registry
   properties:
-    TENANT_HOST_PATTERN: "^(.*)-${default-uri}"
+    TENANT_HOST_PATTERN: "^(.*).${app-url}.${domain}"
 
-# Destination content module (define destinations with service keys)
+# Service Module
+- name: author-readings-srv
+  type: nodejs
+  path: gen/srv
+  requires:
+  - name: author-readings-service-manager
+  - name: author-readings-uaa
+  - name: author-readings-destination-service
+  - name: author-readings-auditlog 
+  - name: author-readings-registry 
+  provides:
+  - name: srv-api
+    properties:
+      srv-url: ${protocol}://${srv-url}.${domain} # ${default-url}
+  - name: srv-multi-tenancy
+    properties:
+      tenant-delimiter: ${tenant-delimiter}
+  parameters:
+    buildpack: nodejs_buildpack
+  properties:
+    SUBSCRIPTION_URL: ${protocol}://\${tenant_subdomain}-${default-uri}
+    SUBSCRIPTION_URL_REPLACEMENT_RULES: [ [ '-srv', '' ] ]
+
+# Multi Tenancy Service Module (Onboarding, Upgrading)
+- name: author-readings-mtx-srv
+  type: nodejs
+  path: gen/srv
+  requires:
+  - name: author-readings-auditlog
+  - name: author-readings-uaa
+  - name: author-readings-service-manager
+  provides:
+  - name: author-readings-mtx-srv-destination
+    public: true
+    properties:
+      name: mtx-srv-api
+      url: ${protocol}://${mtx-srv-url}.${domain}
+      forwardAuthToken: true
+  - name: mtx-srv-api # required by consumers of CAP services (e.g. approuter)
+    properties:
+      mtx-srv-url: ${protocol}://${mtx-srv-url}.${domain} # ${default-url}
+                
+# Destination Module (destinations to connect to cloud ERP solutions)
 - name: author-readings-destination-content
   type: com.sap.application.content
   requires:
@@ -80,12 +116,13 @@ modules:
     no-source: true
 
 # -------------------------------------------------------------------------
-# Resources
+#  Resources
+# -------------------------------------------------------------------------
 
 resources:
 
 # Database
-- name: author-readings-db
+- name: author-readings-service-manager
   type: org.cloudfoundry.managed-service
   parameters:
     service: service-manager
@@ -161,17 +198,3 @@ resources:
         onSubscriptionAsync: false
         onUnSubscriptionAsync: false
         callbackTimeoutMillis: 300000
-
-# -------------------------------------------------------------------------
-# Parameters
-
-parameters:
-  deploy_mode: html5-repo
-  enable-parallel-deployments: true
-  
-build-parameters:
-  before-all:
-  - builder: custom
-    commands:
-    - npm ci --production
-    - npx -p @sap/cds-dk cds build --production

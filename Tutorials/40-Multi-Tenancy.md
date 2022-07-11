@@ -92,6 +92,15 @@ In the light of this setup we simplify our application and replace the usage of 
     ```
     > Note: The application router module refers to the mtx module that we will add in the next step; dont't bother about the reference error here.
 
+4. Create new folder `approuter` on root level of project `author-readings-mt`. Move files `./app/package.json` and `./app/xs-app.json` to folder ./approuter`. 
+    > Note: By this step we run and configure the application router centrally such that it can be **reused** by multiple web applications (for example if you create a second app for author reading participants later on). Furthermore the appplication router is now ready for **exit implementations** (for example to set specific environment variables, properties, URL header properties like access origins for CORS checks, write log for tracing, ...).
+
+5. Open file `./approuter/xs-app.json` and remove the routes. The xs-app.json only contains generic routes that apply for all web applications. In our example, we have app specific routes only. However, we have to keep the xs-app.json for the application router for project consistency.
+
+6. Adopt file `./app/authorreadingmanager/xs-app.json`. 
+**TODO**
+
+
 ### Add Configuration for Multi-Tenancy 
 
 In this step we refactor the project deployment configuration to run a multi-tenant application with subscriptions.
@@ -287,6 +296,10 @@ In this step we refactor the project deployment configuration to run a multi-ten
         ```
 
     9. Remove the resources *HTML5 app repository* (author-readings-repo-host) and *Event Mesh service* (author-readings-eventmesh).    
+
+    10. Define mtx as separate node module such that tenant lifecycle operations to be done on a separate application to not interfere with the work load of app users.
+    Goal: Separating workloads: 1. frontend workload, 2. backend workload, 3. tenant lifecycle operations.
+
 
 3. Open file `xs-security.json` on the project root level and apply the following changes:
 
