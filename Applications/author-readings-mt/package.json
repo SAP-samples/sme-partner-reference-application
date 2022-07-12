@@ -49,11 +49,8 @@
                 "auth": {
                   "kind": "xsuaa"
                 },
-                "approuter": {
-                  "kind": "cloudfoundry"
-                }
-            },
-            "multitenancy": true,
+                "multitenancy": true
+            },            
             "byd_khproject": {
                 "kind": "odata-v2",
                 "model": "srv/external/byd_khproject",

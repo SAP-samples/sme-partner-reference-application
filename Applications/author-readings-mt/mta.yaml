@@ -32,7 +32,6 @@ modules:
   type: nodejs
   path: approuter 
   parameters:
-    keep-existing-routes: true
     disk-quota: 256M
     memory: 256M
   requires:
@@ -43,15 +42,9 @@ modules:
         url: ~{srv-url}
         forwardAuthToken: true
     - name: author-readings-uaa
-    - name: srv-multi-tenancy
     - name: author-readings-auditlog
     - name: author-readings-registry
     - name: author-readings-html5-runtime    
-  provides:
-  - name: app-binding
-    properties:
-      app-fqdn: ${approuter-url}.${domain}
-      app-url: https://~{app-binding/app-fqdn}      
   properties:
     TENANT_HOST_PATTERN: "^(.*).${app-url}.${domain}"
 
@@ -75,8 +68,7 @@ modules:
   parameters:
     buildpack: nodejs_buildpack
   properties:
-    SUBSCRIPTION_URL: ${protocol}://\${tenant_subdomain}-${default-uri}
-    SUBSCRIPTION_URL_REPLACEMENT_RULES: [ [ '-srv', '' ] ]
+    SUBSCRIPTION_URL: ${protocol}://\${tenant_subdomain}.${srv-url}.${domain} # ${default-url}    
 
 # Multi Tenancy Service Module (Onboarding, Upgrading)
 - name: author-readings-mtx-srv
@@ -87,6 +79,10 @@ modules:
   - name: author-readings-uaa
   - name: author-readings-service-manager
   provides:
+  - name: mtx-binding
+    properties:
+      app-fqdn: ${mtx-srv-url}.${domain}
+      app-url: ${protocol}://~{mtx-binding/app-fqdn}  
   - name: author-readings-mtx-srv-destination
     public: true
     properties:
@@ -172,7 +168,7 @@ resources:
 - name: author-readings-registry
   type: org.cloudfoundry.managed-service
   requires:
-    - name: app-binding
+    - name: mtx-binding
   parameters:
     service: saas-registry
     service-plan: application
@@ -183,8 +179,8 @@ resources:
       description: ${displayname}
       category: 'Category'
       appUrls:
-        getDependencies: ~{app-binding/app-url}/mtx/v1/provisioning/dependencies
-        onSubscription: ~{app-binding/app-url}/mtx/v1/provisioning/tenant/{tenantId}
+        getDependencies: ~{mtx-binding/app-url}/mtx/v1/provisioning/dependencies
+        onSubscription: ~{mtx-binding/app-url}/mtx/v1/provisioning/tenant/{tenantId}
         callbackTimeoutMillis: 300000
 
 # HTML5 Runtime
