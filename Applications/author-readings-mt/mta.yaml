@@ -138,14 +138,14 @@ resources:
   properties:
     hdi-service-name: ${service-name}
 
-# Destination service
+# Destination Service
 - name: author-readings-destination-service
   type: org.cloudfoundry.managed-service
   parameters:
     service: destination
     service-plan: lite
 
-# UAA service
+# UAA service (Authorization and Trust Management Service)
 - name: author-readings-uaa
   type: org.cloudfoundry.managed-service
   parameters:
@@ -157,14 +157,14 @@ resources:
     service-name: author-readings-uaa
     service-plan: broker
 
-# Audit Log service
+# Audit Log Service 
 - name: author-readings-auditlog
   type: org.cloudfoundry.managed-service
   parameters:
     service: auditlog
     service-plan: oauth2 
 
-# Service Registry
+# Service Registry (SaaS Provisioning Service)
 - name: author-readings-registry
   type: org.cloudfoundry.managed-service
   requires:
@@ -183,14 +183,14 @@ resources:
         onSubscription: ~{mtx-binding/app-url}/mtx/v1/provisioning/tenant/{tenantId}
         callbackTimeoutMillis: 300000
 
-# HTML5 Runtime
+# HTML5 Runtime (HTML5 Application Repository Service)
 - name: author-readings-html5-runtime
   type: org.cloudfoundry.managed-service
   parameters:
     service: html5-apps-repo
     service-plan: app-runtime
 
-# HTML5 Repository service
+# HTML5 Repository (HTML5 Application Repository Service)
 - name: author-readings-html5-repo-host
   type: org.cloudfoundry.managed-service
   parameters:
