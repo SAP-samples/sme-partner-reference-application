@@ -464,8 +464,13 @@ BTP Cockpit (provider subaccount):
 
 ### Deploy the Multi-Tenant Application
 
+1. npm install
+2. build
+3. deploy
 
 ## Provisioning of BTP Consumer Tenant
+
+
 
 ### Prepare a BTP Consumer Subaccount
 
