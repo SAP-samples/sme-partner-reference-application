@@ -64,7 +64,7 @@ modules:
       srv-url: ${protocol}://${srv-url}.${domain} # ${default-url}
   - name: srv-multi-tenancy
     properties:
-      tenant-delimiter: ${tenant-delimiter}
+      tenant-delimiter: "."
   parameters:
     buildpack: nodejs_buildpack
   properties:
@@ -144,6 +144,17 @@ resources:
   parameters:
     service: destination
     service-plan: lite
+    config:
+      HTML5Runtime_enabled: true
+      init_data:
+        instance:
+          destinations:
+          - Name: ui5                        
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com/1.103.1/
+            Authentication: NoAuthentication
+          existing_destinations_policy: update
 
 # UAA service (Authorization and Trust Management Service)
 - name: author-readings-uaa
