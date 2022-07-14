@@ -29,5 +29,4 @@ mta_archives/
 *.iml
 *.flattened-pom.xml
 
-package-lock.json
 default-*.json

@@ -44,13 +44,13 @@
             },
             "[production]": {
                 "db": {
-                  "kind": "hana-mt"
+                    "kind": "hana-mt"
                 },
                 "auth": {
-                  "kind": "xsuaa"
+                    "kind": "xsuaa"
                 },
                 "multitenancy": true
-            },            
+            },
             "byd_khproject": {
                 "kind": "odata-v2",
                 "model": "srv/external/byd_khproject",
@@ -103,7 +103,7 @@
             "element-prefix": "Z_",
             "namespace-blocklist": [],
             "extension-allowlist": []
-        }        
+        }
     },
     "sapux": [
         "app/authorreadingmanager"
