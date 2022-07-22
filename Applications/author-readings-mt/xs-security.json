@@ -20,6 +20,13 @@
             ]
           },
           {
+            "name": "$XSAPPNAME.Callback",
+            "description": "Multi Tenancy Callback Access (approuter)",
+            "grant-as-authority-to-apps": [
+              "$XSAPPNAME(application,sap-provisioning,tenant-onboarding)"
+            ]
+          },
+          {
             "name": "$XSAPPNAME.mtdeployment",
             "description": "Deploy applications"
           }

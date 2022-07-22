@@ -99,7 +99,7 @@
         "hana": {
             "deploy-format": "hdbtable"
         },
-        "mtx": {
+        "mtx": {            
             "element-prefix": "Z_",
             "namespace-blocklist": [],
             "extension-allowlist": []

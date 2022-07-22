@@ -9,6 +9,7 @@ node_modules/
 target/
 dist/
 resources/
+*.*-mt_mta_build_tmp
 
 # Web IDE, App Studio
 .che/
@@ -19,6 +20,7 @@ resources/
 # MTA
 *_mta_build_tmp
 *.mtar
+mtad.yaml
 mta_archives/
 
 # Other
