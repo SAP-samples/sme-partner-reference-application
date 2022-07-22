@@ -35,7 +35,7 @@ For this navigate to the BTP Global Account and go to *Entitlements* and *Entity
 
 <img src="./resources/enableBAS1.png" width="50%">
 
-Press on *Configure Entitlements* and then *Add Service Plans*
+Press on *Configure Entitlements* and then *Add Service Plans*. Select the *SAP Business Application Studio* entitlement and decide for an available plan.
 
 <img src="./resources/enableBAS2.png" width="50%">
 
