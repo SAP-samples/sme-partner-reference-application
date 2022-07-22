@@ -57,7 +57,7 @@ Three role collections have been added by *SAP Business Application Studio* alre
 
 <img src="./resources/enableBAS6.png" width="50%">
 
-Now you can start the *SAP Business Application Studio*. If the access is denied wait some seconds and try again.
+Now you can start the *SAP Business Application Studio*. If the access is denied wait some seconds and try again. You may need to clear your browser cache.
 
 <img src="./resources/startBAS.png" width="50%">
 
