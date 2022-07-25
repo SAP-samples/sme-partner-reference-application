@@ -64,7 +64,7 @@ We are using the *Business Application Studio* as standardized development envir
 
 You can start your journey following two paths:
 
-1. Deploy and run the sample application as provided in this respository following the tutorial "*Deploy the Sample Application as provided in a Customer BTP Account*".
+1. Deploy and run the sample application as provided in this respository following the tutorial [Deploy the Sample Application as provided in a Customer BTP Account](./Tutorials/20-Deploy-Sample-Application.md).
 
 2. Re-build the application from scratch following tutorial "*Build a full-stack BTP Application with One-off Deployment in a Customer BTP Account*".
 
