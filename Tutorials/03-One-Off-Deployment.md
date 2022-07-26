@@ -263,7 +263,7 @@ In this step, you’ll assign your app to the "Everyone" role. This is a default
 
 10. Click the role *Everyone* to open the role editor.
 
-11. Edit the role: On the *Assignments*-panel, click into the search box to get the list of available apps. Click on "+"-symbol behind your app to assign your app to the role.
+11. Press the button *Edit*.  On the *Assignments*-panel, click into the search box to get the list of available apps. Click on "+"-symbol behind your app to assign your app to the role.
 
 12. Save the role.
 
