@@ -6,14 +6,21 @@ In our approach of progressive development from a customer-specific single-tenan
 1. Open a terminal and navigate to folder *Applications* using the command `cd Applications/`.
 2. Copy the author readings application using the command `cp -R author-readings/ author-readings-mt/`.
 
-In result you have a second (identical) application in folder `author-readings-mt/`. This application is using the same names and IDs as the single tenant version in folder `author-readings/` and therefore both apps cannot be deployed into the same BTP subaccount. Hence, in all following steps we create new subaccounts for the multi-tenant version of our author readings application to avoid name clashes.
+In result you have a second (identical) application in folder `author-readings-mt/`. This application is using the same names and IDs as the single tenant version in folder `./author-readings` and therefore both apps cannot be deployed into the same BTP subaccount. Hence, we create new BTP provider and consumer subaccounts for the multi-tenant version of our author readings application to avoid name clashes.
 
 ## Enable Multi-Tenancy
 
-The enablement of multi-tenancy basically requires 3 steps:
-1. Replace the SAP Launchpad by a custom application router. 
-2. Add and configure the multi-tenant extension module (mtx-module) and adopt service plans where needed.
-3. Remove the event-based integration based on the SAP Event Mesh, which does not yet support multi-tenancy. 
+The enablement of multi-tenancy basically requires 5 steps:
+1. Replace the SAP Launchpad by a custom application router, which we setup as a separate module. 
+2. Add and configure the multi-tenant extension module (mtx-module) which handles the subscription and tenant lifecycle processes.
+3. Incorporate BTP resources like the Service Manager and the SaaS Provisioning Service to manage and provision multi-tenant applications.
+4. Define tenant URL patterns and re-configure routes and destinations accodingly.
+5. Remove the event-based integration based on the SAP Event Mesh, which does not yet support multi-tenancy. 
+
+In result we will have an application with three separate major modules running on separated workloads:
+- the **application services module**, which processes the application services and the web app (the web app could be outsourced in a separate module later as well),
+- the **mtx module**, which processes tenant onboarding and other lifecycle operations, and
+- the **application router** as single entry point and to manage access to all modules and used services.
 
 ### Add Custom Application Router 
 
@@ -401,7 +408,7 @@ To verify your modifications check the files in the samle application:
 
 ## Multi-Tenant Deployment
 
-### Create a BTP Provider Subaccount
+### Setup BTP Provider Subaccount
 
 BTP Cockpit (Global account): Create a provider subaccount and assign required entitlements.
 
@@ -429,13 +436,13 @@ Relevant entity assigments defaulted at subaccount creation (no action required)
 - *SaaS Provisioning Service*, service plan *application*
 - *HTML5 Application Repository Service*, service plans *app-runtime* and *app-host*
 
-### Maintain Provider Subaccount Administrators
+#### Maintain Provider Subaccount Administrators
 
 BTP Cockpit (provider subaccount): Maintain application administrators.
 
 1. Open menu item *Security - Users* and enter users that should toke over the role of subaccount administrators. 
 
-### Enable Cloud Foundry 
+#### Enable Cloud Foundry 
 
 BTP Cockpit (provider subaccount): Create a Cloud Foundry space to host the database and the runtime.
 
@@ -452,7 +459,7 @@ BTP Cockpit (provider subaccount): Create a Cloud Foundry space to host the data
 
 > Note: While choosing the technical names, keep in mind that the application URL will be composed of the application name, the org name, the space name and the domain. Therefore, try to keep it short, unique and avoid duplicate URL components.
 
-### Create a HANA database
+#### Create a HANA database
 
 BTP Cockpit (provider subaccount):
 
@@ -462,17 +469,15 @@ BTP Cockpit (provider subaccount):
     - Enter a password
     - Save
 
-### Deploy the Multi-Tenant Application
+#### Deploy the Multi-Tenant Application
 
 1. npm install
 2. build
 3. deploy
 
-## Provisioning of BTP Consumer Tenant
+## Provision a Application Tenant for a Customer
 
-
-
-### Prepare a BTP Consumer Subaccount
+### Setup BTP Consumer Subaccount
 
 ### Subscribe the BTP Multi-Tenant Application
 
@@ -482,9 +487,3 @@ BTP Cockpit (provider subaccount):
 
 ### Testing
 
-
-## Patch multi-tenant applications
-
-### Code changes
-
-### Entity changes (database changes)
