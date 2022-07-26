@@ -273,7 +273,7 @@ In this step we create and review a launchpad site. If you already have a site, 
 
 13. Open the *Site Directory*. Create a site and enter a site name.
 
-14. Launch the site with button *Go to site* and test your Web application. 
+14. Launch the site by opening the page URL provided in the *site settings* and test your Web application. 
 
 > Note: Take note of the launchpad site URL as **BTP Application Launchpad URL**. On the launchpad, open the context menu of the tile "Author Readings" and take note of the URL as **BTP Application URL**. We will use these URLs for later testing and to embedd the BTP application in the launchpads of ByD and S4HANA Cloud.
 
