@@ -668,7 +668,7 @@ author-readings-destination-service*.
     | *Name*:                   | *byd*                                                                                  |
     | *Type*:                   | *HTTP*                                                                                 |
     | *Description*:            | Enter a destination description, for example "*ByD 123456 with principal propagation*" |
-    | *URL*:                    | *https://{{ByD-hostname}}* for example “*https://my123456.sapbydesign.com*”            |
+    | *URL*:                    | *https://{{ByD-hostname}}* for example *“https://my123456.sapbydesign.com”*            |
     | *Proxy Type*:             | *Internet*                                                                             |
     | *Authentication*:         | *OAuth2SAMLBearerAssertion*                                                            |
     | *Audience*:               | Enter the **ByD service provider name**                                                |
