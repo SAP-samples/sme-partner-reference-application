@@ -73,29 +73,40 @@ In the light of this setup we simplify our application and replace the usage of 
 
 3. Add application router module to the project deployment configuration. Enhance file `mta.yaml` in the project root folder by the following content:
     ```yml
-    # Application router module
-    - name: author-readings
-      type: approuter.nodejs
-      path: app/ 
-      parameters:
-        keep-existing-routes: true
+    # Application Router Module
+    - name: author-readings-approuter
+    type: nodejs
+    path: approuter 
+    parameters:
         disk-quota: 256M
         memory: 256M
-      requires:
+        routes:
+        - route: ${approuter-url}.${domain}
+        - route: "*.${app-url}.${domain}"
+    provides:
+    - name: approuter-binding
+        properties:
+        app-fqdn: ${approuter-url}.${domain}
+        app-url: ${protocol}://~{approuter-binding/app-fqdn}  
+    requires:
         - name: srv-api
-          group: destinations
-          properties:
-            name: srv-api # Compare ./app/xs-app.json
+        group: destinations
+        properties:
+            name: srv-api # Compare ./app/authorreadingmanager/xs-app.json
             url: ~{srv-url}
             forwardAuthToken: true
         - name: author-readings-uaa
-        - name: mtx-api
-          group: destinations
-          properties:
-            name: mtx-api 
-            url: ~{mtx-url}
-      properties:
-        TENANT_HOST_PATTERN: "^(.*)-${default-uri}"
+        - name: author-readings-destination-service
+        - name: author-readings-auditlog
+        - name: author-readings-registry
+        - name: author-readings-html5-runtime    
+    properties:
+        TENANT_HOST_PATTERN: "^(.*).${app-url}.${domain}"    
+        CORS:
+                - uriPattern: .*
+                    allowedOrigin:
+                        - host: "*.${app-url}.${domain}"
+                        protocol: "https"
     ```
     > Note: The application router module refers to the mtx module that we will add in the next step; dont't bother about the reference error here.
 
@@ -190,28 +201,29 @@ In this step we refactor the project deployment configuration to run a multi-ten
 
     1. Adopt the *Application service module*: Remove the event mesh, add the registry and add the properties for the mtx-module and the application subscription:
         ```yml
-        # Service module
-        - name: author-readings-srv
-          type: nodejs
-          path: gen/srv
-          requires:
-            - name: author-readings-db
+            # Service Module
+            - name: author-readings-srv
+            type: nodejs
+            path: gen/srv
+            requires:
+            - name: author-readings-service-manager
             - name: author-readings-uaa
             - name: author-readings-destination-service
             - name: author-readings-auditlog 
             - name: author-readings-registry 
-          provides:
+            provides:
             - name: srv-api
-              properties:
-                srv-url: ${default-url}
-            - name: mtx-api
-              properties:
-                mtx-url: ${default-url}
-          parameters:
-            buildpack: nodejs_buildpack
-          properties:
-            SUBSCRIPTION_URL: ${protocol}://\${tenant_subdomain}-${default-uri}
-            SUBSCRIPTION_URL_REPLACEMENT_RULES: [ [ '-srv', '' ] ]        
+                properties:
+                srv-url: ${protocol}://${srv-url}.${domain} # ${default-url}
+            - name: srv-multi-tenancy
+                properties:
+                tenant-delimiter: "."
+            parameters:
+                buildpack: nodejs_buildpack
+                routes:
+                - route: ${srv-url}.${domain}
+            properties:
+                SUBSCRIPTION_URL: ${protocol}://\${tenant_subdomain}.${srv-url}.${domain} # ${default-url}    
         ```
 
     2. Adopt the *Application router module* for multi-tenancy (Already done when adding the custom application router).
@@ -221,91 +233,123 @@ In this step we refactor the project deployment configuration to run a multi-ten
     4. Adopt the *Destination content module* and remove the content and parameters refering to the html5 repo host. The resulting *Destination content module* looks like:
         ```yml
         modules:
-          # Destination content module (define destinations with service keys)
-          - name: author-readings-destination-content
+          # App UI Content Deployer Module (deploy web app content into the HTML5 application repository)
+            - name: author-readings-app-deployer
             type: com.sap.application.content
+            path: gen
             requires:
-            - name: author-readings-destination-service
-              parameters:
+            - name: author-readings-html5-repo-host
+                parameters:
                 content-target: true
             - name: author-readings-uaa
-              parameters:
-                service-key:
-                  name: author-readings-uaa-key
-            parameters:
-              content:
-                instance:
-                  destinations:
-                  - Authentication: OAuth2UserTokenExchange
-                    Name: authorreadingmanager-uaa-fiori-dest
-                    ServiceInstanceName: author-readings-uaa
-                    ServiceKeyName: author-readings-uaa-key
-                    sap.cloud.service: authorreadingmanager
-                  existing_destinations_policy: ignore
             build-parameters:
-              no-source: true        
+                build-result: resources
+                requires:
+                - artifacts:
+                - authorreadingmanager.zip
+                name: authorreadingmanager
+                target-path: resources/       
         ```
 
     5. Adopt the *Database resource* for multi-tenancy such that database schemas are created on subscription by the service manager:
         ```yml
         resources: 
-          # Database
-          - name: author-readings-db
+          # Service Manager
+            - name: author-readings-service-manager
             type: org.cloudfoundry.managed-service
             parameters:
-              service: service-manager
-              service-plan: container
+                service: service-manager
+                service-plan: container
             properties:
-              hdi-service-name: ${service-name}        
+                hdi-service-name: ${service-name}       
         ```    
 
     6. Adopt the *UUA service resource* for multi-tenancy (tenant-mode): 
         ```yml
         resource:        
-          # UAA service
-          - name: author-readings-uaa
+          # UAA service (Authorization and Trust Management Service)
+            - name: author-readings-uaa
             type: org.cloudfoundry.managed-service
             parameters:
-              config:
-              tenant-mode: shared
-            xsappname: author-readings-${space}  # App name + CF space name
-            path: ./xs-security.json
-            service: xsuaa
-            service-name: author-readings-uaa
-            service-plan: application        
+                config:
+                tenant-mode: shared
+                xsappname: ${xsappname}  
+                path: ./xs-security.json
+                service: xsuaa
+                service-name: author-readings-uaa
+                service-plan: broker      
         ```    
 
     7. The are no changes to the resource *Audit log service* - nothing to do here.
+        ```yml
+        resource: 
+            # Audit Log Service 
+            - name: author-readings-auditlog
+            type: org.cloudfoundry.managed-service
+            parameters:
+                service: auditlog
+                service-plan: oauth2 
+        ```         
 
     8. Add the *Service registry* as new resource, which is required for subscription and tenant provisioning:
         ```yml
         resource:
-          # Service registry
-          - name: author-readings-registry
+          # Service Registry (SaaS Provisioning Service)
+            - name: author-readings-registry
             type: org.cloudfoundry.managed-service
             requires:
-              - name: mtx-api
+                - name: mtx-binding
+                - name: approuter-binding
             parameters:
-              service: saas-registry
-              service-plan: application
-              config:
-              xsappname: author-readings-${space}
-              appName: author-readings-${space}
-              displayName: author-readings
-              description: SAP Sample Application.
-              category: 'Category'
-              appUrls:
-                getDependencies: ~{mtx-api/mtx-url}/mtx/v1/provisioning/dependencies
-                onSubscription: ~{mtx-api/mtx-url}/mtx/v1/provisioning/tenant/{tenantId}
-                onSubscriptionAsync: false
-                onUnSubscriptionAsync: false
-                callbackTimeoutMillis: 300000        
+                service: saas-registry
+                service-plan: application
+                config:
+                xsappname: ${xsappname}
+                appName: ${xsappname}
+                displayName: ${displayname}
+                description: ${displayname}
+                category: 'Category'
+                appUrls:
+                    getDependencies: ~{approuter-binding/app-url}/callback/v1.0/dependencies  
+                    onSubscription: ~{mtx-binding/app-url}/mtx/v1/provisioning/tenant/{tenantId}
+                    callbackTimeoutMillis: 300000        
         ```
 
     9. Remove the resources *HTML5 app repository* (author-readings-repo-host) and *Event Mesh service* (author-readings-eventmesh).    
 
     10. Define mtx as separate node module such that tenant lifecycle operations to be done on a separate application to not interfere with the work load of app users.
     Goal: Separating workloads: 1. frontend workload, 2. backend workload, 3. tenant lifecycle operations.
+
+        ```yml
+            # Multi Tenancy Service Module (Onboarding, Upgrading)
+            - name: author-readings-mtx-srv
+            type: nodejs
+            path: gen/srv
+            requires:
+            - name: author-readings-auditlog
+            - name: author-readings-uaa
+            - name: author-readings-destination-service  
+            - name: author-readings-service-manager
+                properties:      
+                    SUBSCRIPTION_URL: ${protocol}://\${tenant_subdomain}.${app-url}.${domain} # ${default-url}
+            parameters:
+                routes:
+                - route: ${mtx-srv-url}.${domain}
+            provides:
+            - name: mtx-binding
+                properties:
+                app-fqdn: ${mtx-srv-url}.${domain}
+                app-url: ${protocol}://~{mtx-binding/app-fqdn}  
+            - name: author-readings-mtx-srv-destination
+                public: true
+                properties:
+                name: mtx-srv-api
+                url: ${protocol}://${mtx-srv-url}.${domain}
+                forwardAuthToken: true
+            - name: mtx-srv-api # required by consumers of CAP services (e.g. approuter)
+                properties:
+                mtx-srv-url: ${protocol}://${mtx-srv-url}.${domain} # ${default-url}       
+        ```
 
 
 3. Open file `xs-security.json` on the project root level and apply the following changes:
@@ -479,11 +523,13 @@ BTP Cockpit (provider subaccount):
 
 ### Setup BTP Consumer Subaccount
 
+Subscribe to *Audit Logg Viewver* appliction
+
 ### Subscribe the BTP Multi-Tenant Application
 
 ### Configure the Consumer Subaccount 
 
-(trust, SSO, destinations, ERP launchpad)
+(trust, SSO, destinations, ERP launchpad, Role Collection -> Edit the User Group)
 
 ### Testing
 

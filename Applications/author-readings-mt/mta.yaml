@@ -50,6 +50,7 @@ modules:
         url: ~{srv-url}
         forwardAuthToken: true
     - name: author-readings-uaa
+    - name: author-readings-destination-service
     - name: author-readings-auditlog
     - name: author-readings-registry
     - name: author-readings-html5-runtime    
@@ -92,6 +93,7 @@ modules:
   requires:
   - name: author-readings-auditlog
   - name: author-readings-uaa
+  - name: author-readings-destination-service  
   - name: author-readings-service-manager
     properties:      
         SUBSCRIPTION_URL: ${protocol}://\${tenant_subdomain}.${app-url}.${domain} # ${default-url}
