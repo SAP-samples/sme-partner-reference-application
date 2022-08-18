@@ -69,9 +69,9 @@ In the light of this setup we simplify our application and replace the usage of 
         ]
     }
     ``` 
-    > Note: The destination `srv-api` refers to the application router module in file `mta.yaml` in the next step.
+    > Note: The destination `srv-api` refers to the application router module in file [mta.yaml](../Applications/author-readings-mt/mta.yaml) in the next step.
 
-3. Add application router module to the project deployment configuration. Enhance file `mta.yaml` in the project root folder by the following content:
+3. Add application router module to the project deployment configuration. Enhance file [mta.yaml](../Applications/author-readings-mt/mta.yaml) in the project root folder by the following content:
     ```yml
     # Application Router Module
     - name: author-readings-approuter
@@ -197,7 +197,7 @@ In this step we refactor the project deployment configuration to run a multi-ten
             }      
         }
         ```
-2. Open file `mta.yaml` on the project root level and apply the following changes:
+2. Open file [mta.yaml](../Applications/author-readings-mt/mta.yaml) on the project root level and apply the following changes:
 
     1. Adopt the *Application service module*: Remove the event mesh, add the registry and add the properties for the mtx-module and the application subscription:
         ```yml
