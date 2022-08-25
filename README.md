@@ -93,7 +93,7 @@ Following a progressive development approach we now enhance the application to s
 
 5. [Deploy the Multi-Tenant Application to a Provider Subaccount](Tutorials/44-Multi-Tenancy-Deployment.md)
 
-6. [Provision Tenants of the Multi-Tenant Application to Customers](Tutorials/40-Multi-Tenancy-Provisioning.md)
+6. [Provision Tenants of the Multi-Tenant Application to Customers](Tutorials/45-Multi-Tenancy-Provisioning.md)
 
 Related resources:
 - [SAP Cloud Application Programming Model](https://cap.cloud.sap/docs/)
