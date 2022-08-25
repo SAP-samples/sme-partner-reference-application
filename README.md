@@ -64,15 +64,15 @@ We are using the *Business Application Studio* as standardized development envir
 
 You can start your journey following two paths:
 
-1. Deploy and run the sample application as provided in this respository following the tutorial [Deploy the Sample Application as provided in a Customer BTP Account](./Tutorials/20-Deploy-Sample-Application.md).
+1. Deploy and run the sample application as provided in this respository following the tutorials for deployment and provisioning of the one-off or multi-tenant version of the sample application.
 
-2. Re-build the application from scratch following tutorial "*Build a full-stack BTP Application with One-off Deployment in a Customer BTP Account*".
+2. Re-build the application from scratch following the guidelines step-by-step starting with tutorial "*Build a full-stack BTP Application with One-off Deployment in a Customer BTP Account*".
 
 After deployment of the application you may follow the tutorial "*A Guided Tour to explore the Capabilities of the Sample Application*" to visit the sample scenario end-to-end.
 
 ## Tutorials
 
-Re-build, deploy and run the sample application from scratch following a guided tour and a progressive development approach.
+Starting easy, we create, deploy and run a one-off (single-tenant) version of the application first:
 
 1. Build a full-stack BTP Application with One-off Deployment in a Customer BTP Account
     1. [Prepare the BTP Account](Tutorials/01-Prepare-BTP-Account.md) 
@@ -83,12 +83,17 @@ Re-build, deploy and run the sample application from scratch following a guided 
     6. [Manage Data Privacy](Tutorials/06-Manage-Data-Privacy.md)
     7. [Test, Trace and Debug](Tutorials/07-Test-Trace-Debug.md)
 
-2. [Deploy the Sample Application in a Customer BTP Account](Tutorials/20-Deploy-Sample-Application.md)
+2. [Deploy the Sample Application to a BTP Account](Tutorials/20-Deploy-Sample-Application.md)
 
 3. [A Guided Tour to explore the Capabilities of the Sample Application](Tutorials/30-Guided-Tour.md)
 
+Following a progressive development approach we now enhance the application to support multible customers using shared BTP resources:
+
 4. [Enhance the BTP Application for Multi-Tenancy](Tutorials/40-Multi-Tenancy.md)
 
+5. [Deploy the Multi-Tenant Application to a Provider Subaccount](Tutorials/44-Multi-Tenancy-Deployment.md)
+
+6. [Provision Tenants of the Multi-Tenant Application to Customers](Tutorials/40-Multi-Tenancy-Provisioning.md)
 
 Related resources:
 - [SAP Cloud Application Programming Model](https://cap.cloud.sap/docs/)
