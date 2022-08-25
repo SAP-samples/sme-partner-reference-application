@@ -490,12 +490,13 @@ srv.on("createProject", async (req) => {
             if (remoteProjectID) {
                 
                 // Read the ByD system URL dynamically from BTP destination "byd-url"
-                const VCAP_SERVICES = JSON.parse(process.env.VCAP_SERVICES);
+                /*const VCAP_SERVICES = JSON.parse(process.env.VCAP_SERVICES);
                 const dest = VCAP_SERVICES.destination[0].name;
                 const xsuaa = VCAP_SERVICES.xsuaa[0].name;
                 const destServ = await new DestinationService(dest, xsuaa).GetDestination("byd-url");
-                var bydRemoteSystem = destServ.URL;
-                //var bydRemoteSystem = "https://my123456-sso.sapbydesign.com";
+                var bydRemoteSystem = destServ.URL;*/
+
+                var bydRemoteSystem = "https://my123456-sso.businessbydesign.cloud.sap";  //this is a sample URL for testing the UI navigation ( dynamic retrival of URL information from destination is work in process )
 
                 // Set the URL of ByD project overview screen for UI navigation
                 var bydRemoteProjectExternalURL =
