@@ -3,10 +3,14 @@
 In our approach of progressive development from a customer-specific single-tenant application to multi-customer application, we keep the single-tenant application as is and start developing the multi-tenant version of the app based on a copy.
 
 *SAP Business Application Studio* (BAS): 
-1. Open a terminal and navigate to folder *Applications* using the command `cd Applications/`.
+1. Open a terminal and navigate to folder `Applications` using the command `cd Applications/`.
 2. Copy the author readings application using the command `cp -R author-readings/ author-readings-mt/`.
 
-In result you have a second (identical) application in folder `author-readings-mt/`. This application is using the same names and IDs as the single tenant version in folder `./author-readings` and therefore both apps cannot be deployed into the same BTP subaccount. Hence, we create new BTP provider and consumer subaccounts for the multi-tenant version of our author readings application to avoid name clashes.
+In result you have two applications in folder `Applications`:
+- The single-tenant version of the Author-Readings app in folder `Applications/author-readings/`, and
+- The multi-tenant version of the Author-Readings app in folder `Applications/author-readings-mt/`. 
+
+Both applications use the same names and IDs and therefore cannot be deployed into the same BTP subaccount. Hence, we create new BTP provider and consumer subaccounts for the multi-tenant version of our author readings application to avoid name clashes.
 
 ## Enable Multi-Tenancy
 
@@ -24,7 +28,7 @@ In result we will have an application with three separate major modules running 
 
 ### Add Custom Application Router 
 
-For the multi-tenant application we will connect each tenant to the launchpad of the respective ERP solution respectively the central launchpad of the respective customer. 
+For the multi-tenant application we will connect each tenant to the launchpad of the respective ERP solution or the central launchpad of the respective customer. 
 In the light of this setup we simplify our application and replace the usage of the SAP Launchpad (which includes a managed application router) by a custom application router without launchpad.
 
 > Note: This setup is a suitable setup for the single-tenant version of app as well, if no launchpad is required.

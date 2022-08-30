@@ -7,7 +7,7 @@ BTP Cockpit (Global account): Create a provider subaccount and assign required e
 1. Create a provider subaccount to host the application runtime:
     - Enter a meaningful name, for example "AuthorReadings MT Provider"
     - Enter a subdomain and keep it short because the subdomain is used in the application URL; for example "armt"
-    - In our example we used the data center of *Amazon Web Services (AWS)* and the region *Europe (Frankfurt)*). You can reuse the subaccount used for development for convience.
+    - In our example we used the data center of *Amazon Web Services (AWS)* and the region *Europe (Frankfurt)*. You can reuse the subaccount used for development for convience.
     - Optional: Assign subaccount to a directory as parent.
 
     > Note: In all following steps and descriptions we will refer to this subaccount as **"provider subaccount"**.
@@ -18,9 +18,9 @@ BTP Cockpit (Global account): Create a provider subaccount and assign required e
     - *SAP HANA Schemas & HDI Containers* (min. 3 units - for the provider and two tenants)
     - *Authorization and Trust Management Service*, service plan *broker* (1 unit)
     - *Auditlog Service*, service plan *oauth2* (1 unit)
-    - *Audit Log Viewer Service*, service plan *default (Application)* (1 unit)
+    - *Custom Domain Service*, service plan *standard (Application)* (1 unit)
 
-    > Note: Contact SAP if no sufficient service entotlements are available in your global account.
+    > Note: Contact SAP if no sufficient service entitlements are available in your global account.
 
 Relevant entity assigments defaulted at subaccount creation (no action required):
 - *Service Manager*, service plan *container*
@@ -32,7 +32,7 @@ Relevant entity assigments defaulted at subaccount creation (no action required)
 
 BTP Cockpit (provider subaccount): Maintain application administrators.
 
-1. Open menu item *Security - Users* and enter users that should toke over the role of subaccount administrators. 
+1. Open menu item *Security - Users* and enter users that should take over the role of subaccount administrators. 
 
 ### Enable Cloud Foundry 
 
@@ -41,10 +41,10 @@ BTP Cockpit (provider subaccount): Create a Cloud Foundry space to host the data
 1. Open the subaccount *Overview* and enable Cloud Foundry:
     - Plan: *standard*
     - Landscape: *cf-eu10*
-    - Instance Name: *armt*
-    - Org Name: *armt*
+    - Instance Name: "armt"
+    - Org Name: "armt"
 
-2. Create Space with space name *runtime*
+2. Create Space with space name "runtime"
     - keep standard roles
     - Add CF Org members
     - Add CF space members
@@ -57,7 +57,7 @@ BTP Cockpit (provider subaccount):
 
 1. Open the Cloud Foundry space, navigate to menu item *SAP HANA Cloud* and create an SAP HANA Database: 
     - Choose CF Organization + Space
-    - Instance Name: *authorreadings-db*
+    - Instance Name: "authorreadings-db"
     - Enter a password
     - Save
 
@@ -66,3 +66,17 @@ BTP Cockpit (provider subaccount):
 1. npm install
 2. build
 3. deploy
+
+(TODO: more details)
+
+### Configure the Application Subdomain
+
+1. Open the *BTP Cockpit* (provider subaccount), navigate to *Instances and Subscriptions*, and create a subscription for application *Custom Domain Service*, service plan *standard*.
+
+(TODO: Configure domain)
+
+### Setup the Subscription Management Dashboard
+
+1. Open the *BTP Cockpit* (provider subaccount), navigate to *Instances and Subscriptions*, and create a subscription for application *Subscription Management Dashboard*, service plan *application*.
+
+(TODO: Explain how to use the dashboard)

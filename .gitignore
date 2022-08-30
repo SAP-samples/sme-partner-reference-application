@@ -8,7 +8,7 @@ gen/
 node_modules/
 target/
 dist/
-resources/
+#resources/
 *.*-mt_mta_build_tmp
 
 # Web IDE, App Studio

@@ -1,17 +1,17 @@
 # Provision Tenants of the Multi-Tenant Application to Customers
 
-Our goal is to provide our multi-customer application as "partner-managed application". For this purpose we create a consumer subaccount dedicated to a specfic customer in the BTP global account of the partner that hosts the provider subaccount as well. Then we subscribe the multi-tenant BTP application in the consumer subaccount and connect the consumer subaccount to the ERP system and the corporate identity provider of the customer.
+Our goal is to provide our multi-customer application as "partner-managed application". For this purpose we create consumer subaccounts for each customer in the BTP global account of the partner that hosts the provider subaccount as well. Then we subscribe the multi-tenant BTP application in the consumer subaccount and connect the customers ERP system and the corporate identity provider.
 
-As result of this setup, every patch and enhancement of the multi-tenant application in the provider subaccount is available to all subscriber automatically.
+As result of this setup, all customers use shared BTP resources like the Cloud Foundry runtime and the HANA cloud service. At the same time the BTP multi-tenancy ensures a secure separation of customer data (by DB schemas) and user access management.
 
-(TODO: Picture: Deployment model with integration to ByD)
+<img src="./resources/mt_deployment_models.jpg" width="80%">
 
 
 ## Setup BTP Consumer Subaccount
 
-We start the provisioning proceedure by creating a BTP subaccount for a specfic customer.
+We start the provisioning proceedure by creating a BTP consumer subaccount for a specfic customer.
 
-1. Open the *BTP Cockpit* (the same global account that hosts the provider subaccount of the BTP application) and create a new *Multi-Environment*-Subaccount with some name refering to the tenant number or the customer and provider *Amazon Web Services (AWS)*. Here we name the subaccount "*AuthorReadings MT Subscriber 1*" 
+1. Open the *BTP Cockpit* (the same global account that hosts the provider subaccount of the BTP application) and create a new *Multi-Environment*-Subaccount with some name refering to the tenant number or the customer. As provider we choose *Amazon Web Services (AWS)*. In our example we name the subaccount "AuthorReadings MT Subscriber 1" 
 
 2. BTP Cockpit (global account level): Assign the following entities to the consumer subaccount:
     - *Audit Log Viewer Service*, service plan *default (Application)*
@@ -26,13 +26,13 @@ Now we subscribe our own BTP application and related administrative BTP applicat
 
 You can launch the BTP application and the audit log viewer using the following URLs:
 
-- **BTP Application Tenant URL**: Navigate to *Instances and Subscriptions* and concatenate the URL provided by application "SME Partner Reference Sample Application" and the name of the web application "/authorreadingmanager/". Here, we get the tenant-specific application URL as defined in the MTA-configuration: *https://<tenant-subdomain>.<org>-<space>.<domain>/<web-application>/*.
+- **BTP Application Tenant URL**: Navigate to *Instances and Subscriptions* and concatenate the URL provided by application *SME Partner Reference Sample Application* via button *Go to Application*, and the path of the web application `/authorreadingmanager/`.
 
 - **Audit Log Viewer URL**: Navigate to *Instances and Subscriptions* and launch the application "Audit Log Viewer Service" using button "Go to Application". 
 
 ### Setup Single Sign-on for the BTP Application Subscription
 
-We use the *SAP Identity and Authentication Service* (IAS) as corporate identity provider (IDP) and establish a trust relationship between the service provider (our BTP subaccount to which we deployed our application) and the IAS tenant. In result the BTP subaccount and our application delegates user authentications to the IAS tenant incl. single sign-on. Furthermore we use the IAS tenant to assign authorization roles to users via user groups.
+We use the *SAP Identity and Authentication Service* (IAS) as corporate identity provider (IDP) and establish a trust relationship between the service provider (our BTP consumer subaccount) and the IAS tenant. In result the BTP consumer subaccount and our application delegates user authentications to the IAS tenant incl. single sign-on. Furthermore, we use the IAS tenant to assign authorization roles to users via user groups.
 
 Precondition: You have admin access to an *SAP Identity and Authentication Service* tenant.
 
@@ -40,7 +40,7 @@ Precondition: You have admin access to an *SAP Identity and Authentication Servi
 
 Setup the trust relationship between the BTP subaccount to IAS using SAML 2.0. 
 
-> Note: Typically the BTP consumer subaccount is assigned to the partner and the IAS tenant is assigned to the customer such that a trust configuration using Open ID Connect (OIDC) is not possible and therefore we use the SAML protocol for the trust relationship. If the provider subaccount, the consumer subaccount and the IAS tenant are all assigned to the customer, then OIDC is the prefered approach to configure trust; follow the instruction in chapter [Open ID Connect Configuration](Tutorials/03-One-Off-Deployment.md) in this case.
+> Note: Typically the BTP consumer subaccount is assigned to the partner and the IAS tenant is assigned to the customer such that a trust configuration using Open ID Connect (OIDC) is not possible, and therefore we use the SAML protocol for the trust relationship. If the provider subaccount, the consumer subaccount and the IAS tenant are all assigned to the customer, then OIDC is the prefered approach to configure trust; follow the instruction in chapter [Open ID Connect Configuration](Tutorials/03-One-Off-Deployment.md) in this case.
 
 BTP consumer subaccount:
 
@@ -49,7 +49,7 @@ BTP consumer subaccount:
 IAS Admin UI:
 	
 2. Open menu item *Applications* and create a new application of type *Bundled application*.
-	- Enter the required information like application display name, application URL, … The display name appears on user login screen and the login applies to all applications liked to the IAS tenant (following the SSO principle). Choose something meaningful from an end-user point of view representing the scope of the IAS, for example "Almika Inc. - Author Readings" or something more general if you subscribed multiple apps in your consumer subaccount.
+	- Enter the required information like application display name, application URL, … The display name appears on user login screen and the login applies to all applications linked to the IAS tenant (following the SSO principle). Choose something meaningful text from an end-user point of view representing the scope of the IAS, for example "Almika Inc. - Author Readings" or something more general if you subscribed multiple apps in your consumer subaccount.
 	- Open section *SAML 2.0 Configuration" and upload the **Service provider SAML metadata file** from the BTP subaccount.
 	- Open section *Subject Name identifier* and select "E-Mail" as basic attribute.
 	- Open section *Default Name ID Format* and select "E-Mail".
@@ -64,13 +64,13 @@ BTP consumer subaccount:
 
 #### Configure Authorization Roles 
 
-We are using IAS user groups to assign authorizaton roles to users. The user groups will be passed as "assertion attribute" to the BTP subaccount and will be mapped to respective role collections in the BTP subaccount. 
+We are using IAS user groups to assign authorizaton roles to users. The user groups will be passed as assertion attribute to the BTP consumer subaccount and will be mapped to respective role collections in the subaccount. 
 
 IAS Admin UI:
 
-1. Open menu item *User Management* and add the users who shall have access to the BTP application. Enter user details like name and e-mail and take into account that the e-mail is used as identifying attribute and hence I would recommend to use the e-mail address as used in the ERP system that we will integrate later.
+1. Open menu item *User Management* and add the users who shall have access to the BTP application. Enter user details like name and e-mail and take into account that the e-mail is used as identifying attribute (use the same e-mail address in all related systems incl. IAS, ERP system, ...).
 	
-2. Open menu item *User Groups* and add user groups that represent typical user roles and enter a unique (technical) *Name* and a meaningful "Display Name*, for example:
+2. Open menu item *User Groups* and add user groups that represent typical user roles and enter a unique (technical) *Name* and a meaningful *Display Name*, for example:
 
     | Name:                      | Display name:              |
     | :------------------------- | :------------------------- |
@@ -86,24 +86,24 @@ BTP consumer subaccount:
 
 5. Open menu item *Role Collections* and add the user groups (using the unique technical name of the user group) to the role collections that shall be assigned to the respective users with the use group:
 
-    | Role Collection: | User Groups: |
-	| :---  | :---          |
+    | Role Collection:                   | User Groups:         |
+	| :---                               | :---                 |
 	| AuthorReadingManagerRoleCollection | AuthorReadingManager |
-	| AuthorReadingAdminRoleCollection | Admin |
-    | Auditor | Admin |
-    | Subaccount Administrator | Admin |
-    | Destination Administrator | Admin |
+	| AuthorReadingAdminRoleCollection   | Admin                |
+    | Auditor                            | Admin                |
+    | Subaccount Administrator           | Admin                |
+    | Destination Administrator          | Admin                |
 
 6. Test the login using single sign-on: Launch the BTP application and select the IAS tenant as IDP. 
 
-> Note: The first attempt to open the app may fail with an authorization error message if the user has not yet been replicated from the IAS tenant to the BTP subaccount (latest at this point this replication is triggered and executed automatically). The second login attempt to open the app should be successful always.
+    > Note: The first attempt to open the app may fail with an authorization error message if the user has not yet been replicated from the IAS tenant to the BTP consumer subaccount (latest at this point this replication is triggered and executed automatically). The second login attempt to open the app should be successful always.
 
-You may deactivate the "Default Identity Provider" (which refers to the SAP ID Service) in the trust center of your BTP consumer subaccount.
+You may deactivate the user login with the *Default Identity Provider* (which refers to the *SAP ID Service*) in the *Trust Configuration* of your BTP consumer subaccount. In result end users cannot select the *Default Identity Provider* and the customers IAS tenant is used for authentication automatically.
 
 
 ## Connect the BTP Application to *SAP Business ByDesign*
 
-In this chapter we connect the customer SAP Business ByDesign tenant (ByD) with the customer IAS tenant (acting as corporate IDP) and the BTP consumer subaccount dedicated to the customer.
+In this chapter we connect a *SAP Business ByDesign* tenant (representing the customers cloud ERP system), the IAS tenant (acting as corporate IDP), and the BTP consumer subaccount (with the customer subscription of the partner application).
 
 Frontend integration:
 
@@ -116,7 +116,7 @@ Back-channel integration:
 
 5. Create and read ByD projects from the BTP app using OData APIs with principal propagation,
 
-(TODO: Image)
+<img src="./resources/mt_byd_integration.jpg" width="80%">
 
 ### Configure Single Sign-on for ByD
 
@@ -135,7 +135,7 @@ ByD:
 3. Go to the *Identity Provider* sheet, and in the list *Trusted Identity Provider*, click on the button *New Identity Provider*. 
 4. Upload the **IDP SAML metadata file** which you downloaded from IAS tenant. 
 5. Enter a suitable name for the IDP as *Alias*. The alias is displayed in the selection screen to choose an IDP in case you configure multiple identity provider in ByD.   
-6. In the list under *Supported Name ID Formats*, add "E-Mail Address" as additional *Name Id Format* and use the *Actions* button group to set the e-mail address default name ID format. 
+6. In the list under *Supported Name ID Formats*, add "E-Mail Address" as additional *Name Id Format* and use the *Actions*-button to select the e-mail address as *default name ID format*. 
 7. Click on the *Save* button on the header of the UI. 
 8. Click on the *Activate Single Sign-On* button on the header of the UI. 
 9. Navigate to sheet *My System* and click on button *SP Metadata* to download the **ByD Service provider SAML metadata file**.
@@ -143,8 +143,8 @@ ByD:
 IAS Admin UI:
 
 10. Open menu item *Applications* and create a new application of type *Bundled application*.
-	- Enter the required information like application display name, application URL, … The display name appears on user login screen and the login applies to all applications liked to the IAS tenant (following the SSO principle). Choose something meaningful display name from an end-user point of view representing the scope of the IAS, for example "Almika Inc. - User login" or "Almika Inc. - ByD user authentication". As application URL you may use the ByD access URL for single sign-on, for example https://myXXXXXX-sso.sapbydesign.com.
-	- Open section *SAML 2.0 Configuration" and upload the **ByD Service provider SAML metadata file** that you downloaded from ByD.
+	- Enter the required information like application display name, application URL, … The display name appears on user login screen and the login applies to all applications linked to the IAS tenant (following the SSO principle). Choose some meaningful display name from an end-user point of view representing the scope of the IAS, for example "Almika Inc. - User login" or "Almika Inc. - ByD user authentication". As application URL you may use the ByD access URL for single sign-on, for example https://myXXXXXX-sso.sapbydesign.com.
+	- Open section *SAML 2.0 Configuration* and upload the **ByD Service provider SAML metadata file** that you downloaded from ByD.
 	- Open section *Subject Name identifier* and select "E-Mail" as basic attribute.
 	- Open section *Default Name ID Format* and select "E-Mail".
 
@@ -168,7 +168,7 @@ Create the *Custom OData Service* "khproject":
 
 We are using *OAuth 2.0 SAML Bearer authentication* to access the ByD OData service to read and write ByD projects with the user-context initiated by the user on the UI of the BTP application. In result ByD user authorizations apply on the BTP application as well. Users without the permission to manage projects in ByD can still open the BTP application, but ByD project data is not retrieved and projects cannot be created.
 
-Steps tp configure ByD for *OAuth 2.0 SAML Bearer authentications*:
+Steps to configure ByD for *OAuth 2.0 SAML Bearer authentications*:
 
 BTP consumer subaccount: Get the signing certificate of the BTP UAA service as OAuth Identity provider:
 
@@ -232,12 +232,12 @@ BTP consumer subaccount: Create destination "byd" to connect to ByD with princip
     | Property name:  | Value:                                                   |
     | :-------------- | :------------------------------------------------------- |
     | *nameIdFormat*: | *urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress* |
-    | *scope*:        | Enter the **ByD OAuth Scope**                            |
+    | *scope*:        | Enter the **ByD OAuth Scope** (*UIWC:CC_HOME*)           |
     | *userIdSource*: | *email*                                                  |
 
     > Note: You may need to upload the ByD server certificate into the destination service for SSL authentication using the link *Upload and Delete Certificates* on the destinations screen. You can download the ByD server certificate from the brower (Open the ByD UI and view the site information; then display and export the certificate details into a ".cer"-file).
 
-BTP consumer subaccount: Create destination "byd_url" to launch ByD screens. 
+BTP consumer subaccount: Create destination "byd-url" to launch ByD screens. 
 
 The destination "byd-url" is used to store the single sign-on URL of the ByD system. By storing the base-URL in a destination, we make sure that connecting the BTP web application to ByD systems is a pure configuration task and does not require any code changes.
 
@@ -250,7 +250,7 @@ At runtime we dynamically assemble the parameterized URL to launch the ByD proje
     | *Name*:           | *byd-url*                                                                               |
     | *Type*:           | *HTTP*                                                                                  |
     | *Description*:    | Enter a destination description, for example "*ByD 123456 URL*"                         |
-    | *URL*:            | *https://{{ByD-hostname-for-SSO}}* for example “*https://my123456-sso.sapbydesign.com*” |
+    | *URL*:            | *https://{{ByD-hostname-for-SSO}}*, for example “*https://my123456-sso.sapbydesign.com*” |
     | *Proxy Type*:     | *Internet*                                                                              |
     | *Authentication*: | *NoAuthentication*                                                                      |
     
@@ -260,7 +260,7 @@ As last step we add the BTP application subscription for author readings and BTP
 
 Create mashup for the BTP application subscription "Author Readings":
 
-1. Launch the **BTP Application Tenant URL** and copy the link address of the application "Manage Author Readings" (we want to launch the app directly w/o the BTP launchpad).
+1. Launch the **BTP Application Tenant URL** and copy the link address of the application "Manage Author Readings" (we want to launch the app directly w/o the BTP launchpad). 
 
 2. ByD: Open work center view *Application and User Management - Mashup Authoring* and create a new URL mashup with the following data:
 	- *Port Binding Type*: Select *1 - Without Port Binding*
@@ -295,7 +295,7 @@ Add the BTP apps to the ByD Launchpad:
 
 9. Test frontend SSO: Open ByD using the SSO-URL (following the pattern https://myXXXXXX-sso.sapbydesign.com/) and login using your IAS user. Then launch the BTP application via the ByD launchpad. No additional authentication should be required.
 
-(TODO: Image ByD launchpad)
+<img src="./resources/mt_byd_launchpad.jpg" width="80%">
 
 
 ## Create Users and Assign Authorizations
