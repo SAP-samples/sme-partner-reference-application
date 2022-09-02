@@ -1,4 +1,5 @@
 "use strict";
+const { getDestination } = require('@sap-cloud-sdk/core');
 
 // ----------------------------------------------------------------------------
 // Constants
@@ -84,6 +85,26 @@ async function emitAuthorReadingEvent(req, id, eventMeshTopic) {
 
 }
 
+// Reuse function to get the ERP URL
+function getDestinationURL() {
+    console.log("--- GET ERP DESTINATION FOR UI NAVIGATION ---");
+    let destUrl;
+    destUrl = "https://myXXXXXX-sso.businessbydesign.cloud.sap"; // This is a workaround for testing!!!
+    /*
+    getDestination("byd-url").then( destBydUrl => {
+        console.log(destBydUrl.url);    
+        //console.log(destBydUrl.authentication);    
+        //console.log(destBydUrl.clientId);
+        //console.log(destBydUrl.clientSecret);
+        //console.log(destBydUrl.tokenServiceUrl);
+        destUrl = destBydUrl.url;         
+    } ).catch( rejected => {
+        console.log("Destination byd-url not found" );
+    });
+    */
+    return destUrl;
+}
+
 // Publish constants and functions
 module.exports = {
   color,
@@ -91,5 +112,6 @@ module.exports = {
   participantStatusCode,
   validateEmail,
   validatePhone,
-  emitAuthorReadingEvent
+  emitAuthorReadingEvent,
+  getDestinationURL
 };

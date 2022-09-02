@@ -55,12 +55,13 @@ modules:
     - name: author-readings-registry
     - name: author-readings-html5-runtime    
   properties:
-    TENANT_HOST_PATTERN: "^(.*).${app-url}.${domain}"    
+    TENANT_HOST_PATTERN: "^(.*).${app-url}.${domain}" 
+    SEND_XFRAMEOPTIONS: false   # Allow to display the app as URL App in an iframe (for example in the SAP Launchpad)
     CORS:
-              - uriPattern: .*
-                allowedOrigin:
-                    - host: "*.${app-url}.${domain}"
-                      protocol: "https"
+    - uriPattern: .*
+      allowedOrigin:
+      - host: "*.${app-url}.${domain}"
+        protocol: "https"
 
 # Service Module
 - name: author-readings-srv

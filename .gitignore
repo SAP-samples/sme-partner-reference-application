@@ -22,6 +22,7 @@ resources/
 *.mtar
 mtad.yaml
 mta_archives/
+Makefile*.mta
 
 # Other
 .DS_Store
