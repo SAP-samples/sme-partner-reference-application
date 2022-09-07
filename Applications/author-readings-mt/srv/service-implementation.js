@@ -489,8 +489,8 @@ srv.on("createProject", async (req) => {
             if (remoteProjectID) {
                 
                 // Read the ByD system URL dynamically from BTP destination "byd-url"
-                var bydRemoteSystem = reuse.getDestinationURL(); 
-
+                var bydRemoteSystem = await reuse.getDestinationURL(req , 'byd-url'); 
+                
                 // Set the URL of ByD project overview screen for UI navigation
                 var bydRemoteProjectExternalURL =
                     "/sap/ap/ui/runtime?bo_ns=http://sap.com/xi/AP/ProjectManagement/Global&bo=Project&node=Root&operation=OpenByProjectID&object_key=" +
@@ -569,6 +569,9 @@ srv.on("userInfo", async (req) => {
     results.roles.authenticated = req.user.is("authenticated-user");
     return results;
 });
+
+
+  
 
 // ----------------------------------------------------------------------------
 // Implementation of remote OData services (back-channel integration with ByD)

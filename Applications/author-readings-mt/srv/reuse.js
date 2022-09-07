@@ -1,5 +1,5 @@
 "use strict";
-const { getDestination } = require('@sap-cloud-sdk/core');
+const { getDestination, retrieveJwt } = require("@sap-cloud-sdk/connectivity");
 
 // ----------------------------------------------------------------------------
 // Constants
@@ -86,23 +86,26 @@ async function emitAuthorReadingEvent(req, id, eventMeshTopic) {
 }
 
 // Reuse function to get the ERP URL
-function getDestinationURL() {
-    console.log("--- GET ERP DESTINATION FOR UI NAVIGATION ---");
-    let destUrl;
-    destUrl = "https://myXXXXXX-sso.businessbydesign.cloud.sap"; // This is a workaround for testing!!!
-    /*
-    getDestination("byd-url").then( destBydUrl => {
-        console.log(destBydUrl.url);    
-        //console.log(destBydUrl.authentication);    
-        //console.log(destBydUrl.clientId);
-        //console.log(destBydUrl.clientSecret);
-        //console.log(destBydUrl.tokenServiceUrl);
-        destUrl = destBydUrl.url;         
-    } ).catch( rejected => {
-        console.log("Destination byd-url not found" );
-    });
-    */
-    return destUrl;
+async function getDestinationURL(req, destinationName) {
+    let destinationURL;
+    try{
+        // read the destination details using cloud SDK reusable getDestination function
+        const destination = await getDestination({ destinationName: destinationName, jwt: retrieveJwt(req) });
+        
+        if(destination){
+            console.log("ERP destination URL : " + destination.url);        
+            destinationURL = destination.url;
+        }
+        else{
+            // In case if the remote system detination URL is blank , then use the defualt URL ( to make sure to generate the URL for project)
+            destinationURL = "https://myXXXXXX-sso.businessbydesign.cloud.sap"; 
+            console.log("ERP default destination URL : " + destinationURL);   
+        }
+        
+    }catch (error) {
+        req.error(error);
+    }
+    return destinationURL;    
 }
 
 // Publish constants and functions
