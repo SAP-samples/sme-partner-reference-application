@@ -427,13 +427,15 @@ BAS: Enhance the implementation of the CAP services in file `./application/autho
     ```javascript
      const reuse = require("./reuse");
     ```
-    > Note: The code block *Read the ByD system URL dynamically from BTP destination "byd-url"* reads the URL of the ByD system, used to navigate to the ByD project overview screen. We are using reusable function *getDestinationURL* to read dynamically the BTP destination (refer to file `./srv/reuse.js` for details of the reusable function getDestinationURL). 
+    > Note: The code block *Read the ByD system URL dynamically from BTP destination "byd-url"* reads the URL of the ByD system used to navigate to the ByD project overview screen. We are using the reuse function *getDestinationURL* to read dynamically the BTP destination (refer to file `./srv/reuse.js` for details of the reusable function getDestinationURL).
     
     > Note: The code block *Set URL of ByD project overview screen for UI navigation* assembles the URL of the ByD project overview screen used for UI navigations lateron. 
 
 4. Add a new function *getDestinationURL* in the file `reuse.js` in folder `./srv` (Refer to the file to check the required code). 
 
-5. Since we are using the npm module *@sap-cloud-sdk/connectivity* in the *reuse.js*, we need to add the corresponding npm module to the dependencies in the `package.json` file:
+    > Note: The reuse function *getDestinationURL* is designed such that it works for single-tenant as well as for multi-tenant applications. For single-tenant deployments it reads the destination from the BTP subaccount that hosts the app, for multi-tenant deployments it reads the destination from the subscriber subaccount. We achieve this system behavior by pasing the JWT-token of the logged-in user to the function to get the destination. The JWT-token contains the tenant information.
+
+5. Since we are using the npm module *@sap-cloud-sdk/connectivity* in file *reuse.js*, we need to add the corresponding npm module to the dependencies in the `package.json` file:
     ```json
     "dependencies": {
         "@sap-cloud-sdk/connectivity": "^2.8.0"

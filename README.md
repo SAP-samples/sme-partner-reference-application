@@ -97,6 +97,7 @@ Following a progressive development approach we now enhance the application to s
 
 Related resources:
 - [SAP Cloud Application Programming Model](https://cap.cloud.sap/docs/)
+- [SAP Cloud SDK](https://sap.github.io/cloud-sdk/)
 - [SAP Discovery Center](https://discovery-center.cloud.sap/missionssearch)
 - [ByD API Overview](https://blogs.sap.com/2019/09/26/sap-business-bydesign-an-api-overview/)
 - [ByD OData API Usage Samples](https://blogs.sap.com/2019/02/27/sap-business-bydesign-api-usage-samples/)

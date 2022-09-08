@@ -1,4 +1,6 @@
 "use strict";
+
+// Include SAP Cloud SDK reuse functions
 const { getDestination, retrieveJwt } = require("@sap-cloud-sdk/connectivity");
 
 // ----------------------------------------------------------------------------
@@ -89,7 +91,10 @@ async function emitAuthorReadingEvent(req, id, eventMeshTopic) {
 async function getDestinationURL(req, destinationName) {
     let destinationURL;
     try{
-        // read the destination details using cloud SDK reusable getDestination function
+        // Read the destination details using the SAP Cloud SDK reusable getDestination function:
+        // The JWT-token contains the subaccount information, such that the function works for single tenant as well as for multi-tenant apps:
+        // - Single tenant: Get destination from the subaccount that hosts the app.
+        // - Multi tenant: Get destination from subscriber subaccount.
         const destination = await getDestination({ destinationName: destinationName, jwt: retrieveJwt(req) });
         
         if(destination){
@@ -97,7 +102,7 @@ async function getDestinationURL(req, destinationName) {
             destinationURL = destination.url;
         }
         else{
-            // In case if the remote system detination URL is blank , then use the defualt URL ( to make sure to generate the URL for project)
+            // In case the remote system destination URL is blank, then use some default URL (for testing and logging)
             destinationURL = "https://myXXXXXX-sso.businessbydesign.cloud.sap"; 
             console.log("ERP default destination URL : " + destinationURL);   
         }
@@ -107,6 +112,7 @@ async function getDestinationURL(req, destinationName) {
     }
     return destinationURL;    
 }
+
 
 // Publish constants and functions
 module.exports = {

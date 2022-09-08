@@ -6,6 +6,7 @@
     "author": "SAP",
     "license": "SAP SAMPLE CODE LICENSE",
     "dependencies": {
+        "@sap-cloud-sdk/connectivity": "^2.8.0",
         "@sap/cds": "^5.9.4",
         "express": "4.17.1",
         "hdb": "0.19.1",
