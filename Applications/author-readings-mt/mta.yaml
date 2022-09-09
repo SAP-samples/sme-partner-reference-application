@@ -57,9 +57,9 @@ modules:
   properties:
     TENANT_HOST_PATTERN: "^(.*).${app-url}.${domain}" 
     # Allow to display the app as URL App in an iframe (for example in the SAP Launchpad)
-    # SEND_XFRAMEOPTIONS: false  # For productive use whitelist the source domains
-    # httpHeaders: [ { "X-Frame-Options": "ALLOW-FROM *.launchpad.cfapps.eu10.hana.ondemand.com" } ]
-    httpHeaders: [ { "Content-Security-Policy": "frame-ancestors 'self' *.launchpad.cfapps.eu10.hana.ondemand.com" } ]
+    # SEND_XFRAMEOPTIONS: false  # For testing only; whitelist source domains for productive use
+    # httpHeaders: [ { "X-Frame-Options": "ALLOW-FROM *.hana.ondemand.com" } ] 
+    httpHeaders: "[{ \"Content-Security-Policy\": \"frame-ancestors 'self' https://*.hana.ondemand.com\" }]" 
     CORS:
     - uriPattern: .*
       allowedOrigin:
