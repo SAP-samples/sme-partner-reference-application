@@ -77,6 +77,19 @@ BTP Cockpit (provider subaccount):
 
 ### Setup the Subscription Management Dashboard
 
-1. Open the *BTP Cockpit* (provider subaccount), navigate to *Instances and Subscriptions*, and create a subscription for application *Subscription Management Dashboard*, service plan *application*.
+*Subscription Management Dashboard* will enable lifecycle management of multi-tenant applications. 
 
-(TODO: Explain how to use the dashboard)
+*Pre-requisite*: subscribe and create instance of subscription management service
+Steps to follow : Open the *BTP Cockpit* (provider subaccount), navigate to *Instances and Subscriptions*, and create a subscription for application *Subscription Management Dashboard*, service plan *application*.
+
+*Details of Subscription Management Dashboard* : 
+The dashboard enables users to view the deployed multi-tenant applications with *status* like In-Process, Subscribed, Subscription Failed, UnSubscription failed, Update Failed and also *filtered by different time periods* like changed in the last 24 hours , changed in the last 7 days, changed in the last month, changed in the last 3 months, changed in the last 6 months and changed in the last 12 months.
+
+Users can perform *Actions* like *unsubscribe*, *update* and track the status of subscription process in progress.
+
+In the Overview section of the subscribed application user can view information like *subscription status*, *global account* , *consumer sub account*, *app name* , *app URL*, *License Type* ( Productive , Test tenant), *changed on* and *created on* details.
+
+In the Dependencies section user could view the service dependencies in the application. There is *tree view* and *table view* of dependencies . the information helps the user to view the full list of dependencies among various services used in the application . for instance the application service module is having dependency on modules like destination, auditlog, html5-app-repo, connectivity services and the overview of the dependencies can be viewed in this section. 
+
+> Note: in case of multi-tenant application with custom Approuter and mtx module being used in the application , make sure to make the destination service as the dependency ( the dependency can be declared by adding the destination service as requires in application deployment descriptor mta.yaml file)
+
