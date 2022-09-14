@@ -69,27 +69,67 @@ BTP Cockpit (provider subaccount):
 
 (TODO: more details)
 
-### Configure the Application Subdomain
+### Configure the Application Subdomain (Custom Domain)
 
-1. Open the *BTP Cockpit* (provider subaccount), navigate to *Instances and Subscriptions*, and create a subscription for application *Custom Domain Service*, service plan *standard*.
+*Custom Domain* :
+The SAP Custom Domain service lets you configure your own custom domain to publicly expose your application.
+With the SAP Custom Domain Service you can configure subdomains for your application and you have the possibility to expose your application using your own company specific domain. In our example we are using default domain provided by SAP and use the Custom Domain Service to configure the subdomains used by our multi-tenant application. 
 
-(TODO: Configure domain)
+*Pre-requisite*: subscribe and create instance of custom domain service.
+
+*Details of Custom Domain Service*: 
+1. Entitle to the Custom Domain Service:
+    - Create entitlement for Custom Domain Manager in the SAP BTP Control Center ( Custom Domain Service  |   custom-domain-manager )
+    - select the Custom Domain Service as applications, select standard as the plan.
+    
+2. Create an instance of Custom Domain Service in provier BTP subaccount
+    - In the Provider BTP subaccount navigate to  *Entitlements* -> *Entity Assignments* ->  select standard ( Application ) -> *Save* the changes 
+    - Goto to *Service* -> *Service Market Place* -> select Custom Domain Services -> click on *Create* -> select service *Custom Domain service* and plan *standard*
+    - Goto to *Security* -> *Role collection* -> create new role collection "custom domain manager" -> *Edit* the new role collection -> chose the new role name "customDomainAdmin" -> *Save* 
+    - Goto *Users* -> assign new role collection "custom domain manager" to existing users 
+
+3. Create an Custom Domain
+    - Goto *Service* -> *Instances and Subscriptions* -> click on *Subscriptions* -> select application "Custom Domain service" to launch the domain service to create new custom domain along with server certificate
+    - Launch the *Server Certificates* application (manage server certificate) and create a server certificate for multi-tenant application by the following steps:
+        - In the General Information section enter the *Alias* and select the *Key Size* and click on *Next Step*
+        - In the Select Landscape section,  please select the desired landscape to continue and click on *Next Step*  . Note: the landscape refers to the cloud foundry instance.
+        - In the *Select Alternative Names* section select the entry with wildcard and click on *Next Step* . Note the sample entry looks like *.{alias name}.{cloud foundry endpoint}
+        - In the *Set Subject* section enter the Common Name (CN) *.{alias name}.{cloud foundry endpoint} and click on *Finish* 
+        - The above steps will initiate the creation of Certificate Signing Request (CSR) and the status would be *CSR in progress* 
+        - Once the server certificate status is changed to *CSR created* ( status change would take few seconds to a minute)
+        - Open the server certificate, note the Automation is set to *disabled*, it would be recommended to set the Automated Certificate Lifecycle Management is set to *Automated*
+        - Click on the button *Automate* to enable Automated Certificate Lifecycle Management. Note: automation will enable the certificate to be created using DigiCert as certificate provider and as long as automation is enabled , the certificate will be automatically renewed before the expiration date
+        - After clicking on the *Atomate* button , in the enable automation popup ui , click on the button *Enable* . Note: the automation process would start, the message *automation process in progress, this may take few hours* , but ideally the automation takes few minutes
+        
+        > Note: the Automation would be set to enabled and Status is *Inactive* ,  **user have to activate the certificate**
+
+        - To activate the server certificate click on the *Activate* button
+        - Activation is a multi step process
+            - In the first step *Subject Alternative Names* select the entry with wildcard *.{alias name}.{cloud foundry endpoint} and click on *Next step*
+            - In the second step *Select TLS Configuration* select the entry *Default_without_Client_authentication* and click on *Next step*
+            - In the *Summary and confirmation* step , review the configuration and click on *Finish* button
+        > Note: the status of the server certificate would be set to *In Progress* and the **process might take few seconds to a minutes**
+        - Once the above process is complete the status of the server certificate would change to *Active*
+    - In result after performing above steps related to *Server Certificates* would create an *Custom Domain* with status *Active*  
+    - Goto the *Domains* application (manage reserved and custom doamins), navigate to **Custom Domains**, user should view a custom domain with name {alias name}.{cloud foundry endpoint} and with  **active** status
+    > Note: sample custom domain would look like armt-runtime.{cloud foundry endpoint}
+    
 
 ### Setup the Subscription Management Dashboard
 
-*Subscription Management Dashboard* will enable lifecycle management of multi-tenant applications. 
+*Subscription Management Dashboard* will enable **lifecycle management of multi-tenant applications**. 
 
-*Pre-requisite*: subscribe and create instance of subscription management service
-Steps to follow : Open the *BTP Cockpit* (provider subaccount), navigate to *Instances and Subscriptions*, and create a subscription for application *Subscription Management Dashboard*, service plan *application*.
+*Pre-requisite*: subscribe and create instance of subscription management service. 
+Steps to follow : Open the *BTP Cockpit* (provider subaccount), navigate to *Instances and Subscriptions*, and create a subscription for application *Subscription Management Dashboard*, service plan *application*. 
 
-*Details of Subscription Management Dashboard* : 
-The dashboard enables users to view the deployed multi-tenant applications with *status* like In-Process, Subscribed, Subscription Failed, UnSubscription failed, Update Failed and also *filtered by different time periods* like changed in the last 24 hours , changed in the last 7 days, changed in the last month, changed in the last 3 months, changed in the last 6 months and changed in the last 12 months.
+*Details of Subscription Management Dashboard*: 
+- The dashboard enables users to view the deployed multi-tenant applications with *status* like In-Process, Subscribed, Subscription Failed, UnSubscription failed, Update Failed and also *filtered by different time periods* like changed in the last 24 hours , changed in the last 7 days, changed in the last month, changed in the last 3 months, changed in the last 6 months and changed in the last 12 months.
 
-Users can perform *Actions* like *unsubscribe*, *update* and track the status of subscription process in progress.
+- Users can perform *Actions* like *unsubscribe*, *update* and track the status of subscription process in progress.
 
-In the Overview section of the subscribed application user can view information like *subscription status*, *global account* , *consumer sub account*, *app name* , *app URL*, *License Type* ( Productive , Test tenant), *changed on* and *created on* details.
+- In the Overview section of the subscribed application user can view information like *subscription status*, *global account* , *consumer sub account*, *app name* , *app URL*, *License Type* ( Productive , Test tenant), *changed on* and *created on* details.
 
-In the Dependencies section user could view the service dependencies in the application. There is *tree view* and *table view* of dependencies . the information helps the user to view the full list of dependencies among various services used in the application . for instance the application service module is having dependency on modules like destination, auditlog, html5-app-repo, connectivity services and the overview of the dependencies can be viewed in this section. 
+- In the **Dependencies** section user could view the service dependencies in the application. There is *tree view* and *table view* of dependencies . the information helps the user to view the full list of dependencies among various services used in the application . for instance the application service module is having dependency on modules like destination, auditlog, html5-app-repo, connectivity services and the user gets  overview of the dependencies in the dependencies section. 
 
-> Note: in case of multi-tenant application with custom Approuter and mtx module being used in the application , make sure to make the destination service as the dependency ( the dependency can be declared by adding the destination service as requires in application deployment descriptor mta.yaml file)
+> Note: in case if your multi-tenant application is using custom Approuter along with mtx module , then make sure to add the destination service as the dependency ( the dependency can be added and declared by adding the destination service as requires property in the application deployment descriptor mta.yaml file)
 
