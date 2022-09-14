@@ -67,7 +67,19 @@ BTP Cockpit (provider subaccount):
 2. build
 3. deploy
 
-(TODO: more details)
+Build and deploy your application:
+
+1. Open a new terminal and login to cloud foundry: Run command `cf login`, enter your development user/password and select the BTP provider subaccount for the application.
+
+2. Navigate to the sub-folder with the sample application using command `cd Applications/author-readings-mt`.
+
+3. Run command `npm install` to install the messaging npm packages.
+
+4. Build the project by selecting `Build MTA Project` in the context menu of file `mta.yaml`. 
+
+5. Deploy the application by selecting `Deploy MTA Archive` in the context menu of file `./mta_archives/author-readings_1.0.0.mtar`.
+
+> Note: The first deployment of the application creates instances of BTP services in the provider subaccount , navigate to BTP provider subaccount and view the created services.
 
 ### Configure the Application Subdomain (Custom Domain)
 
