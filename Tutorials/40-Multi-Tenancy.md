@@ -453,7 +453,7 @@ To verify your modifications check the files in the samle application:
 - [service-implementation.js](../Applications/author-readings-mt/srv/service-implementation.js)
 - [reuse.js](../Applications/author-readings-mt/srv/reuse.js)
 
-### Support and Frequently Occurring Issues
+### Support and Maintainance
 
 Issue : Not able to connect to ERP via BTP destination
 
