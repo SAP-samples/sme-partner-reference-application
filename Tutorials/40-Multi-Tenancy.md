@@ -452,3 +452,38 @@ Remove the service implementation to emit event notifications and to implement E
 To verify your modifications check the files in the samle application:
 - [service-implementation.js](../Applications/author-readings-mt/srv/service-implementation.js)
 - [reuse.js](../Applications/author-readings-mt/srv/reuse.js)
+
+### Support and Frequently Occurring Issues
+
+Issue : Not able to connect to ERP via BTP destination
+
+Symptom : 
+- Destination to ERP is maintained correctly in BTP subaccount , BTP application raises the error message bad gateway.
+- User can retrieve the log using command *cf logs {service-name}*  , example : *cf logs author-readings-srv*
+- In the above case user gets the following error in the log : *Error during request to remote service: Could not fetch client credentials token for service of type "destination"*
+
+Root cause analysis : 
+- Navigate to *subscription management dashboard *
+- Select the subscribed application from the subscription list
+- Navigate to *details* section and dependencies subsection
+- Check the dependencies of the application and observe that the destination service is missing in the dependencies list.
+  <img src="./resources/Dependencies_without_destination.PNG" width="80%">
+Solution : 
+- Add the destination service as part of dependencies of Approuter and mtx module in deployment descriptor file mta.yaml and redeploy the application
+- details: 
+    - In the mtx.yaml file, to the Approuter module *author-readings-approuter* and to the Multi Tenancy Service Module (Onboarding, Upgrading) module *author-readings-mtx-srv* add the destination service *author-readings-destination-service* as part of requires as shown below 
+    ```json
+    - name: author-readings-approuter
+      requires:
+       - name: author-readings-destination-service    
+
+    - name: author-readings-mtx-srv
+      requires:
+       - name: author-readings-destination-service    
+    ```
+    - after the successful update of destinations the dependencies should like as shown below 
+      <img src="./resources/Dependencies_with_destination.PNG" width="80%">
+> Note: after the above changes and successfull deployment of application, make sure to perform the action *update* dependencies ( user have to click on "update" button in the details section) in *subscription management dashboard* 
+
+
+
