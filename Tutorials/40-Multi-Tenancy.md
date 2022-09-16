@@ -472,7 +472,7 @@ Solution :
 - Add the destination service as part of dependencies of Approuter and mtx module in deployment descriptor file mta.yaml and redeploy the application
 - details: 
     - In the [mta.yaml](../Applications/author-readings-mt/mta.yaml) file, to the Approuter module *author-readings-approuter* and to the Multi Tenancy Service Module (Onboarding, Upgrading) module *author-readings-mtx-srv* add the destination service *author-readings-destination-service* as part of requires as shown below 
-        ```json
+        ```yml
         - name: author-readings-approuter
         requires:
         - name: author-readings-destination-service    
