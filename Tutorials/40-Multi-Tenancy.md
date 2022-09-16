@@ -467,7 +467,7 @@ Root cause analysis :
 - Select the subscribed application from the subscription list
 - Navigate to *details* section and dependencies subsection
 - Check the dependencies of the application and observe that the destination service is missing in the dependencies list.
-  <img src="./resources/Dependencies_without_destination.PNG" width="80%">
+  <img src="./resources/Dependencies_without_destination.png" width="80%">
 Solution : 
 - Add the destination service as part of dependencies of Approuter and mtx module in deployment descriptor file mta.yaml and redeploy the application
 - details: 
@@ -482,7 +482,7 @@ Solution :
        - name: author-readings-destination-service    
     ```
     - after the successful update of destinations the dependencies should like as shown below 
-      <img src="./resources/Dependencies_with_destination.PNG" width="80%">
+      <img src="./resources/Dependencies_with_destination.png" width="80%">
 > Note: after the above changes and successfull deployment of application, make sure to perform the action *update* dependencies ( user have to click on "update" button in the details section) in *subscription management dashboard* 
 
 
