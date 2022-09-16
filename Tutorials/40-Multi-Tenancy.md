@@ -471,16 +471,16 @@ Root cause analysis :
 Solution : 
 - Add the destination service as part of dependencies of Approuter and mtx module in deployment descriptor file mta.yaml and redeploy the application
 - details: 
-    - In the mtx.yaml file, to the Approuter module *author-readings-approuter* and to the Multi Tenancy Service Module (Onboarding, Upgrading) module *author-readings-mtx-srv* add the destination service *author-readings-destination-service* as part of requires as shown below 
-    ```json
-    - name: author-readings-approuter
-      requires:
-       - name: author-readings-destination-service    
+    - In the [mta.yaml](../Applications/author-readings-mt/mta.yaml) file, to the Approuter module *author-readings-approuter* and to the Multi Tenancy Service Module (Onboarding, Upgrading) module *author-readings-mtx-srv* add the destination service *author-readings-destination-service* as part of requires as shown below 
+        ```json
+        - name: author-readings-approuter
+        requires:
+        - name: author-readings-destination-service    
 
-    - name: author-readings-mtx-srv
-      requires:
-       - name: author-readings-destination-service    
-    ```
+        - name: author-readings-mtx-srv
+        requires:
+        - name: author-readings-destination-service    
+        ```
     - after the successful update of destinations the dependencies should like as shown below 
       <img src="./resources/Dependencies_with_destination.png" width="80%">
 > Note: after the above changes and successfull deployment of application, make sure to perform the action *update* dependencies ( user have to click on "update" button in the details section) in *subscription management dashboard* 
