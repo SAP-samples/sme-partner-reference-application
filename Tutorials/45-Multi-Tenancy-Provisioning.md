@@ -48,7 +48,7 @@ BTP consumer subaccount:
 
 IAS Admin UI:
 	
-2. Open menu item *Applications* and create a new application of type *Bundled application*.
+2. Open menu item *Applications* under *Applica*tions & Resources* and create a new application of type *Bundled application*.
 	- Enter the required information like application display name, application URL, … The display name appears on user login screen and the login applies to all applications linked to the IAS tenant (following the SSO principle). Choose something meaningful text from an end-user point of view representing the scope of the IAS, for example "Almika Inc. - Author Readings" or something more general if you subscribed multiple apps in your consumer subaccount.
 	- Open section *SAML 2.0 Configuration" and upload the **Service provider SAML metadata file** from the BTP subaccount.
 	- Open section *Subject Name identifier* and select "E-Mail" as basic attribute.
@@ -56,7 +56,7 @@ IAS Admin UI:
     - Open section *Assertion Attributes* and add the user attribute *Groups* with value "Groups"
         > Note: The assertion attribute *Groups* is used to process authorization checks in the consumer subaccount based on user groups. The value "Groups" of the assertion attribute needs to be written with a capital "G" for BTP subaccounts!
 
-3. Download the **IDP SAML metadata file**: Open menu item *Tenant Settings* >> *SAML 2.0 Configuration* and click on *Download Metadata File* (the button in the lower left corner).
+3. Download the **IDP SAML metadata file**: Open menu item *Applications & Resources* >> *Tenant Settings* >> *SAML 2.0 Configuration* and click on *Download Metadata File* (the button in the lower left corner).
 
 BTP consumer subaccount:
 
