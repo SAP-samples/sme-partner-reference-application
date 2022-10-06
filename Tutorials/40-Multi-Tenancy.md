@@ -120,7 +120,7 @@ In the light of this setup we simplify our application and replace the usage of 
 5. Open file `./approuter/xs-app.json` and remove the routes. The xs-app.json only contains generic routes that apply for all web applications. In our example, we have app specific routes only. However, we have to keep the xs-app.json for the application router for project consistency.
 
 6. Adopt file `./app/authorreadingmanager/xs-app.json`. 
-**TODO**
+The webapplication routes can be configured using the xs-app.json and sample route configuration to access the service api's and html5 ui module can be referred in file `./app/authorreadingmanager/xs-app.json`
 
 
 ### Add Configuration for Multi-Tenancy 

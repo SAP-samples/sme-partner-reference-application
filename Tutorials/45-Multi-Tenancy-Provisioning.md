@@ -68,16 +68,17 @@ We are using IAS user groups to assign authorizaton roles to users. The user gro
 
 IAS Admin UI:
 
-1. Open menu item *User Management* and add the users who shall have access to the BTP application. Enter user details like name and e-mail and take into account that the e-mail is used as identifying attribute (use the same e-mail address in all related systems incl. IAS, ERP system, ...).
+1. Open menu item *User Management* under *Users & Authorizations* and add the users who shall have access to the BTP application. Enter user details like name and e-mail and take into account that the e-mail is used as identifying attribute (use the same e-mail address in all related systems incl. IAS, ERP system, ...).
 	
-2. Open menu item *User Groups* and add user groups that represent typical user roles and enter a unique (technical) *Name* and a meaningful *Display Name*, for example:
+2. Open menu item *User Groups* under *Users & Authorizations* and add user groups that represent typical user roles and enter a unique (technical) *Name* and a meaningful *Display Name*, for example:
 
     | Name:                      | Display name:              |
     | :------------------------- | :------------------------- |
     | AuthorReadingManager       | Author Reading Manager     |
     | Admin                      | Administrator              |
+   > Note: add *users* to the user group by clicking on *Add* button and select the user from the list of users and click on *Save*.
 
-3. Open menu item *Applications*, open the application referring to the BTP consumer subaccount, and navigate to *Assertion Attributes*. 
+3. Open menu item *Applications* under *Applications & Resources*, open the application referring to the BTP consumer subaccount, and navigate to *Assertion Attributes*. 
 Check if the *User Attribute* "Groups" is already mapped to the *Assertion Attribute* "Groups". If not, then add the attribute mapping.
 
 BTP consumer subaccount:
@@ -299,8 +300,10 @@ Add the BTP apps to the ByD Launchpad:
 
 
 ## Create Users and Assign Authorizations
+	- Create business user in SAP Business ByDesign and assign relevant work centers to newly created business user
+    - Users in SAP Business ByDesign could be created using *Service Agent* , for more detail refer to help documentation 
 
-(TODO: ByD service agent, user in IAS, user groups)
+    > Note: make sure the email-id of the user match with the email-id configured in IAS tenant ( custom IDP ) and assign the user to user group in IAS tenant.
 
 
 ## Remarks and Troubleshooting
@@ -310,5 +313,3 @@ If you delete and recreate a subscription of the BTP application, all consumer s
 
 Never remove the multi-tenant application in the provider subaccount without deleting all subscriptions first.
 If you accidentially deleted an application with existing subacriptions, then these subscriptions cannot be deleted because off-boarding proceedures cannot be processed. Send a support request to SAP to remove such dead-end subscriptions. 
-
-(TODO: debugging, dependencies, trace lifecycle operation, access logs, ...)
