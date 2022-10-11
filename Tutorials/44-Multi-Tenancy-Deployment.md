@@ -129,19 +129,18 @@ With the SAP Custom Domain Service you can configure subdomains for your applica
 
 ### Setup the Subscription Management Dashboard
 
-*Subscription Management Dashboard* will enable **lifecycle management of multi-tenant applications**. 
+The *Subscription Management Dashboard* supports the lifecycle management of multi-tenant applications. 
 
-*Pre-requisite*: subscribe and create instance of subscription management service. 
-Steps to follow : Open the *BTP Cockpit* (provider subaccount), navigate to *Instances and Subscriptions*, and create a subscription for application *Subscription Management Dashboard*, service plan *application*. 
+Pre-requisite: Subscribe and create an instance of the *Subscription Management Service*. 
 
-*Details of Subscription Management Dashboard*: 
-- The dashboard enables users to view the deployed multi-tenant applications with *status* like In-Process, Subscribed, Subscription Failed, UnSubscription failed, Update Failed and also *filtered by different time periods* like changed in the last 24 hours , changed in the last 7 days, changed in the last month, changed in the last 3 months, changed in the last 6 months and changed in the last 12 months.
+Steps to follow: 
+1. Open the *BTP Cockpit* (provider subaccount) and navigate to *Instances and Subscriptions*.
+2. Create a subscription for application *Subscription Management Dashboard*, service plan *application*. 
 
-- Users can perform *Actions* like *unsubscribe*, *update* and track the status of subscription process in progress.
+Capabilities of the *Subscription Management Dashboard*: 
+- The dashboard enables application providers to review the deployment of multi-tenant applications including the application- and subscription status and the change history respectively subscription history.
+- Application providers can perform subscription actions like *unsubscribe* and *update*, and track the status of subscriptions in progress.
+- In the overview section of the subscribed application, application owners can review information like the *Subscription status*, *Global accounts*, *Consumer subaccounts*, *Application name*, *Application URL*, *License Type* (Productive, Test tenant), *changed on* and *created on* details.
+- In the *Dependencies*-section application providers can review the service dependencies of the application. There is a tree view and a table view of dependencies. The information helps the user to view the full list of dependencies among various services used in the application. It outlines for example the dependencies between the application service module and modules for destinations, audit log, html5 application repository, connectivity services. 
 
-- In the Overview section of the subscribed application user can view information like *subscription status*, *global account* , *consumer sub account*, *app name* , *app URL*, *License Type* ( Productive , Test tenant), *changed on* and *created on* details.
-
-- In the **Dependencies** section user could view the service dependencies in the application. There is *tree view* and *table view* of dependencies . the information helps the user to view the full list of dependencies among various services used in the application . for instance the application service module is having dependency on modules like destination, auditlog, html5-app-repo, connectivity services and the user gets  overview of the dependencies in the dependencies section. 
-
-> Note: in case if your multi-tenant application is using custom Approuter along with mtx module , then make sure to add the destination service as the dependency ( the dependency can be added and declared by adding the destination service as requires property in the application deployment descriptor mta.yaml file)
-
+> Note: Make sure to add the destination service as the dependency, if your multi-tenant application is using a custom application router along with the mtx module (the dependency can be added and declared by adding the destination service as requires-property in the application deployment descriptor mta.yaml file).

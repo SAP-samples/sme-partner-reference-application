@@ -300,10 +300,17 @@ Add the BTP apps to the ByD Launchpad:
 
 
 ## Create Users and Assign Authorizations
-	- Create business user in SAP Business ByDesign and assign relevant work centers to newly created business user
-    - Users in SAP Business ByDesign could be created using *Service Agent* , for more detail refer to help documentation 
 
-    > Note: make sure the email-id of the user match with the email-id configured in IAS tenant ( custom IDP ) and assign the user to user group in IAS tenant.
+In our app design we rely on the business users and authorizations being created and managed in the Cloud ERP solution (here: *SAP Business ByDesign*) and the customers identity provisioning provider (here: *Identity Authentication Service*).
+As a general approach you create the user in the ERP solution and the IdP, and then assign the user group that includes the authorization to the partner application to the user.
+
+Step for *SAP Business ByDesign* as Cloud ERP:
+1. ByD: Hire an *Employee* or create a *Service Agent* in the *SAP Business ByDesign* system (for service agents, you need to trigger the creation of a user). Make sure to maintain the e-mail address for in-house communication of the employee or service agent (this e-mail is used as user identifying attribute for single sign-on).
+2. ByD: Edit the business user and assign relevant work centers (incl. the work center *Project Management*).
+3. IAS: Create the same user in the *Identity Authentication Service* system and enter the same e-mail address used in the ByD system.
+4. IAS: Assign the user group with the authorization for BTP application (for example the user group *Admin* or *AuthorReadingManager*) to the user.
+
+> Note: Make sure to maintain the same e-mail address for users in the Cloud ERP and the IAS tenant. Otherwise single sign-on and the API-led integration using OAuth SAML bearer does not work.
 
 
 ## Remarks and Troubleshooting
