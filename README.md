@@ -47,7 +47,7 @@ Additionally, the sample showcases qualities relevant for enterprise-grade partn
 14. Seamless and secure frontend and back-channel integration with SAP ERP solutions
 15.	Delivering “open solutions” by integration-ready OData APIs and business events following SAP technology alignments
 16. Extensible by citizen user tools (AppGyver) to add web apps and mobile apps for customer specific use cases and user groups (planned)
-17. Deployment as one-off and multi-customer solution (planned) 
+17. Deployment as one-off and multi-customer solution 
 
 <img src="./Tutorials/images/readme_btp_components.jpg" width="100%">
 
