@@ -13,7 +13,7 @@ With this repository we want to provide guidance for SAP partners in the market 
 
 The repository includes a sample application that is ready to deploy and run, and tutorials to re-build the sample application from scratch following a progressive development approach from one-off to multi-consumer solutions.
 
-<img src="./Tutorials/images/readme_progressive_dev.jpg" width="90%">  
+<img src="./Tutorials/images/readme_progressive_dev.jpg" width="100%">  
 
 **About the sample application "Author Readings":**
 
@@ -24,7 +24,7 @@ Additionally an SAP partner provided a side-by-side application named "Author Re
 
 It was in particular important for you to separate the event publishing and participant registration from your ERP system for security and compliance reasons. Nevertheless, as a power user working in both systems you asked the partner to ensure a seamless user experience and navigation between the SAP system and the partner application.
 
-<img src="./Tutorials/images/readme_sample-use-case.jpg" width="80%">
+<img src="./Tutorials/images/readme_sample-use-case.jpg" width="100%">
 
 Features of the author reading application:
 
@@ -48,6 +48,8 @@ Additionally, the sample showcases qualities relevant for enterprise-grade partn
 15.	Delivering “open solutions” by integration-ready OData APIs and business events following SAP technology alignments
 16. Extensible by citizen user tools (AppGyver) to add web apps and mobile apps for customer specific use cases and user groups (planned)
 17. Deployment as one-off and multi-customer solution (planned) 
+
+<img src="./Tutorials/images/readme_btpcomponents.jpg" width="100%">
 
 **Join our community!**
 
