@@ -59,28 +59,28 @@ Next we will add an *SAP Fiori Element* based user interface.
 ### Fiori Element Application Wizard
 Start the wizard by searching for *Create MTA Module from Template*.
 
-<img src="./resources/FE-Wizard-open.png" width="80%">
+<img src="./images/FE-Wizard-open.png" width="80%">
 
 Select the Module Template: *SAP Fiori Application Template*
 Select *List Report Object Page*
 
 Select a Data Source and Service as shown below.
 
-<img src="./resources/FE-Wizard2.png" width="80%">
+<img src="./images/FE-Wizard2.png" width="80%">
 
 Select the entity, which should be shown in the main list of the List Report. In our example this is the *AuthorReadings*.
 
-<img src="./resources/FE-Wizard3.png" width="80%">
+<img src="./images/FE-Wizard3.png" width="80%">
 
 And add further project attributes
 
-<img src="./resources/FE-Wizard4.png" width="80%">
+<img src="./images/FE-Wizard4.png" width="80%">
 
 Select *Cloud Foundry* as Target of the Deployment Configuration. For now the destination name is set to *none*, because we will configure it in a later step of this tutorial.
 
 Last configure the *Fiori Launchpad Configuration*
 
-<img src="./resources/FE-Wizard5.png" width="80%">
+<img src="./images/FE-Wizard5.png" width="80%">
 
 and press *finish*.
 
@@ -88,7 +88,7 @@ The wizard will create a couple of files in the `/app` folder, which is containi
 
 Now the application can already being started in SAP Business Application Studio. The Fiori Launchpad including the generated tile appears.
 
-<img src="./resources/FLP1.png" width="40%">
+<img src="./images/FLP1.png" width="40%">
 
 ### Fine Tune User Interface
 The generated user interface can be adapted to specific needs by changing the generated files. Most important are:

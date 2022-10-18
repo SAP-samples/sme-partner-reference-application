@@ -235,7 +235,7 @@ Once you have deployed your application successfully, the included Web Applicati
 
 3. Select the content provider *HTML5 Apps* and fetch any updates of your Web application by clicking the fetch updated content icon. The HTML5 Apps content provider should now expose the latest version of the Web application. 
 
-<img src="./resources/launchpad_sitemanager1.jpg" width="90%">
+<img src="./images/launchpad_sitemanager1.jpg" width="90%">
 
 > Note: You need to update the content provider whenever you changed the Web application.
 
@@ -253,7 +253,7 @@ Once you have deployed your application successfully, the included Web Applicati
 
 8. Save the group.
 
-<img src="./resources/launchpad_sitemanager3.jpg" width="90%">
+<img src="./images/launchpad_sitemanager3.jpg" width="90%">
 
 **Assign the Web application to the default role:**
 

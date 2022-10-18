@@ -13,7 +13,7 @@ Back-channel integration:
 3. Create ByD projects from the BTP app using OData APIs with principal propagation,
 4. The BTP subscribes to ByD events notifications to set the status of author readings according the status of related projects in ByD.
 
-<img src="./resources/ByD_integration_overview.jpg" width="80%">
+<img src="./images/ByD_integration_overview.jpg" width="80%">
 
 ## Configure Single Sign-on for ByD
 
@@ -784,4 +784,4 @@ Add the BTP apps to the ByD Launchpad:
 
 9. Test frontend SSO: Open ByD using the SSO-URL (following the pattern https://myXXXXXX-sso.sapbydesign.com/)and login using your IAS user. Then launch the BTP application via the ByD launchpad. No additional authentication should be required.
 
-<img src="./resources/byd_launchpad.jpg" width="100%">
+<img src="./images/byd_launchpad.jpg" width="100%">

@@ -12,7 +12,7 @@ Let's go on a guided tour through the integrated sample solution:
 
 2. On the ByD Launchpad you find the partner application "*Author Readings*". Click on the tile to launch the app in a new browser window.
     
-    <img src="./resources/20-byd-launchpad.jpg" width="80%">
+    <img src="./images/20-byd-launchpad.jpg" width="80%">
 
     > Note: The partner app is embedded on the ByD launchpad using ByD URL mashup capabilities. Additionally you can launch other BTP apps relevant for key users and administrators such as the *Identity Authentication Service* to manage user authentications and authorizations and the *Audit Log Viewer* to review user logins, the read access log and logged changes.
     Launching these apps does not require to login again because they linked to your corporate IDP as well and you benefit from single sign-on.
@@ -30,13 +30,13 @@ Let's go on a guided tour through the integrated sample solution:
 
 6. Click on button "*Create Project*". In result the system creates a project in ByD based on a project template.
 
-    <img src="./resources/20-create-project.jpg" width="80%">
+    <img src="./images/20-create-project.jpg" width="80%">
 
     > Note: The app creates the project in ByD using a ByD OData service for projects with user propagation. This means your ByD user authorizations apply in the partner application as well; you cannot create a project if your user does not have write-authorizations for ByD projects. 
 
 7. After creating the project you see some brief project details in section *Project Data*. The project ID is displayed as link. Click on the project ID to navigate to the project overview.
 
-    <img src="./resources/20-project-mixin.jpg" width="80%">
+    <img src="./images/20-project-mixin.jpg" width="80%">
 
     > Note: The app mixed-in live project data from ByD (no data replication with delays). The app gets the ByD project data using the ByD OData service for projects and user propagation again, and hence this data is only visible if you have the authorizations to read projects in ByD.
     The link to launch the ByD project overview is assembled dynamically and uses the ByD hostname of your BTP subaccount configuration as well as the project ID.
@@ -44,7 +44,7 @@ Let's go on a guided tour through the integrated sample solution:
 
 8. On the ByD project overview click on "*View All*" to navigate to the project GANT-chart. You can see that the project has been created using a template with tasks to plan and run the event and that the project finish date has been taken over from the author reading event date. Assume your project requires additional staffing and you need to put the project on hold until clarification: Select the checkbox "*On Hold*" in section "*Basic Data*". Save the project changes.
 
-    <img src="./resources/20-project-onhold.jpg" width="80%">
+    <img src="./images/20-project-onhold.jpg" width="80%">
 
     > Note: Saving the project triggers a event notification of the ByD business object *Paroject*, and ByD publishes this event notification to the *SAP Event Mesh*. You can monitor the event notifications in the ByD work center view *Application and User Management - Event Notification Monitoring* or on the *Event Mesh* application.
 

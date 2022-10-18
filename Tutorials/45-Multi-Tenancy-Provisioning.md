@@ -4,7 +4,7 @@ Our goal is to provide our multi-customer application as "partner-managed applic
 
 As result of this setup, all customers use shared BTP resources like the Cloud Foundry runtime and the HANA cloud service. At the same time the BTP multi-tenancy ensures a secure separation of customer data (by DB schemas) and user access management.
 
-<img src="./resources/mt_deployment_models.jpg" width="80%">
+<img src="./images/mt_deployment_model.jpg" width="40%">
 
 
 ## Setup BTP Consumer Subaccount
@@ -117,7 +117,7 @@ Back-channel integration:
 
 5. Create and read ByD projects from the BTP app using OData APIs with principal propagation,
 
-<img src="./resources/mt_byd_integration.jpg" width="80%">
+<img src="./images/mt_byd_integration.jpg" width="70%">
 
 ### Configure Single Sign-on for ByD
 
@@ -296,7 +296,9 @@ Add the BTP apps to the ByD Launchpad:
 
 9. Test frontend SSO: Open ByD using the SSO-URL (following the pattern https://myXXXXXX-sso.sapbydesign.com/) and login using your IAS user. Then launch the BTP application via the ByD launchpad. No additional authentication should be required.
 
-<img src="./resources/mt_byd_launchpad.jpg" width="80%">
+<img src="./images/mt_byd_launchpad.jpg" width="80%">
+
+> Note: If the SAP Launchpad raises the error message *"[…] refuse to connect"* or *"Refused to display '[…]' in a frame because it set 'X-Frame-Options' to 'sameorigin'"* on opening the web app (click on the app tile), then add the property `httpHeaders: "[{ \"Content-Security-Policy\": \"frame-ancestors 'self' https://*.hana.ondemand.com\" }]"` to the application router module in your `mta.yaml` file. See tutorial [Enhance the BTP Application for Multi-Tenancy](Tutorials/40-Multi-Tenancy.md) for more details.
 
 
 ## Create Users and Assign Authorizations
