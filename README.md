@@ -49,7 +49,7 @@ Additionally, the sample showcases qualities relevant for enterprise-grade partn
 16. Extensible by citizen user tools (AppGyver) to add web apps and mobile apps for customer specific use cases and user groups (planned)
 17. Deployment as one-off and multi-customer solution (planned) 
 
-<img src="./Tutorials/images/readme_btpcomponents.jpg" width="100%">
+<img src="./Tutorials/images/readme_btp_components.jpg" width="100%">
 
 **Join our community!**
 
