@@ -288,7 +288,7 @@ In this step we refactor the project deployment configuration to run a multi-ten
                 service-plan: broker      
         ```    
 
-    7. The are no changes to the resource *Audit log service* - nothing to do here.
+    7. Change the parameters of resource *Audit log service* to use service plan *oauth2*.
         ```yml
         resource: 
             # Audit Log Service 
