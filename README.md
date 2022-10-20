@@ -11,7 +11,7 @@ With this repository we want to provide guidance for SAP partners in the market 
 - best practices ("golden paths") to build, deploy and provision full-stack BTP applications, and
 - we pay special attention to the interoperability and integration with cloud ERP solutions such as *SAP Business ByDesign* and *S/4HANA Cloud*.
 
-The repository includes a sample application that is ready to deploy and run, and tutorials to re-build the sample application from scratch following a progressive development approach from one-off to multi-consumer solutions.
+The repository includes a sample application that is ready to deploy and run, and tutorials to re-build the sample application from scratch following a incremental development approach from one-off to multi-consumer solutions.
 
 <img src="./Tutorials/images/readme_progressive_dev.jpg" width="100%">  
 
