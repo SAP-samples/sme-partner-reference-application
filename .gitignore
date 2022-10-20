@@ -33,3 +33,4 @@ Makefile*.mta
 *.flattened-pom.xml
 
 default-*.json
+package-lock.json
