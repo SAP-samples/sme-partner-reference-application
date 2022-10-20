@@ -10,7 +10,7 @@
         "@sap/cds": "^5.9.4",
         "express": "4.17.1",
         "hdb": "0.19.1",
-        "passport": "^0.5.2",
+        "passport": "^0.6.0",
         "cors": "^2.8.5",
         "request": "^2.88.2",
         "@sap/xb-msg-amqp-v100": "^0.9.51",

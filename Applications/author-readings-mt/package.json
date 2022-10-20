@@ -13,7 +13,7 @@
         "cors": "^2.8.5",
         "express": "4.17.1",
         "hdb": "0.19.1",
-        "passport": "^0.5.2",
+        "passport": "^0.6.0",
         "request": "^2.88.2"
     },
     "devDependencies": {
