@@ -1,0 +1,226 @@
+_schema-version: "3.1"
+ID: author-readings
+description: "SME Partner Reference Sample Application"
+version: 1.0.0
+
+parameters:
+  displayname: SME Partner Reference Sample Application
+  xsappname: author-reading-${org}-${space}
+  app-url: ${org}-${space}
+  approuter-url: ${app-url}-approuter
+  srv-url: ${app-url}-srv
+  mtx-srv-url: ${app-url}-mtx-srv
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true
+  
+build-parameters:
+  before-all:
+  - builder: custom
+    commands:
+    - npm ci --production
+    - npx -p @sap/cds-dk cds build --production
+
+
+# -------------------------------------------------------------------------
+#  Modules 
+# -------------------------------------------------------------------------
+
+modules:
+
+# Application Router Module
+- name: author-readings-approuter
+  type: nodejs
+  path: approuter 
+  parameters:
+    disk-quota: 256M
+    memory: 256M
+    routes:
+      - route: ${approuter-url}.${domain}
+      - route: "*.${app-url}.${domain}"
+  provides:
+  - name: approuter-binding
+    properties:
+      app-fqdn: ${approuter-url}.${domain}
+      app-url: ${protocol}://~{approuter-binding/app-fqdn}  
+  requires:
+    - name: srv-api
+      group: destinations
+      properties:
+        name: srv-api # Compare ./app/authorreadingmanager/xs-app.json
+        url: ~{srv-url}
+        forwardAuthToken: true
+    - name: author-readings-uaa
+    - name: author-readings-destination-service
+    - name: author-readings-auditlog
+    - name: author-readings-registry
+    - name: author-readings-html5-runtime    
+  properties:
+    TENANT_HOST_PATTERN: "^(.*).${app-url}.${domain}" 
+    httpHeaders: "[{ \"Content-Security-Policy\": \"frame-ancestors 'self' https://*.hana.ondemand.com\" }]" # Allow the SAP launchpad to host the app in-place
+    CORS:
+    - uriPattern: .*
+      allowedOrigin:
+      - host: "*.${app-url}.${domain}"
+        protocol: "https"
+
+# Service Module
+- name: author-readings-srv
+  type: nodejs
+  path: gen/srv
+  requires:
+  - name: author-readings-service-manager
+  - name: author-readings-uaa
+  - name: author-readings-destination-service
+  - name: author-readings-auditlog 
+  - name: author-readings-registry 
+  provides:
+  - name: srv-api
+    properties:
+      srv-url: ${protocol}://${srv-url}.${domain} # ${default-url}
+  - name: srv-multi-tenancy
+    properties:
+      tenant-delimiter: "."
+  parameters:
+    buildpack: nodejs_buildpack
+    routes:
+      - route: ${srv-url}.${domain}
+  properties:
+    SUBSCRIPTION_URL: ${protocol}://\${tenant_subdomain}.${srv-url}.${domain} # ${default-url}    
+
+# Multi Tenancy Service Module (Onboarding, Upgrading)
+- name: author-readings-mtx-srv
+  type: nodejs
+  path: gen/srv
+  requires:
+  - name: author-readings-auditlog
+  - name: author-readings-uaa
+  - name: author-readings-destination-service  
+  - name: author-readings-service-manager
+    properties:      
+        SUBSCRIPTION_URL: ${protocol}://\${tenant_subdomain}.${app-url}.${domain} # ${default-url}
+  parameters:
+    routes:
+      - route: ${mtx-srv-url}.${domain}
+  provides:
+  - name: mtx-binding
+    properties:
+      app-fqdn: ${mtx-srv-url}.${domain}
+      app-url: ${protocol}://~{mtx-binding/app-fqdn}  
+  - name: author-readings-mtx-srv-destination
+    public: true
+    properties:
+      name: mtx-srv-api
+      url: ${protocol}://${mtx-srv-url}.${domain}
+      forwardAuthToken: true
+  - name: mtx-srv-api # required by consumers of CAP services (e.g. approuter)
+    properties:
+      mtx-srv-url: ${protocol}://${mtx-srv-url}.${domain} # ${default-url}    
+
+# App UI Content Deployer Module (deploy web app content into the HTML5 application repository)
+- name: author-readings-app-deployer
+  type: com.sap.application.content
+  path: gen
+  requires:
+  - name: author-readings-html5-repo-host
+    parameters:
+      content-target: true
+  - name: author-readings-uaa
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - authorreadingmanager.zip
+      name: authorreadingmanager
+      target-path: resources/
+
+# App UI Resource Module
+- name: authorreadingmanager
+  type: html5
+  path: app/authorreadingmanager
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+
+
+# -------------------------------------------------------------------------
+#  Resources
+# -------------------------------------------------------------------------
+
+resources:
+
+# Service Manager
+- name: author-readings-service-manager
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: service-manager
+    service-plan: container
+  properties:
+    hdi-service-name: ${service-name}
+
+# Destination Service
+- name: author-readings-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: destination
+    service-plan: lite
+    config:
+      HTML5Runtime_enabled: true      
+
+# UAA service (Authorization and Trust Management Service)
+- name: author-readings-uaa
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      tenant-mode: shared
+      xsappname: ${xsappname}  
+    path: ./xs-security.json
+    service: xsuaa
+    service-name: author-readings-uaa
+    service-plan: broker
+
+# Audit Log Service 
+- name: author-readings-auditlog
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: auditlog
+    service-plan: oauth2 
+
+# Service Registry (SaaS Provisioning Service)
+- name: author-readings-registry
+  type: org.cloudfoundry.managed-service
+  requires:
+    - name: mtx-binding
+    - name: approuter-binding
+  parameters:
+    service: saas-registry
+    service-plan: application
+    config:
+      xsappname: ${xsappname}
+      appName: ${xsappname}
+      displayName: ${displayname}
+      description: ${displayname}
+      category: 'Category'
+      appUrls:
+        getDependencies: ~{approuter-binding/app-url}/callback/v1.0/dependencies  
+        onSubscription: ~{mtx-binding/app-url}/mtx/v1/provisioning/tenant/{tenantId}
+        callbackTimeoutMillis: 300000
+
+# HTML5 Runtime (HTML5 Application Repository Service)
+- name: author-readings-html5-runtime
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-plan: app-runtime
+
+# HTML5 Repository (HTML5 Application Repository Service)
+- name: author-readings-html5-repo-host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-plan: app-host
+    config:
+      sizeLimit: 10

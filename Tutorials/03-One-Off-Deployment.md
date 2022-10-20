@@ -235,7 +235,7 @@ Once you have deployed your application successfully, the included Web Applicati
 
 3. Select the content provider *HTML5 Apps* and fetch any updates of your Web application by clicking the fetch updated content icon. The HTML5 Apps content provider should now expose the latest version of the Web application. 
 
-<img src="./resources/launchpad_sitemanager1.jpg" width="90%">
+<img src="./images/launchpad_sitemanager1.jpg" width="90%">
 
 > Note: You need to update the content provider whenever you changed the Web application.
 
@@ -253,7 +253,7 @@ Once you have deployed your application successfully, the included Web Applicati
 
 8. Save the group.
 
-<img src="./resources/launchpad_sitemanager3.jpg" width="90%">
+<img src="./images/launchpad_sitemanager3.jpg" width="90%">
 
 **Assign the Web application to the default role:**
 
@@ -263,7 +263,7 @@ In this step, you’ll assign your app to the "Everyone" role. This is a default
 
 10. Click the role *Everyone* to open the role editor.
 
-11. Edit the role: On the *Assignments*-panel, click into the search box to get the list of available apps. Click on "+"-symbol behind your app to assign your app to the role.
+11. Press the button *Edit*.  On the *Assignments*-panel, click into the search box to get the list of available apps. Click on "+"-symbol behind your app to assign your app to the role.
 
 12. Save the role.
 
@@ -273,7 +273,7 @@ In this step we create and review a launchpad site. If you already have a site, 
 
 13. Open the *Site Directory*. Create a site and enter a site name.
 
-14. Launch the site with button *Go to site* and test your Web application. 
+14. Launch the site by opening the page URL provided in the *site settings* and test your Web application. 
 
 > Note: Take note of the launchpad site URL as **BTP Application Launchpad URL**. On the launchpad, open the context menu of the tile "Author Readings" and take note of the URL as **BTP Application URL**. We will use these URLs for later testing and to embedd the BTP application in the launchpads of ByD and S4HANA Cloud.
 
@@ -342,7 +342,7 @@ IAS Admin UI:
 
 1. Open menu item *User Management* and add the users who shall have access to the BTP application. Enter user details like name and e-mail and take into account that the e-mail is used as identifying attribute and hence I would recommend to use the e-mail address as used in the ERP system that we will integrate later.
 	
-2. Open menu item *User Groups* and add user groups that represent typical user roles and enter a unique (technical) *Name* and a meaningful "Display Name*, for example:
+2. Open menu item *User Groups* and add user groups that represent typical user roles and enter a unique (technical) *Name* and a meaningful *Display Name*, for example:
 
     | Name:                      | Display name:              |
     | :------------------------- | :------------------------- |

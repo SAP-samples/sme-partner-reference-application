@@ -490,7 +490,7 @@ srv.on("createProject", async (req) => {
                 
                 // Read the ByD system URL dynamically from BTP destination "byd-url"
                 var bydRemoteSystem = await reuse.getDestinationURL(req , 'byd-url'); 
-
+                
                 // Set the URL of ByD project overview screen for UI navigation
                 var bydRemoteProjectExternalURL =
                     "/sap/ap/ui/runtime?bo_ns=http://sap.com/xi/AP/ProjectManagement/Global&bo=Project&node=Root&operation=OpenByProjectID&object_key=" +
@@ -570,6 +570,9 @@ srv.on("userInfo", async (req) => {
     return results;
 });
 
+
+  
+
 // ----------------------------------------------------------------------------
 // Implementation of remote OData services (back-channel integration with ByD)
 
@@ -631,6 +634,7 @@ srv.on("READ", "ProjectsTechUser", async (req) => {
 // ----------------------------------------------------------------------------
 // Event-based integration with ByD
 
+/*
 const bydmessage = await cds.connect.to("byd_messaging");  
     
 bydmessage.on("sap/byd/project/ProjectUpdated", async msg => {
@@ -707,6 +711,6 @@ bydmessage.on("sap/byd/project/ProjectUpdated", async msg => {
         console.log("Internal error on processing ByD event notifications: " + error);
     }
 })    
-
+*/
     
 })

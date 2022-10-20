@@ -54,6 +54,7 @@ function validatePhone(phone) {
 // Emit event message to event mesh
 async function emitAuthorReadingEvent(req, id, eventMeshTopic) {
 
+  /*
   // Return updated reading event data
   const authorReadings = await SELECT.from("sap.samples.authorreadings.AuthorReadings").where({ ID: id });
   const authorReading = authorReadings[0];
@@ -82,6 +83,8 @@ async function emitAuthorReadingEvent(req, id, eventMeshTopic) {
   } catch (error) {
     req.error(error);
   }
+  */
+
 }
 
 // Reuse function to get the ERP URL

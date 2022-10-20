@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="E=edge" />
+        <title>Author Readings</title>
+        <style>
+            html, body, body > div, #container, #container-uiarea {
+                height: 100%;
+            }
+        </style>
+
+        <!-- Remove shell header and sandbox
+        <script>
+            window['sap-ushell-config'] = {
+                defaultRenderer: 'fiori2',
+                applications: {
+                    'fe-lrop-v4': {
+                        title: 'Manage Author Readings',
+                        description: 'An application to create and manage author readings.',
+                        additionalInformation: 'SAPUI5.Component=authorreadingmanager',
+                        applicationType: 'URL',
+                        url: './',
+                        navigationMode: 'embedded'
+                    }
+                }
+            };
+        </script>
+
+        <script src="https://sapui5.hana.ondemand.com/1.100.0/test-resources/sap/ushell/bootstrap/sandbox.js"></script>
+        <script
+            src="https://sapui5.hana.ondemand.com/1.100.0/resources/sap-ui-core.js"
+            data-sap-ui-libs="sap.m, sap.ushell, sap.fe.templates"
+            data-sap-ui-compatVersion="edge"
+            data-sap-ui-theme="sap_fiori_3_dark"
+            data-sap-ui-frameOptions="allow"
+            data-sap-ui-bindingSyntax="complex"
+        ></script>
+        <script>
+            sap.ui.getCore().attachInit(function() {
+                sap.ushell.Container.createRenderer().placeAt('content');
+            });
+        </script>
+        -->
+
+        <!-- Replacement for Launchpad sandbox; load UI5 library -->
+        <script
+            id="sap-ui-bootstrap" 
+            src="https://sapui5.hana.ondemand.com/1.102.1/resources/sap-ui-core.js" 
+            data-sap-ui-theme="sap_horizon" 
+            data-sap-ui-resourceroots='{
+                "authorreadingmanager": "./"
+            }' 
+            data-sap-ui-oninit="module:sap/ui/core/ComponentSupport" 
+            data-sap-ui-compatVersion="edge" 
+            data-sap-ui-async="true">
+        </script>
+
+    </head>
+    <body class="sapUiBody sapUiSizeCompact" id="content">
+
+        <!-- Render the app UI -->
+        <div 
+            data-sap-ui-component 
+            data-name="authorreadingmanager"
+            data-id="container"
+            data-settings='{"id" : "authorreadingmanager"}'
+            data-handle-validation="true">
+        </div>
+
+    </body>
+</html>

@@ -59,36 +59,39 @@ Next we will add an *SAP Fiori Element* based user interface.
 ### Fiori Element Application Wizard
 Start the wizard by searching for *Create MTA Module from Template*.
 
-<img src="./resources/FE-Wizard-open.png" width="80%">
+<img src="./images/FE-Wizard-open.png" width="80%">
 
 Select the Module Template: *SAP Fiori Application Template*
 Select *List Report Object Page*
 
 Select a Data Source and Service as shown below.
 
-<img src="./resources/FE-Wizard2.png" width="80%">
+<img src="./images/FE-Wizard2.png" width="80%">
 
 Select the entity, which should be shown in the main list of the List Report. In our example this is the *AuthorReadings*.
 
-<img src="./resources/FE-Wizard3.png" width="80%">
+<img src="./images/FE-Wizard3.png" width="80%">
 
 And add further project attributes
 
-<img src="./resources/FE-Wizard4.png" width="80%">
+<img src="./images/FE-Wizard4.png" width="80%">
 
 Select *Cloud Foundry* as Target of the Deployment Configuration. For now the destination name is set to *none*, because we will configure it in a later step of this tutorial.
 
 Last configure the *Fiori Launchpad Configuration*
 
-<img src="./resources/FE-Wizard5.png" width="80%">
+<img src="./images/FE-Wizard5.png" width="80%">
 
 and press *finish*.
 
 The wizard will create a couple of files in the `/app` folder, which is containing all user interface related files.
 
-Now the application can already being started in SAP Business Application Studio. The Fiori Launchpad including the generated tile appears.
+Now the application can already being started for local testing in SAP Business Application Studio. 
+1. Open a terminal and start the app with the sandbox profile using the run command `cds watch --profile sandbox`. 
+2. Use the test users as listed in file `.cdsrc.json`. 
+3. The Launchpad sandbox including the generated tile appears; click on the tile "Manage Author Readings" to launch the web app.
 
-<img src="./resources/FLP1.png" width="40%">
+    <img src="./images/FLP1.png" width="40%">
 
 ### Fine Tune User Interface
 The generated user interface can be adapted to specific needs by changing the generated files. Most important are:
@@ -266,9 +269,20 @@ Last we need to define some users and their roles for local testing. This is don
 }
 ```
 
-Now the application can be started and a user login popup appears. Log in with one of the 3 defined users and see how the authorization definition works.
-
-> Note: If you would like to switch users, the browser cache needs to be cleared before. This can be for example done in Chrome by pressing CTRL+SHIFT+DEL (or in German: STRG+SHIFT+ENTF), go to `Advanced` and choose a time range and `Passwords and other sign-in data`.
-
 ## Testing
+
+Now the web application can be started and locally tested in the SAP Business Application Studio:
+1. Open a terminal in the SAP Business Application Studio 
+2. Run command `npm install` to ensure all modules are loaded and installed.
+3. Start the app with the sandbox profile using the run command `cds watch --profile sandbox`; the popup "A service is listening to port 4004" indicates that the sandbox runtime has been started successfully.
+4. Open the test environment by clicking on button "Open in a New Tab" on the popup or by clicking on the link "http://localhost:4004" in the terminal. In result a browser tab opens with the all web applications and OData service endpoints. 
+5. Testing the web app: 
+    1. Click on the *Web Application* */authorreadingmanager/webapp/index.html*
+    2. A logon popup appears; use the test users as listed in file `.cdsrc.json`.
+    3. The Launchpad sandbox including the generated tile appears; click on the tile "Manage Author Readings" to launch the web app.
+
+> Note: If you would like to switch users, the browser cache needs to be cleared before. This can be for example done in Chrome by pressing `CTRL+SHIFT+DEL` (or in German: `STRG+SHIFT+ENTF`), go to *Advanced* and choose a time range and *Passwords and other sign-in data*.
+
+## Test Automation
+
 It is always a good idea to add automatic tests to the application. This can be done by using standard javascript libraries like chai and mocha.

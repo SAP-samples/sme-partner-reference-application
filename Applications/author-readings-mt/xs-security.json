@@ -1,0 +1,83 @@
+{
+    "scopes": [
+        {
+            "name": "$XSAPPNAME.AuthorReadingManagerRole",
+            "description": "AuthorReadingManagerRole"
+        },
+        {
+            "name": "$XSAPPNAME.AuthorReadingAdminRole",
+            "description": "AuthorReadingAdminRole"
+        },
+        {
+            "name": "$XSAPPNAME.MtxDiagnose",
+            "description": "Diagnose MTX"
+          },
+          {
+            "name": "$XSAPPNAME.mtcallback",
+            "description": "Subscribe to applications",
+            "grant-as-authority-to-apps": [
+              "$XSAPPNAME(application,sap-provisioning,tenant-onboarding)"
+            ]
+          },
+          {
+            "name": "$XSAPPNAME.Callback",
+            "description": "Multi Tenancy Callback Access (approuter)",
+            "grant-as-authority-to-apps": [
+              "$XSAPPNAME(application,sap-provisioning,tenant-onboarding)"
+            ]
+          },
+          {
+            "name": "$XSAPPNAME.mtdeployment",
+            "description": "Deploy applications"
+          }
+    ],
+    "attributes": [],
+    "role-templates": [
+        {
+            "name": "AuthorReadingManagerRole",
+            "description": "generated",
+            "scope-references": [
+                "$XSAPPNAME.AuthorReadingManagerRole"
+            ],
+            "attribute-references": []
+        },
+        {
+            "name": "AuthorReadingAdminRole",
+            "description": "generated",
+            "scope-references": [
+                "$XSAPPNAME.AuthorReadingAdminRole"
+            ],
+            "attribute-references": []
+        },
+        {
+            "name": "MultitenancyAdministrator",
+            "description": "Administrate multitenant applications",
+            "scope-references": [
+              "$XSAPPNAME.MtxDiagnose",
+              "$XSAPPNAME.mtdeployment",
+              "$XSAPPNAME.mtcallback"
+            ]
+          }
+    ],
+    "role-collections": [
+        {
+            "name": "AuthorReadingManagerRoleCollection",
+            "description": "Author Reading Manager",
+            "role-template-references": [
+                "$XSAPPNAME.AuthorReadingManagerRole"
+            ]
+        },
+        {
+            "name": "AuthorReadingAdminRoleCollection",
+            "description": "Author Readings Administrator",
+            "role-template-references": [
+                "$XSAPPNAME.AuthorReadingAdminRole"
+            ]
+        }
+    ],
+    "authorities": [
+        "$XSAPPNAME.MtxDiagnose",
+        "$XSAPPNAME.mtdeployment",
+        "$XSAPPNAME.mtcallback"
+    ]    
+}

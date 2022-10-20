@@ -7,14 +7,14 @@
     "license": "SAP SAMPLE CODE LICENSE",
     "dependencies": {
         "@sap-cloud-sdk/connectivity": "^2.8.0",
+        "@sap/audit-logging": "^5.1.0",
         "@sap/cds": "^5.9.4",
+        "@sap/cds-mtx": "^2",
+        "cors": "^2.8.5",
         "express": "4.17.1",
         "hdb": "0.19.1",
         "passport": "^0.5.2",
-        "cors": "^2.8.5",
-        "request": "^2.88.2",
-        "@sap/xb-msg-amqp-v100": "^0.9.51",
-        "@sap/audit-logging": "^5.1.0"
+        "request": "^2.88.2"
     },
     "devDependencies": {
         "@sap/ux-specification": "^1.96.9",
@@ -42,6 +42,15 @@
             },
             "uaa": {
                 "kind": "xsuaa"
+            },
+            "[production]": {
+                "db": {
+                    "kind": "hana-mt"
+                },
+                "auth": {
+                    "kind": "xsuaa"
+                },
+                "multitenancy": true
             },
             "byd_khproject": {
                 "kind": "odata-v2",
@@ -79,25 +88,6 @@
                     }
                 }
             },
-            "outbound_messaging": {
-                "kind": "enterprise-messaging-shared",
-                "format": "cloudevents",
-                "publishPrefix": "sap/samples/authorreadings/",
-                "webhook": {
-                    "waitingPeriod": 60000,
-                    "qos": 0
-                }
-            },
-            "byd_messaging": {
-                "kind": "enterprise-messaging-shared",
-                "queue": {
-                    "name": "sap/samples/authorreadings/bydprojectevents"
-                },
-                "webhook": {
-                    "waitingPeriod": 60000,
-                    "qos": 0
-                }
-            },
             "audit-log": {
                 "[sandbox]": {
                     "kind": "audit-log-to-console"
@@ -109,6 +99,11 @@
         },
         "hana": {
             "deploy-format": "hdbtable"
+        },
+        "mtx": {
+            "element-prefix": "Z_",
+            "namespace-blocklist": [],
+            "extension-allowlist": []
         }
     },
     "sapux": [

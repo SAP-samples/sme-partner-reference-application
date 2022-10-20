@@ -8,15 +8,21 @@ gen/
 node_modules/
 target/
 dist/
+resources/
+*.*-mt_mta_build_tmp
 
 # Web IDE, App Studio
 .che/
 .gen/
+.vscode
+.idea
 
 # MTA
 *_mta_build_tmp
 *.mtar
+mtad.yaml
 mta_archives/
+Makefile*.mta
 
 # Other
 .DS_Store
@@ -26,5 +32,4 @@ mta_archives/
 *.iml
 *.flattened-pom.xml
 
-package-lock.json
 default-*.json

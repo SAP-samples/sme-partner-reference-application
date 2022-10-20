@@ -11,7 +11,9 @@ With this repository we want to provide guidance for SAP partners in the market 
 - best practices ("golden paths") to build, deploy and provision full-stack BTP applications, and
 - we pay special attention to the interoperability and integration with cloud ERP solutions such as *SAP Business ByDesign* and *S/4HANA Cloud*.
 
-The repository includes a sample application that is ready to deploy and run, and tutorials to re-build the sample application from scratch following a progressive development approach. 
+The repository includes a sample application that is ready to deploy and run, and tutorials to re-build the sample application from scratch following a progressive development approach from one-off to multi-consumer solutions.
+
+<img src="./Tutorials/images/readme_progressive_dev.jpg" width="100%">  
 
 **About the sample application "Author Readings":**
 
@@ -22,7 +24,7 @@ Additionally an SAP partner provided a side-by-side application named "Author Re
 
 It was in particular important for you to separate the event publishing and participant registration from your ERP system for security and compliance reasons. Nevertheless, as a power user working in both systems you asked the partner to ensure a seamless user experience and navigation between the SAP system and the partner application.
 
-<img src="./Tutorials/resources/readme_sample-use-case.jpg" width="80%">
+<img src="./Tutorials/images/readme_sample-use-case.jpg" width="100%">
 
 Features of the author reading application:
 
@@ -45,7 +47,9 @@ Additionally, the sample showcases qualities relevant for enterprise-grade partn
 14. Seamless and secure frontend and back-channel integration with SAP ERP solutions
 15.	Delivering “open solutions” by integration-ready OData APIs and business events following SAP technology alignments
 16. Extensible by citizen user tools (AppGyver) to add web apps and mobile apps for customer specific use cases and user groups (planned)
-17. Deployment as one-off and multi-customer solution (planned) 
+17. Deployment as one-off and multi-customer solution 
+
+<img src="./Tutorials/images/readme_btp_components.jpg" width="100%">
 
 **Join our community!**
 
@@ -64,15 +68,15 @@ We are using the *Business Application Studio* as standardized development envir
 
 You can start your journey following two paths:
 
-1. Deploy and run the sample application as provided in this respository following the tutorial "*Deploy the Sample Application as provided in a Customer BTP Account*".
+1. Deploy and run the sample application as provided in this respository following the tutorials for deployment and provisioning of the one-off or multi-tenant version of the sample application.
 
-2. Re-build the application from scratch following tutorial "*Build a full-stack BTP Application with One-off Deployment in a Customer BTP Account*".
+2. Re-build the application from scratch following the guidelines step-by-step starting with tutorial "*Build a full-stack BTP Application with One-off Deployment in a Customer BTP Account*".
 
 After deployment of the application you may follow the tutorial "*A Guided Tour to explore the Capabilities of the Sample Application*" to visit the sample scenario end-to-end.
 
 ## Tutorials
 
-Re-build, deploy and run the sample application from scratch following a guided tour and a progressive development approach.
+Starting easy, we create, deploy and run a one-off (single-tenant) version of the application first:
 
 1. Build a full-stack BTP Application with One-off Deployment in a Customer BTP Account
     1. [Prepare the BTP Account](Tutorials/01-Prepare-BTP-Account.md) 
@@ -83,12 +87,21 @@ Re-build, deploy and run the sample application from scratch following a guided 
     6. [Manage Data Privacy](Tutorials/06-Manage-Data-Privacy.md)
     7. [Test, Trace and Debug](Tutorials/07-Test-Trace-Debug.md)
 
-2. [Deploy the Sample Application in a Customer BTP Account](Tutorials/20-Deploy-Sample-Application.md)
+2. [Deploy the Sample Application to a BTP Account](Tutorials/20-Deploy-Sample-Application.md)
 
 3. [A Guided Tour to explore the Capabilities of the Sample Application](Tutorials/30-Guided-Tour.md)
 
+Following a progressive development approach we now enhance the application to support multible customers using shared BTP resources:
+
+4. [Enhance the BTP Application for Multi-Tenancy](Tutorials/40-Multi-Tenancy.md)
+
+5. [Deploy the Multi-Tenant Application to a Provider Subaccount](Tutorials/44-Multi-Tenancy-Deployment.md)
+
+6. [Provision Tenants of the Multi-Tenant Application to Customers](Tutorials/45-Multi-Tenancy-Provisioning.md)
+
 Related resources:
 - [SAP Cloud Application Programming Model](https://cap.cloud.sap/docs/)
+- [SAP Cloud SDK](https://sap.github.io/cloud-sdk/)
 - [SAP Discovery Center](https://discovery-center.cloud.sap/missionssearch)
 - [ByD API Overview](https://blogs.sap.com/2019/09/26/sap-business-bydesign-an-api-overview/)
 - [ByD OData API Usage Samples](https://blogs.sap.com/2019/02/27/sap-business-bydesign-api-usage-samples/)
