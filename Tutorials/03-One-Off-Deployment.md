@@ -342,7 +342,7 @@ IAS Admin UI:
 
 1. Open menu item *User Management* and add the users who shall have access to the BTP application. Enter user details like name and e-mail and take into account that the e-mail is used as identifying attribute and hence I would recommend to use the e-mail address as used in the ERP system that we will integrate later.
 	
-2. Open menu item *User Groups* and add user groups that represent typical user roles and enter a unique (technical) *Name* and a meaningful "Display Name*, for example:
+2. Open menu item *User Groups* and add user groups that represent typical user roles and enter a unique (technical) *Name* and a meaningful *Display Name*, for example:
 
     | Name:                      | Display name:              |
     | :------------------------- | :------------------------- |
