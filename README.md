@@ -49,8 +49,6 @@ Additionally, the sample showcases qualities relevant for enterprise-grade partn
 16. Extensible by citizen user tools (AppGyver) to add web apps and mobile apps for customer specific use cases and user groups (planned)
 17. Deployment as one-off and multi-customer solution 
 
-<img src="./Tutorials/images/readme_btp_components.jpg" width="100%">
-
 **Join our community!**
 
 Do you like to share your own ideas and best practices? Please feel welcome to a vivid conversation about the *SME Partner Reference Application* in our [SAP Community](https://blogs.sap.com/2022/06/03/build-and-run-cloud-applications-on-the-sap-btp/).

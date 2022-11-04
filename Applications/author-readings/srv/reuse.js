@@ -87,7 +87,7 @@ async function emitAuthorReadingEvent(req, id, eventMeshTopic) {
 // Reuse function to get the ERP URL
 async function getDestinationURL(req, destinationName) {
     let destinationURL;
-    try{
+    try {
         // Read the destination details using the SAP Cloud SDK reusable getDestination function:
         // The JWT-token contains the subaccount information, such that the function works for single tenant as well as for multi-tenant apps:
         // - Single tenant: Get destination from the subaccount that hosts the app.
@@ -104,8 +104,9 @@ async function getDestinationURL(req, destinationName) {
             console.log("ERP default destination URL : " + destinationURL);   
         }
         
-    }catch (error) {
-        req.error(error);
+    } catch (error) {
+        // App reacts error tolerant if the destination is missing
+        console.log("GET_DESTINATION" + "; " + error);
     }
     return destinationURL;    
 }

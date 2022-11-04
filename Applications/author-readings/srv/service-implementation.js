@@ -511,47 +511,53 @@ srv.on("createProject", async (req) => {
             req.error(400, "ACTION_CREATE_PROJECT_DRAFT");
         }
     } catch (error) {
-        req.error(error);
+        // App reacts error tolerant in case of calling the remote service, mostly if the remote service is not available of if the destination is missing
+        console.log("ACTION_CREATE_PROJECT_CONNECTION" + "; " + error);
     }
 });
 
 // Expand author readings to remote projects
 // OData parameter following the UI-request pattern: "/AuthorReadings(ID=79ceab87-300d-4b66-8cc3-f82c679b77a1,IsActiveEntity=true)?$select=toProject&$expand=toProject($select=ID,costCenter,endDateTime,startDateTime,statusCodeText,typeCodeText)"
-srv.on("READ", "AuthorReadings", async (req, next) => {        
-    const bydProject = await cds.connect.to('byd_khproject');
-    var expandIndex = -1;
-    // Check the if the object exists before running the findIndex-function
-    if(req){
-        if(req.query){                
-            if(req.query.SELECT){
-                if(req.query.SELECT.columns){
-                    expandIndex = req.query.SELECT.columns.findIndex( ({ expand, ref }) => expand && ref[0] === "toProject" );
+srv.on("READ", "AuthorReadings", async (req, next) => {     
+    try {   
+        const bydProject = await cds.connect.to('byd_khproject');
+        var expandIndex = -1;
+        // Check the if the object exists before running the findIndex-function
+        if(req){
+            if(req.query){                
+                if(req.query.SELECT){
+                    if(req.query.SELECT.columns){
+                        expandIndex = req.query.SELECT.columns.findIndex( ({ expand, ref }) => expand && ref[0] === "toProject" );
+                    }
                 }
             }
         }
-    }
-    if (expandIndex < 0) return next();
-    // Remove expand from query
-    req.query.SELECT.columns.splice(expandIndex, 1);
-    // Return projectID
-    if (!req.query.SELECT.columns.find(
-        column => column.ref.find((ref) => ref == "projectID"))
-    ) req.query.SELECT.columns.push({ ref: ["projectID"] });
+        if (expandIndex < 0) return next();
+        // Remove expand from query
+        req.query.SELECT.columns.splice(expandIndex, 1);
+        // Return projectID
+        if (!req.query.SELECT.columns.find(
+            column => column.ref.find((ref) => ref == "projectID"))
+        ) req.query.SELECT.columns.push({ ref: ["projectID"] });
 
-    const authorReadings = await next();
-    const asArray = x => Array.isArray(x) ? x : [ x ];
-    // Request all associated projects
-    const projectIDs = asArray(authorReadings).map(authorReading => authorReading.projectID);     
-    const projects = await bydProject.run( SELECT.from('AuthorReadingManager.Projects').where({ projectID: projectIDs }) );
+        const authorReadings = await next();
+        const asArray = x => Array.isArray(x) ? x : [ x ];
+        // Request all associated projects
+        const projectIDs = asArray(authorReadings).map(authorReading => authorReading.projectID);     
+        const projects = await bydProject.run( SELECT.from('AuthorReadingManager.Projects').where({ projectID: projectIDs }) );
 
-    // Convert in a map for easier lookup
-    const projectsMap = {};
-    for (const project of projects) projectsMap[project.projectID] = project;
-    // Add suppliers to result
-    for (const authorReading of asArray(authorReadings)) {
-        authorReading.toProject = projectsMap[authorReading.projectID];
-    }
-    return authorReadings;            
+        // Convert in a map for easier lookup
+        const projectsMap = {};
+        for (const project of projects) projectsMap[project.projectID] = project;
+        // Add suppliers to result
+        for (const authorReading of asArray(authorReadings)) {
+            authorReading.toProject = projectsMap[authorReading.projectID];
+        }
+        return authorReadings;
+    } catch (error) {
+        // App reacts error tolerant in case of calling the remote service, mostly if the remote service is not available of if the destination is missing
+        console.log("ACTION_READ_PROJECT_CONNECTION" + "; " + error);
+    };          
 })
 
 // ----------------------------------------------------------------------------
