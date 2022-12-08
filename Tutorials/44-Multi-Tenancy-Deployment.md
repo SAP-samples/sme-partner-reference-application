@@ -131,11 +131,7 @@ With the SAP Custom Domain Service you can configure subdomains for your applica
 
 The *Subscription Management Dashboard* supports the lifecycle management of multi-tenant applications. 
 
-Pre-requisite: Subscribe and create an instance of the *Subscription Management Service*. 
-
-Steps to follow: 
-1. Open the *BTP Cockpit* (provider subaccount) and navigate to *Instances and Subscriptions*.
-2. Create a subscription for application *Subscription Management Dashboard*, service plan *application*. 
+The *Subscription Management Dashboard* is available as application in your provider subaccount (*BTP Cockpit - Instances and Subscriptions*) after deployment of the multi-tenant application.
 
 Capabilities of the *Subscription Management Dashboard*: 
 - The dashboard enables application providers to review the deployment of multi-tenant applications including the application- and subscription status and the change history respectively subscription history.
