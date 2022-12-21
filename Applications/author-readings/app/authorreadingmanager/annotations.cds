@@ -12,7 +12,8 @@ annotate service.AuthorReadings with @(UI : {
         availableFreeSlots,
         statusCode_code,
         participantsFeeAmount,
-        projectID        
+        projectID,
+        projectSystem        
     ],
    
     // Table columns
@@ -26,12 +27,6 @@ annotate service.AuthorReadings with @(UI : {
             $Type  : 'UI.DataFieldForAction',
             Label  : '{i18n>block}',
             Action : 'AuthorReadingManager.block'
-        },
-        {
-            $Type  : 'UI.DataFieldForAction',
-            Label  : '{i18n>createProject}',
-            Action : 'AuthorReadingManager.createProject',
-            @UI.Hidden : true
         },
         {
             $Type : 'UI.DataField',
@@ -56,6 +51,10 @@ annotate service.AuthorReadings with @(UI : {
             $Type : 'UI.DataFieldWithUrl',
             Value : projectID,
             Url   : projectURL
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : projectSystem
         },
         {
             $Type : 'UI.DataField',
@@ -94,12 +93,12 @@ annotate service.AuthorReadings with @(UI : {
         },
         {
             $Type  : 'UI.DataFieldForAction',
-            Label  : '{i18n>createProject}',
-            Action : 'AuthorReadingManager.createProject',            
+            Label  : '{i18n>createByDProject}',
+            Action : 'AuthorReadingManager.createByDProject',            
             @UI.Hidden : { $edmJson : 
                 { $If : 
                     [
-                        { $Eq : [ {$Path : 'createProjectEnabled'}, false ] },
+                        { $Eq : [ {$Path : 'createByDProjectEnabled'}, false ] },
                         true,
                         false
                     ]
@@ -247,35 +246,48 @@ annotate service.AuthorReadings with @(UI : {
         }
     ]},    
     FieldGroup #ProjectData : {Data : [
+        // Project system independend fields:
         {
+            $Type : 'UI.DataField',
+            Value : projectSystem,
+            @UI.Hidden : false
+        },
+                {
             $Type : 'UI.DataFieldWithUrl',
             Value : projectID,
-            Url   : projectURL
+            Url   : projectURL,
+            @UI.Hidden : false
         },
+        // SAP Business ByDesign specific fields
         {
             $Type : 'UI.DataField',
             Label : '{i18n>projectTypeCodeText}',
-            Value : toProject.typeCodeText
+            Value : toByDProject.typeCodeText,
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'ByD' ] }, false, true ] } }
         },
         {
             $Type : 'UI.DataField',
             Label : '{i18n>projectStatusCodeText}',
-            Value : toProject.statusCodeText
+            Value : toByDProject.statusCodeText,
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'ByD' ] }, false, true ] } }
         },
         {
             $Type : 'UI.DataField',
             Label : '{i18n>projectCostCenter}',
-            Value : toProject.costCenter
+            Value : toByDProject.costCenter,
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'ByD' ] }, false, true ] } }
         },
         {
             $Type : 'UI.DataField',
             Label : '{i18n>projectStartDateTime}',
-            Value : toProject.startDateTime
+            Value : toByDProject.startDateTime,
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'ByD' ] }, false, true ] } }
         },
         {
             $Type : 'UI.DataField',
             Label : '{i18n>projectEndDateTime}',
-            Value : toProject.endDateTime
+            Value : toByDProject.endDateTime,
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'ByD' ] }, false, true ] } }
         }
     ]},
     FieldGroup #AdminData : {Data : [

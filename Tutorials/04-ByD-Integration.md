@@ -167,9 +167,10 @@ BAS: Enhance the CAP entity models in file `./application/author-readings/db/ent
 
 1. Enhance the entity `AuthorReadings` by the elements:
     ```javascript
-    projectID             : String;
-    projectObjectID       : String;
-    projectURL            : String;  
+    projectID               : String;
+    projectObjectID         : String;
+    projectURL              : String;
+    projectSystem           : String;  
     ```  
 
 2. Enhance the annotations of entity `AuthorReadings` by the elements:
@@ -177,6 +178,7 @@ BAS: Enhance the CAP entity models in file `./application/author-readings/db/ent
     projectID               @title : '{i18n>projectID}';
     projectObjectID         @title : '{i18n>projectObjectID}';
     projectURL              @title : '{i18n>projectURL}';
+    projectSystem           @title : '{i18n>projectSystem}';
     ```  
 
 3. Enhance the labels for entity AuthorReadings in file `./application/author-readings/db/i18n/i18n.properties` by the labels:
@@ -184,6 +186,7 @@ BAS: Enhance the CAP entity models in file `./application/author-readings/db/ent
     projectID               = Project
     projectObjectID         = Project UUID
     projectURL              = Project URL
+    projectSystem           = Project System
     ```  
 
 ### Enhance the Service Model by the Remote Service
@@ -197,10 +200,10 @@ BAS: Extend the CAP service model by the remote entities:
     // -------------------------------------------------------------------------------
     // Extend service AuthorReadingManager by ByD projects (principal propagation)
 
-    using { byd_khproject as RemoteProject } from './external/byd_khproject';
+    using { byd_khproject as RemoteByDProject } from './external/byd_khproject';
 
     extend service AuthorReadingManager with {
-        entity Projects as projection on RemoteProject.ProjectCollection {
+        entity ByDProjects as projection on RemoteByDProject.ProjectCollection {
             key ObjectID as ID,
             ProjectID as projectID,
             ResponsibleCostCentreID as costCenter,
@@ -211,10 +214,10 @@ BAS: Extend the CAP service model by the remote entities:
             BlockingStatusCode as blockingStatusCode,
             PlannedStartDateTime as startDateTime,
             PlannedEndDateTime as endDateTime,
-            ProjectSummaryTask as summaryTask : redirected to ProjectSummaryTasks,
-            Task as task : redirected to ProjectTasks                     
+            ProjectSummaryTask as summaryTask : redirected to ByDProjectSummaryTasks,
+            Task as task : redirected to ByDProjectTasks                     
         }
-        entity ProjectSummaryTasks as projection on RemoteProject.ProjectSummaryTaskCollection {
+        entity ByDProjectSummaryTasks as projection on RemoteByDProject.ProjectSummaryTaskCollection {
             key ObjectID as ID,
             ParentObjectID as parentID,
             ID as taskID,
@@ -222,7 +225,7 @@ BAS: Extend the CAP service model by the remote entities:
             ResponsibleEmployeeID as responsibleEmployee,
             ResponsibleEmployeeFormattedName as responsibleEmployeeName
         }
-        entity ProjectTasks as projection on RemoteProject.TaskCollection {
+        entity ByDProjectTasks as projection on RemoteByDProject.TaskCollection {
             key ObjectID as ID,
             ParentObjectID as parentID,
             TaskID as taskID,
@@ -234,13 +237,14 @@ BAS: Extend the CAP service model by the remote entities:
     };
     ```
     
-2. Enhance the service model of service *AuthorReadingManager* by an association to the remote project:
+2. Enhance the service model of service *AuthorReadingManager* by an association to the remote project in ByD:
     ```javascript
     // Author readings (combined with remote project using mixin)
     @odata.draft.enabled
     entity AuthorReadings as select from armodels.AuthorReadings
         mixin {
-            toProject: Association to RemoteProject.ProjectCollection on toProject.ProjectID = $projection.projectID
+            // ByD projects: Mix-in of ByD project data
+            toByDProject: Association to RemoteByDProject.ProjectCollection on toByDProject.ProjectID = $projection.projectID
         } 
     ```
 
@@ -250,23 +254,26 @@ BAS: Extend the CAP service model by the remote entities:
     @odata.draft.enabled
     entity AuthorReadings as select from armodels.AuthorReadings
         mixin {
-            toProject: Association to RemoteProject.ProjectCollection on toProject.ProjectID = $projection.projectID
+            // ByD projects: Mix-in of ByD project data
+            toByDProject: Association to RemoteByDProject.ProjectCollection on toByDProject.ProjectID = $projection.projectID
         } 
         into  {
             *,
             virtual null as statusCriticality    : Integer  @title : '{i18n>statusCriticality}',
-            virtual null as createProjectEnabled : Boolean  @title : '{i18n>createProjectEnabled}'  @odata.Type : 'Edm.Boolean',
-            toProject,
+            // ByD projects: visibility of button "Create project in ByD"
+            virtual null as createByDProjectEnabled : Boolean  @title : '{i18n>createByDProjectEnabled}'  @odata.Type : 'Edm.Boolean',
+            toByDProject,
         }
     ```
     
 4. Enhance the service model of service *AuthorReadingManager* by an action to create remote projects:
     ```javascript
+    // ByD projects: action to create a project in ByD
     @(
-        Common.SideEffects              : {TargetEntities: ['_authorreading','_authorreading/toProject']},
+        Common.SideEffects              : {TargetEntities: ['_authorreading','_authorreading/toByDProject']},
         cds.odata.bindingparameter.name : '_authorreading'
     )
-    action createProject() returns AuthorReadings;
+    action createByDProject() returns AuthorReadings;
     ```
     > Note: The side effect annotation refreshes the project data right after executing the action.
 
@@ -275,10 +282,10 @@ BAS: Extend the CAP service model by the remote entities:
     // -------------------------------------------------------------------------------
     // Extend service AuthorReadingManager by ByD projects (technical users)
 
-    using { byd_khproject_tech_user as RemoteProjectTechUser } from './external/byd_khproject_tech_user';
+    using { byd_khproject_tech_user as RemoteByDProjectTechUser } from './external/byd_khproject_tech_user';
 
     extend service AuthorReadingManager with {
-        entity ProjectsTechUser as projection on RemoteProjectTechUser.ProjectCollection {
+        entity ByDProjectsTechUser as projection on RemoteByDProjectTechUser.ProjectCollection {
             key ObjectID as ID,
             ProjectID as projectID,
             ResponsibleCostCentreID as costCenter,
@@ -300,10 +307,10 @@ BAS: Extend the authorization annotation of the CAP service model by restriction
 
 1. Open file `./application/author-readings/srv/service-auth.cds` with the authorization annotations.
 
-2. Enhance the authorization model for the service entities `Projects`, `ProjectSummaryTasks`, `ProjectTasks` and `ProjectsTechUser`:
+2. Enhance the authorization model for the service entities `ByDProjects`, `ByDProjectSummaryTasks`, `ByDProjectTasks` and `ByDProjectsTechUser`:
     ```javascript
-    // Managers and Administrators can read and create remote projects
-    annotate AuthorReadingManager.Projects with @(restrict : [
+    // ByD projects: Managers and Administrators can read and create remote projects
+    annotate AuthorReadingManager.ByDProjects with @(restrict : [
         {
             grant : ['*'],
             to    : 'AuthorReadingManagerRole',
@@ -313,7 +320,7 @@ BAS: Extend the authorization annotation of the CAP service model by restriction
             to    : 'AuthorReadingAdminRole'
         }
     ]);
-    annotate AuthorReadingManager.ProjectSummaryTasks with @(restrict : [
+    annotate AuthorReadingManager.ByDProjectSummaryTasks with @(restrict : [
         {
             grant : ['*'],
             to    : 'AuthorReadingManagerRole',
@@ -323,7 +330,7 @@ BAS: Extend the authorization annotation of the CAP service model by restriction
             to    : 'AuthorReadingAdminRole'
         }
     ]);
-    annotate AuthorReadingManager.ProjectTasks with @(restrict : [
+    annotate AuthorReadingManager.ByDProjectTasks with @(restrict : [
         {
             grant : ['*'],
             to    : 'AuthorReadingManagerRole',
@@ -333,7 +340,7 @@ BAS: Extend the authorization annotation of the CAP service model by restriction
             to    : 'AuthorReadingAdminRole'
         }
     ]);
-    annotate AuthorReadingManager.ProjectsTechUser with @(restrict : [
+    annotate AuthorReadingManager.ByDProjectsTechUser with @(restrict : [
         {
             grant : ['*'],
             to    : 'AuthorReadingManagerRole',
@@ -345,87 +352,80 @@ BAS: Extend the authorization annotation of the CAP service model by restriction
     ]);
     ```
 
+### Create a file with Reuse Functions for ByD
+
+Some reuse functions specific for ByD have been defined in a separate file. 
+Copy the ByD reuse functions in file [connector-byd.js](../Applications/author-readings/srv/connector-byd.js) into your project.
+
 ### Enhance the Business Logic to operate on ByD Data
 
-BAS: Enhance the implementation of the CAP services in file `./application/author-readings/srv/service-implementation.js` to create and read project data using the remote OData service. 
+BAS: Enhance the implementation of the CAP services in file `./application/author-readings/srv/service-implementation.js` to create and read ByD project data using the remote ByD OData service. 
 
 1. Delegate requests to the remote OData service: 
     ```javascript
     // Delegate OData requests to remote project entities
-    srv.on("READ", "Projects", async (req) => {
-        const bydProject = await cds.connect.to("byd_khproject");
-        return bydProject.run(req.query);
+    srv.on("READ", "ByDProjects", async (req) => {
+        return await connectorByD.delegateODataRequests(req,"byd_khproject");
     });
-    srv.on("READ", "ProjectSummaryTasks", async (req) => {
-        const bydProject = await cds.connect.to("byd_khproject");
-        return bydProject.run(req.query);
+    srv.on("READ", "ByDProjectSummaryTasks", async (req) => {
+        return await connectorByD.delegateODataRequests(req,"byd_khproject");
     });
-    srv.on("READ", "ProjectTasks", async (req) => {
-        const bydProject = await cds.connect.to("byd_khproject");
-        return bydProject.run(req.query);
+    srv.on("READ", "ByDProjectTasks", async (req) => {
+        return await connectorByD.delegateODataRequests(req,"byd_khproject");
     });
-    srv.on("CREATE", "Projects", async (req) => {
-        const bydProject = await cds.connect.to("byd_khproject");
-        return bydProject.run(req.query);
+    srv.on("CREATE", "ByDProjects", async (req) => {
+        return await connectorByD.delegateODataRequests(req,"byd_khproject");
     });
-    srv.on("CREATE", "ProjectSummaryTasks", async (req) => {
-        const bydProject = await cds.connect.to("byd_khproject");
-        return bydProject.run(req.query);
+    srv.on("CREATE", "ByDProjectSummaryTasks", async (req) => {
+        return await connectorByD.delegateODataRequests(req,"byd_khproject");
     });
-    srv.on("CREATE", "ProjectTasks", async (req) => {
-        const bydProject = await cds.connect.to("byd_khproject");
-        return bydProject.run(req.query);
+    srv.on("CREATE", "ByDProjectTasks", async (req) => {
+        return await connectorByD.delegateODataRequests(req,"byd_khproject");
     });
-    srv.on("UPDATE", "Projects", async (req) => {
-        const bydProject = await cds.connect.to("byd_khproject");
-        return bydProject.run(req.query);
+    srv.on("UPDATE", "ByDProjects", async (req) => {
+        return await connectorByD.delegateODataRequests(req,"byd_khproject");
     });
-    srv.on("UPDATE", "ProjectSummaryTasks", async (req) => {
-        const bydProject = await cds.connect.to("byd_khproject");
-        return bydProject.run(req.query);
+    srv.on("UPDATE", "ByDProjectSummaryTasks", async (req) => {
+        return await connectorByD.delegateODataRequests(req,"byd_khproject");
     });
-    srv.on("UPDATE", "ProjectTasks", async (req) => {
-        const bydProject = await cds.connect.to("byd_khproject");
-        return bydProject.run(req.query);
+    srv.on("UPDATE", "ByDProjectTasks", async (req) => {
+        return await connectorByD.delegateODataRequests(req,"byd_khproject");
     });
-    srv.on("DELETE", "Projects", async (req) => {
-        const bydProject = await cds.connect.to("byd_khproject");
-        return bydProject.run(req.query);
+    srv.on("DELETE", "ByDProjects", async (req) => {
+        return await connectorByD.delegateODataRequests(req,"byd_khproject");
     });
-    srv.on("DELETE", "ProjectSummaryTasks", async (req) => {
-        const bydProject = await cds.connect.to("byd_khproject");
-        return bydProject.run(req.query);
+    srv.on("DELETE", "ByDProjectSummaryTasks", async (req) => {
+        return await connectorByD.delegateODataRequests(req,"byd_khproject");
     });
-    srv.on("DELETE", "ProjectTasks", async (req) => {
-        const bydProject = await cds.connect.to("byd_khproject");
-        return bydProject.run(req.query);
+    srv.on("DELETE", "ByDProjectTasks", async (req) => {
+        return await connectorByD.delegateODataRequests(req,"byd_khproject");
     });
-    srv.on("READ", "ProjectsTechUser", async (req) => {
-        const bydProject = await cds.connect.to("byd_khproject_tech_user");
-        return bydProject.run(req.query);
-    });    
+    srv.on("READ", "ByDProjectsTechUser", async (req) => {
+        return await connectorByD.delegateODataRequests(req,"byd_khproject_tech_user");
+    });
     ```
     > Note: Without delegation, the remote entities return the error code 500 with message "SQLITE_ERROR: no such table" (local testing).
 
-2. Set the virtual element `createProjectEnabled` to control the visualization of the action to create projects dynamically in the read-event of author readings:
+2. Set the virtual element `createByDProjectEnabled` to control the visualization of the action to create projects dynamically in the read-event of author readings:
     ```javascript
     if (each.projectID) {
-        each.createProjectEnabled = false;
+        each.createByDProjectEnabled = false;
     } else {
-        each.createProjectEnabled = true;
+        each.createByDProjectEnabled = true;
     }
     ```
 
-3. Add implementation for action *CreateProject* as outlined in code block: 
+3. Add implementation for action *CreateByDProject* as outlined in code block: 
     ```javascript
-    // Entity action "createProject"
-    srv.on("createProject", async (req) => {
+    // Entity action "createByDProject"
+    srv.on("createByDProject", async (req) => {
         // see code in file ./service-implementation.js
     }
     ```
-    Add a line to import the reusable functions class `reuse` in the beginning of the file:
+    Add two lines to import the reuse functions in the beginning of the file:
     ```javascript
      const reuse = require("./reuse");
+     const connectorByD = require("./connector-byd");
     ```
     > Note: The code block *Read the ByD system URL dynamically from BTP destination "byd-url"* reads the URL of the ByD system used to navigate to the ByD project overview screen. We are using the reuse function *getDestinationURL* to read dynamically the BTP destination (refer to file `./srv/reuse.js` for details of the reusable function getDestinationURL).
     
@@ -447,9 +447,9 @@ BAS: Enhance the implementation of the CAP services in file `./application/autho
     ACTION_CREATE_PROJECT_DRAFT=Projects cannot be created for draft author readings
     ```
 
-7. Add implementation to expand the author readings to remote projects (OData parameter `/AuthorReadings?$expand=toProject`) as outlined in code block:
+7. Add implementation to expand the author readings to remote projects (OData parameter `/AuthorReadings?$expand=toByDProject`) as outlined in code block:
     ```javascript
-    // Expand author readings to remote projects (OData parameter "/AuthorReadings?$expand=toProject")
+    // Expand author readings to remote projects (OData parameter "/AuthorReadings?$expand=toByDProject")
     srv.on("READ", "AuthorReadings", async (req, next) => {     
         // see code in file ./service-implementation.js        
     }
@@ -470,7 +470,8 @@ BAS: Edit the Fiori Element annotations of the web app in file `./app/authorread
             availableFreeSlots,
             statusCode_code,
             participantsFeeAmount,
-            projectID        
+            projectID,
+            projectSystem        
         ],
         ```  
     - Table columns:
@@ -479,6 +480,10 @@ BAS: Edit the Fiori Element annotations of the web app in file `./app/authorread
             $Type : 'UI.DataFieldWithUrl',
             Value : projectID,
             Url   : projectURL
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : projectSystem
         },
     	```
     - Header facet, field group *#Values*:
@@ -490,7 +495,7 @@ BAS: Edit the Fiori Element annotations of the web app in file `./app/authorread
         }        
         ```
 
-2. Add a facet *Project Data* to display information from the remote service by following the *toProject*-association:
+2. Add a facet *Project Data* to display information from the remote service by following the *toByDProject*-association:
     - Add facet:
         ```javascript
         {
@@ -507,35 +512,48 @@ BAS: Edit the Fiori Element annotations of the web app in file `./app/authorread
     - Add a field group *#ProjectData*:         
         ```javascript
         FieldGroup #ProjectData : {Data : [
+            // Project system independend fields:
             {
+                $Type : 'UI.DataField',
+                Value : projectSystem,
+                @UI.Hidden : false
+            },
+                    {
                 $Type : 'UI.DataFieldWithUrl',
                 Value : projectID,
-                Url   : projectURL
+                Url   : projectURL,
+                @UI.Hidden : false
             },
+            // SAP Business ByDesign specific fields
             {
                 $Type : 'UI.DataField',
                 Label : '{i18n>projectTypeCodeText}',
-                Value : toProject.typeCodeText
+                Value : toByDProject.typeCodeText,
+                @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'ByD' ] }, false, true ] } }
             },
             {
                 $Type : 'UI.DataField',
                 Label : '{i18n>projectStatusCodeText}',
-                Value : toProject.statusCodeText
+                Value : toByDProject.statusCodeText,
+                @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'ByD' ] }, false, true ] } }
             },
             {
                 $Type : 'UI.DataField',
                 Label : '{i18n>projectCostCenter}',
-                Value : toProject.costCenter
+                Value : toByDProject.costCenter,
+                @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'ByD' ] }, false, true ] } }
             },
             {
                 $Type : 'UI.DataField',
                 Label : '{i18n>projectStartDateTime}',
-                Value : toProject.startDateTime
+                Value : toByDProject.startDateTime,
+                @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'ByD' ] }, false, true ] } }
             },
             {
                 $Type : 'UI.DataField',
                 Label : '{i18n>projectEndDateTime}',
-                Value : toProject.endDateTime
+                Value : toByDProject.endDateTime,
+                @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'ByD' ] }, false, true ] } }
             }
         ]},
         ```
@@ -544,12 +562,12 @@ BAS: Edit the Fiori Element annotations of the web app in file `./app/authorread
     ```javascript
     {
         $Type  : 'UI.DataFieldForAction',
-        Label  : '{i18n>createProject}',
-        Action : 'AuthorReadingManager.createProject',            
+        Label  : '{i18n>createByDProject}',
+        Action : 'AuthorReadingManager.createByDProject',            
         @UI.Hidden : { $edmJson : 
             { $If : 
                 [
-                    { $Eq : [ {$Path : 'createProjectEnabled'}, false ] },
+                    { $Eq : [ {$Path : 'createByDProjectEnabled'}, false ] },
                     true,
                     false
                 ]
@@ -557,7 +575,7 @@ BAS: Edit the Fiori Element annotations of the web app in file `./app/authorread
         }
     }
     ```
-    > Note: We dynamically control the visibility of the button *Create Project* based on the value of the transient field *createProjectEnabled*.    
+    > Note: We dynamically control the visibility of the button *Create Project in ByD* based on the value of the transient field *createByDProjectEnabled*.    
 
 BAS: Edit language dependend labels in file `./db/i18n/i18n.properties`:
 
@@ -566,7 +584,7 @@ BAS: Edit language dependend labels in file `./db/i18n/i18n.properties`:
     # -------------------------------------------------------------------------------------
     # Service Actions
 
-    createProject           = Create Project
+    createByDProject        = Create Project in ByD
 
     # -------------------------------------------------------------------------------------
     # Remote Project Elements

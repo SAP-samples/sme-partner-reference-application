@@ -52,8 +52,8 @@ annotate AuthorReadingManager.Participants with @(restrict : [
     }
 ]);
 
-// Managers and Administrators can read and create remote projects
-annotate AuthorReadingManager.Projects with @(restrict : [
+// ByD projects: Managers and Administrators can read and create remote projects
+annotate AuthorReadingManager.ByDProjects with @(restrict : [
     {
         grant : ['*'],
         to    : 'AuthorReadingManagerRole',
@@ -63,7 +63,7 @@ annotate AuthorReadingManager.Projects with @(restrict : [
         to    : 'AuthorReadingAdminRole'
     }
 ]);
-annotate AuthorReadingManager.ProjectSummaryTasks with @(restrict : [
+annotate AuthorReadingManager.ByDProjectSummaryTasks with @(restrict : [
     {
         grant : ['*'],
         to    : 'AuthorReadingManagerRole',
@@ -73,7 +73,7 @@ annotate AuthorReadingManager.ProjectSummaryTasks with @(restrict : [
         to    : 'AuthorReadingAdminRole'
     }
 ]);
-annotate AuthorReadingManager.ProjectTasks with @(restrict : [
+annotate AuthorReadingManager.ByDProjectTasks with @(restrict : [
     {
         grant : ['*'],
         to    : 'AuthorReadingManagerRole',
@@ -83,7 +83,7 @@ annotate AuthorReadingManager.ProjectTasks with @(restrict : [
         to    : 'AuthorReadingAdminRole'
     }
 ]);
-annotate AuthorReadingManager.ProjectsTechUser with @(restrict : [
+annotate AuthorReadingManager.ByDProjectsTechUser with @(restrict : [
     {
         grant : ['*'],
         to    : 'AuthorReadingManagerRole',

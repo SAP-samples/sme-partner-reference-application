@@ -19,13 +19,15 @@ service AuthorReadingManager @(
     @odata.draft.enabled
     entity AuthorReadings as select from armodels.AuthorReadings
         mixin {
-            toProject: Association to RemoteProject.ProjectCollection on toProject.ProjectID = $projection.projectID
+            // ByD projects: Mix-in of ByD project data
+            toByDProject: Association to RemoteByDProject.ProjectCollection on toByDProject.ProjectID = $projection.projectID
         } 
         into  {
             *,
             virtual null as statusCriticality    : Integer  @title : '{i18n>statusCriticality}',
-            virtual null as createProjectEnabled : Boolean  @title : '{i18n>createProjectEnabled}'  @odata.Type : 'Edm.Boolean',
-            toProject,
+            // ByD projects: visibility of button "Create project in ByD"
+            virtual null as createByDProjectEnabled : Boolean  @title : '{i18n>createByDProjectEnabled}'  @odata.Type : 'Edm.Boolean',
+            toByDProject,
         }
         actions {
             @(
@@ -40,11 +42,12 @@ service AuthorReadingManager @(
             )
             action publish() returns AuthorReadings;
 
+            // ByD projects: action to create a project in ByD
             @(
-                Common.SideEffects              : {TargetEntities: ['_authorreading','_authorreading/toProject']},
+                Common.SideEffects              : {TargetEntities: ['_authorreading','_authorreading/toByDProject']},
                 cds.odata.bindingparameter.name : '_authorreading'
             )
-            action createProject() returns AuthorReadings;
+            action createByDProject() returns AuthorReadings;
         };
 
     // Participants
@@ -92,10 +95,10 @@ service AuthorReadingManager @(
 // -------------------------------------------------------------------------------
 // Extend service AuthorReadingManager by ByD projects (principal propagation)
 
-using { byd_khproject as RemoteProject } from './external/byd_khproject';
+using { byd_khproject as RemoteByDProject } from './external/byd_khproject';
 
 extend service AuthorReadingManager with {
-    entity Projects as projection on RemoteProject.ProjectCollection {
+    entity ByDProjects as projection on RemoteByDProject.ProjectCollection {
         key ObjectID as ID,
         ProjectID as projectID,
         ResponsibleCostCentreID as costCenter,
@@ -106,10 +109,10 @@ extend service AuthorReadingManager with {
         BlockingStatusCode as blockingStatusCode,
         PlannedStartDateTime as startDateTime,
         PlannedEndDateTime as endDateTime,
-        ProjectSummaryTask as summaryTask : redirected to ProjectSummaryTasks,
-        Task as task : redirected to ProjectTasks                     
+        ProjectSummaryTask as summaryTask : redirected to ByDProjectSummaryTasks,
+        Task as task : redirected to ByDProjectTasks                     
     }
-    entity ProjectSummaryTasks as projection on RemoteProject.ProjectSummaryTaskCollection {
+    entity ByDProjectSummaryTasks as projection on RemoteByDProject.ProjectSummaryTaskCollection {
         key ObjectID as ID,
         ParentObjectID as parentID,
         ID as taskID,
@@ -117,7 +120,7 @@ extend service AuthorReadingManager with {
         ResponsibleEmployeeID as responsibleEmployee,
         ResponsibleEmployeeFormattedName as responsibleEmployeeName
     }
-    entity ProjectTasks as projection on RemoteProject.TaskCollection {
+    entity ByDProjectTasks as projection on RemoteByDProject.TaskCollection {
         key ObjectID as ID,
         ParentObjectID as parentID,
         TaskID as taskID,
@@ -132,10 +135,10 @@ extend service AuthorReadingManager with {
 // -------------------------------------------------------------------------------
 // Extend service AuthorReadingManager by ByD projects (technical users)
 
-using { byd_khproject_tech_user as RemoteProjectTechUser } from './external/byd_khproject_tech_user';
+using { byd_khproject_tech_user as RemoteByDProjectTechUser } from './external/byd_khproject_tech_user';
 
 extend service AuthorReadingManager with {
-    entity ProjectsTechUser as projection on RemoteProjectTechUser.ProjectCollection {
+    entity ByDProjectsTechUser as projection on RemoteByDProjectTechUser.ProjectCollection {
         key ObjectID as ID,
         ProjectID as projectID,
         ResponsibleCostCentreID as costCenter,

@@ -5,6 +5,7 @@ const { getDestination, retrieveJwt } = require("@sap-cloud-sdk/connectivity");
 
 // ----------------------------------------------------------------------------
 // Constants
+// ----------------------------------------------------------------------------
 
 const color = {
   grey: 0, 
@@ -30,6 +31,7 @@ const participantStatusCode = {
 
 // ----------------------------------------------------------------------------
 // Reuse functions
+// ----------------------------------------------------------------------------
 
 // Reuse function to check the formating of an e-mail address
 function validateEmail(email) {

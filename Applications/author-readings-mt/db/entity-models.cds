@@ -9,20 +9,21 @@ using {
 
 // Author readings
 entity AuthorReadings : managed, cuid {
-    identifier            : String;
-    title                 : localized String(100);
-    description           : localized String(500);
-    date                  : DateTime;
-    maxParticipantsNumber : Integer;
-    availableFreeSlots    : Integer;
-    participantsFeeAmount : Decimal(6,2);
-    currency              : Association to one sap.common.Currencies;
-    statusCode            : Association to one AuthorReadingStatusCodes;
-    participants          : Composition of many Participants on participants.parent = $self;
-    projectID             : String;
-    projectObjectID       : String;
-    projectURL            : String;
-    eventMeshMessage      : String;
+    identifier              : String;
+    title                   : localized String(100);
+    description             : localized String(500);
+    date                    : DateTime;
+    maxParticipantsNumber   : Integer;
+    availableFreeSlots      : Integer;
+    participantsFeeAmount   : Decimal(6,2);
+    currency                : Association to one sap.common.Currencies;
+    statusCode              : Association to one AuthorReadingStatusCodes;
+    participants            : Composition of many Participants on participants.parent = $self;
+    projectID               : String;
+    projectObjectID         : String;
+    projectURL              : String;
+    projectSystem           : String;
+    eventMeshMessage        : String;
 }
 
 // Participants (sub-node of AuthorReadings)
@@ -67,6 +68,7 @@ annotate AuthorReadings with @fiori.draft.enabled {
     projectID               @title : '{i18n>projectID}';
     projectObjectID         @title : '{i18n>projectObjectID}';
     projectURL              @title : '{i18n>projectURL}';
+    projectSystem           @title : '{i18n>projectSystem}';
     eventMeshMessage        @title : '{i18n>eventMeshMessage}';
 }
 

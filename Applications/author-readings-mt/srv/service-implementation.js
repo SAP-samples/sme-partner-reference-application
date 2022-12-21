@@ -3,6 +3,7 @@
 // Include cds libraries and reuse files
 const cds = require("@sap/cds");
 const reuse = require("./reuse");
+const connectorByD = require("./connector-byd");
 
 module.exports = cds.service.impl(async (srv) => {
 
@@ -100,9 +101,9 @@ srv.after("READ", "AuthorReadings", (each) => {
         }
     }
     if (each.projectID) {
-        each.createProjectEnabled = false;
+        each.createByDProjectEnabled = false;
     } else {
-        each.createProjectEnabled = true;
+        each.createByDProjectEnabled = true;
     }
 });
 
@@ -412,13 +413,13 @@ srv.on("confirmParticipation", async (req) => {
 // --------------------------------------------------------------------------------------
 // Implementation of entity events (entity AuthorReadings) with impact on remote services
 
-// Entity action "createProject"
-srv.on("createProject", async (req) => {
+// Entity action "createByDProject"
+srv.on("createByDProject", async (req) => {
     try {
         const authorReadingID = (req.params.pop()).ID;
         const authorReadings = await SELECT.from("sap.samples.authorreadings.AuthorReadings").where({ ID: authorReadingID });
         // Allow action for active entity instances only
-        if (authorReadings.length === 1) {
+        if ( authorReadings.length === 1 ) {
             let authorReadingIdentifier, authorReadingDescription, authorReadingTitle, authorReadingDate;
             authorReadings.forEach((authorReading) => {
                 authorReadingIdentifier = authorReading.identifier;
@@ -426,86 +427,56 @@ srv.on("createProject", async (req) => {
                 authorReadingTitle = authorReading.title;
                 authorReadingDate = authorReading.date;
             });
-            // Get the entity service (entity "Projects")
-            const { Projects } = srv.entities;
-            // Set project ID with pattern AR-{{author reading identifier}}
-            var generatedID = "AR-" + authorReadingIdentifier;
-            // Set project start date 40 days before author reading date
-            var moment = require("moment");
-            var generatedStartDate = moment(authorReadingDate).subtract(40, "days").toISOString().substr(0, 10) + "T00:00:00.0000000Z";
-            
-            // Assemble project payload based the sample data provided by *SAP Business ByDesign Partner Demo Tenants* (reference systems)
-            const projectRecord = {
-                ProjectID: generatedID,
-                EstimatedCompletionPercent: 10,
-                ResponsibleCostCentreID: "S1111",
-                ProjectTypeCode: "10",
-                ProjectLanguageCode: "EN",
-                PlannedStartDateTime: generatedStartDate,
-                PlannedEndDateTime: authorReadingDate,
-                ProjectSummaryTask: {
-                    ProjectName: authorReadingTitle,
-                    ResponsibleEmployeeID: "E0202",
-                },
-                Task: [
-                    {
-                        TaskID: generatedID + "-PREP",
-                        TaskName: "Event planning and preparations",
-                        PlannedDuration: "P30D",
-                        TaskRelationship: [
-                            {
-                                DependencyTypeCode: "2",
-                                SuccessorTaskID: generatedID + "-EXE",
-                                LagDuration: "P2D",
-                            },
-                        ],
-                    },
-                    {
-                        TaskID: generatedID + "-EXE",
-                        TaskName: "Event administration and execution",
-                        PlannedDuration: "P5D",
-                        ConstraintEndDateTime: authorReadingDate,
-                        ScheduleActivityEndDateTimeConstraintTypeCode: "2",
-                    },
-                ],
-            };
 
-            // Check and create the project instance
-            // If the project already exist, then read and update the local project elements in entity AuthorReadings
-            var remoteProjectID, remoteProjectObjectID;
-            // GET service call on remote project entity
-            const existingProject = await srv.run( SELECT.from(Projects).where({ ProjectID: generatedID }) );
-            if (existingProject.length === 1) {
-                remoteProjectID = existingProject[0].projectID;
-                remoteProjectObjectID = existingProject[0].ID;
-            } else {
-                // POST request to create the project via remote service
-                const remoteCreatedProject = await srv.run( INSERT.into(Projects).entries(projectRecord) );
-                if (remoteCreatedProject) {
-                    remoteProjectID = remoteCreatedProject.projectID;
-                    remoteProjectObjectID = remoteCreatedProject.ID;
+            if ( bydRemoteSystem == "ByD" || (!bydRemoteSystem) ) {
+                
+                var projectRecord = await connectorByD.projectDataRecord(authorReadingIdentifier, authorReadingTitle, authorReadingDate);
+
+                // Check and create the project instance
+                // If the project already exist, then read and update the local project elements in entity AuthorReadings
+                
+                // Get the entity service (entity "ByDProjects")
+                const { ByDProjects } = srv.entities;
+                var remoteProjectID, remoteProjectObjectID;
+
+                // GET service call on remote project entity
+                const existingProject = await srv.run( SELECT.from(ByDProjects).where({ ProjectID: projectRecord.ProjectID }) );
+
+                if (existingProject.length === 1) {
+                    remoteProjectID = existingProject[0].projectID;
+                    remoteProjectObjectID = existingProject[0].ID;
+                } else {
+                    // POST request to create the project via remote service
+                    const remoteCreatedProject = await srv.run( INSERT.into(ByDProjects).entries(projectRecord) );
+                    if (remoteCreatedProject) {
+                        remoteProjectID = remoteCreatedProject.projectID;
+                        remoteProjectObjectID = remoteCreatedProject.ID;
+                    }
                 }
-            }
-            if (remoteProjectID) {
-                
-                // Read the ByD system URL dynamically from BTP destination "byd-url"
-                var bydRemoteSystem = await reuse.getDestinationURL(req , 'byd-url'); 
-                
-                // Set the URL of ByD project overview screen for UI navigation
-                var bydRemoteProjectExternalURL =
-                    "/sap/ap/ui/runtime?bo_ns=http://sap.com/xi/AP/ProjectManagement/Global&bo=Project&node=Root&operation=OpenByProjectID&object_key=" +
-                    generatedID +
-                    "&key_type=APC_S_PROJECT_ID";
-                var bydRemoteProjectExternalCompleteURL = bydRemoteSystem.concat( bydRemoteProjectExternalURL );
-                
-                // Update project elements in entity AuthorReadings
-                await UPDATE("sap.samples.authorreadings.AuthorReadings")
-                    .set({
-                        ProjectID: remoteProjectID,
-                        projectObjectID: remoteProjectObjectID,
-                        projectURL: bydRemoteProjectExternalCompleteURL,
-                    })
-                    .where({ ID: authorReadingID });
+
+                // Generate remote ByD Project URL and update the URL
+                if (remoteProjectID) {
+                    
+                    // Read the ByD system URL dynamically from BTP destination "byd-url"
+                    var bydRemoteSystem = await reuse.getDestinationURL(req , 'byd-url'); 
+                    
+                    // Set the URL of ByD project overview screen for UI navigation
+                    var bydRemoteProjectExternalURL =
+                        "/sap/ap/ui/runtime?bo_ns=http://sap.com/xi/AP/ProjectManagement/Global&bo=Project&node=Root&operation=OpenByProjectID&object_key=" +
+                        projectRecord.ProjectID +
+                        "&key_type=APC_S_PROJECT_ID";
+                    var bydRemoteProjectExternalCompleteURL = bydRemoteSystem.concat( bydRemoteProjectExternalURL );
+                    
+                    // Update project elements in entity AuthorReadings
+                    await UPDATE("sap.samples.authorreadings.AuthorReadings")
+                        .set({
+                            ProjectID: remoteProjectID,
+                            projectObjectID: remoteProjectObjectID,
+                            projectURL: bydRemoteProjectExternalCompleteURL,
+                            projectSystem : "ByD"
+                        })
+                        .where({ ID: authorReadingID });
+                }
             }                   
         } else {
             req.error(400, "ACTION_CREATE_PROJECT_DRAFT");
@@ -517,47 +488,15 @@ srv.on("createProject", async (req) => {
 });
 
 // Expand author readings to remote projects
-// OData parameter following the UI-request pattern: "/AuthorReadings(ID=79ceab87-300d-4b66-8cc3-f82c679b77a1,IsActiveEntity=true)?$select=toProject&$expand=toProject($select=ID,costCenter,endDateTime,startDateTime,statusCodeText,typeCodeText)"
 srv.on("READ", "AuthorReadings", async (req, next) => {   
-    try {     
-        const bydProject = await cds.connect.to('byd_khproject');
-        var expandIndex = -1;
-        // Check the if the object exists before running the findIndex-function
-        if(req){
-            if(req.query){                
-                if(req.query.SELECT){
-                    if(req.query.SELECT.columns){
-                        expandIndex = req.query.SELECT.columns.findIndex( ({ expand, ref }) => expand && ref[0] === "toProject" );
-                    }
-                }
-            }
-        }
-        if (expandIndex < 0) return next();
-        // Remove expand from query
-        req.query.SELECT.columns.splice(expandIndex, 1);
-        // Return projectID
-        if (!req.query.SELECT.columns.find(
-            column => column.ref.find((ref) => ref == "projectID"))
-        ) req.query.SELECT.columns.push({ ref: ["projectID"] });
-
-        const authorReadings = await next();
-        const asArray = x => Array.isArray(x) ? x : [ x ];
-        // Request all associated projects
-        const projectIDs = asArray(authorReadings).map(authorReading => authorReading.projectID);     
-        const projects = await bydProject.run( SELECT.from('AuthorReadingManager.Projects').where({ projectID: projectIDs }) );
-
-        // Convert in a map for easier lookup
-        const projectsMap = {};
-        for (const project of projects) projectsMap[project.projectID] = project;
-        // Add suppliers to result
-        for (const authorReading of asArray(authorReadings)) {
-            authorReading.toProject = projectsMap[authorReading.projectID];
-        };
-        return authorReadings;    
-    } catch (error) {
-        // App reacts error tolerant in case of calling the remote service, mostly if the remote service is not available of if the destination is missing
-        console.log("ACTION_READ_PROJECT_CONNECTION" + "; " + error);
-    };
+   var isByDProjectRequested = await connectorByD.isAssociationRequested(req, "toByDProject");
+   if (isByDProjectRequested){
+    return await connectorByD.readProject(req, next); 
+   }
+   else{
+    // Project information is not requested at runtime (no need to read the project information from remote project system)
+    return next();
+   }
 })
 
 // ----------------------------------------------------------------------------
@@ -575,66 +514,50 @@ srv.on("userInfo", async (req) => {
     results.roles.authenticated = req.user.is("authenticated-user");
     return results;
 });
-
-
-  
-
 // ----------------------------------------------------------------------------
 // Implementation of remote OData services (back-channel integration with ByD)
 
 // Delegate OData requests to remote project entities
-srv.on("READ", "Projects", async (req) => {
-    const bydProject = await cds.connect.to("byd_khproject");
-    return bydProject.run(req.query);
+srv.on("READ", "ByDProjects", async (req) => {
+    return await connectorByD.delegateODataRequests(req,"byd_khproject");
 });
-srv.on("READ", "ProjectSummaryTasks", async (req) => {
-    const bydProject = await cds.connect.to("byd_khproject");
-    return bydProject.run(req.query);
+srv.on("READ", "ByDProjectSummaryTasks", async (req) => {
+    return await connectorByD.delegateODataRequests(req,"byd_khproject");
 });
-srv.on("READ", "ProjectTasks", async (req) => {
-    const bydProject = await cds.connect.to("byd_khproject");
-    return bydProject.run(req.query);
+srv.on("READ", "ByDProjectTasks", async (req) => {
+    return await connectorByD.delegateODataRequests(req,"byd_khproject");
 });
-srv.on("CREATE", "Projects", async (req) => {
-    const bydProject = await cds.connect.to("byd_khproject");
-    return bydProject.run(req.query);
+srv.on("CREATE", "ByDProjects", async (req) => {
+    return await connectorByD.delegateODataRequests(req,"byd_khproject");
 });
-srv.on("CREATE", "ProjectSummaryTasks", async (req) => {
-    const bydProject = await cds.connect.to("byd_khproject");
-    return bydProject.run(req.query);
+srv.on("CREATE", "ByDProjectSummaryTasks", async (req) => {
+    return await connectorByD.delegateODataRequests(req,"byd_khproject");
 });
-srv.on("CREATE", "ProjectTasks", async (req) => {
-    const bydProject = await cds.connect.to("byd_khproject");
-    return bydProject.run(req.query);
+srv.on("CREATE", "ByDProjectTasks", async (req) => {
+    return await connectorByD.delegateODataRequests(req,"byd_khproject");
 });
-srv.on("UPDATE", "Projects", async (req) => {
-    const bydProject = await cds.connect.to("byd_khproject");
-    return bydProject.run(req.query);
+srv.on("UPDATE", "ByDProjects", async (req) => {
+    return await connectorByD.delegateODataRequests(req,"byd_khproject");
 });
-srv.on("UPDATE", "ProjectSummaryTasks", async (req) => {
-    const bydProject = await cds.connect.to("byd_khproject");
-    return bydProject.run(req.query);
+srv.on("UPDATE", "ByDProjectSummaryTasks", async (req) => {
+    return await connectorByD.delegateODataRequests(req,"byd_khproject");
 });
-srv.on("UPDATE", "ProjectTasks", async (req) => {
-    const bydProject = await cds.connect.to("byd_khproject");
-    return bydProject.run(req.query);
+srv.on("UPDATE", "ByDProjectTasks", async (req) => {
+    return await connectorByD.delegateODataRequests(req,"byd_khproject");
 });
-srv.on("DELETE", "Projects", async (req) => {
-    const bydProject = await cds.connect.to("byd_khproject");
-    return bydProject.run(req.query);
+srv.on("DELETE", "ByDProjects", async (req) => {
+    return await connectorByD.delegateODataRequests(req,"byd_khproject");
 });
-srv.on("DELETE", "ProjectSummaryTasks", async (req) => {
-    const bydProject = await cds.connect.to("byd_khproject");
-    return bydProject.run(req.query);
+srv.on("DELETE", "ByDProjectSummaryTasks", async (req) => {
+    return await connectorByD.delegateODataRequests(req,"byd_khproject");
 });
-srv.on("DELETE", "ProjectTasks", async (req) => {
-    const bydProject = await cds.connect.to("byd_khproject");
-    return bydProject.run(req.query);
+srv.on("DELETE", "ByDProjectTasks", async (req) => {
+    return await connectorByD.delegateODataRequests(req,"byd_khproject");
 });
-srv.on("READ", "ProjectsTechUser", async (req) => {
-    const bydProject = await cds.connect.to("byd_khproject_tech_user");
-    return bydProject.run(req.query);
+srv.on("READ", "ByDProjectsTechUser", async (req) => {
+    return await connectorByD.delegateODataRequests(req,"byd_khproject_tech_user");
 });
+
 
 
 // ----------------------------------------------------------------------------
@@ -669,7 +592,7 @@ bydmessage.on("sap/byd/project/ProjectUpdated", async msg => {
                     let authorReadingUpdateResp;
                     // Trigger remote service call to get the ByD project using a technical user                        
                     const bydProject = await cds.connect.to('byd_khproject_tech_user');                                               
-                    const existingProject = await bydProject.run(SELECT.from('AuthorReadingManager.ProjectsTechUser').where({ projectID: remoteProjectID }));
+                    const existingProject = await bydProject.run(SELECT.from('AuthorReadingManager.ByDProjectsTechUser').where({ projectID: remoteProjectID }));
                     
                     // Reuse ByD project if already existing                        
                     if (existingProject.length === 1){
