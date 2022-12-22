@@ -420,15 +420,16 @@ srv.on("createByDProject", async (req) => {
         const authorReadings = await SELECT.from("sap.samples.authorreadings.AuthorReadings").where({ ID: authorReadingID });
         // Allow action for active entity instances only
         if ( authorReadings.length === 1 ) {
-            let authorReadingIdentifier, authorReadingDescription, authorReadingTitle, authorReadingDate;
+            let authorReadingIdentifier, authorReadingDescription, authorReadingTitle, authorReadingDate, authorReadingProjectSystem;
             authorReadings.forEach((authorReading) => {
                 authorReadingIdentifier = authorReading.identifier;
                 authorReadingDescription = authorReading.description;
                 authorReadingTitle = authorReading.title;
                 authorReadingDate = authorReading.date;
+                authorReadingProjectSystem = authorReading.projectSystem;
             });
 
-            if ( bydRemoteSystem == "ByD" || (!bydRemoteSystem) ) {
+            if ( authorReadingProjectSystem == "ByD" || (!authorReadingProjectSystem) ) {
                 
                 var projectRecord = await connectorByD.projectDataRecord(authorReadingIdentifier, authorReadingTitle, authorReadingDate);
 
