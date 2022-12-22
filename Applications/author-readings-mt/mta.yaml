@@ -97,7 +97,7 @@ modules:
   - name: author-readings-destination-service  
   - name: author-readings-service-manager
     properties:      
-        SUBSCRIPTION_URL: ${protocol}://\${tenant_subdomain}.${app-url}.${domain} # ${default-url}
+        SUBSCRIPTION_URL: ${protocol}://\${tenant_subdomain}.${app-url}.${domain}/authorreadingmanager  # ${default-url}
   parameters:
     routes:
       - route: ${mtx-srv-url}.${domain}
