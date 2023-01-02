@@ -93,3 +93,45 @@ annotate AuthorReadingManager.ByDProjectsTechUser with @(restrict : [
         to    : 'AuthorReadingAdminRole'
     }
 ]);
+
+// S4HC projects: Managers and Administrators can read and create remote projects
+annotate AuthorReadingManager.S4HCProjects with @(restrict : [
+    {
+        grant : ['*'],
+        to    : 'AuthorReadingManagerRole',
+    },
+    {
+        grand : ['*'],
+        to    : 'AuthorReadingAdminRole'
+    }
+]);
+annotate AuthorReadingManager.S4HCProjects with @(restrict : [
+    {
+        grant : ['*'],
+        to    : 'AuthorReadingManagerRole',
+    },
+    {
+        grand : ['*'],
+        to    : 'AuthorReadingAdminRole'
+    }
+]);
+annotate AuthorReadingManager.S4HCProjects with @(restrict : [
+    {
+        grant : ['*'],
+        to    : 'AuthorReadingManagerRole',
+    },
+    {
+        grand : ['*'],
+        to    : 'AuthorReadingAdminRole'
+    }
+]);
+annotate AuthorReadingManager.S4HCEntProjEntitlement with @(restrict : [
+    {
+        grant : ['*'],
+        to    : 'AuthorReadingManagerRole',
+    },
+    {
+        grand : ['*'],
+        to    : 'AuthorReadingAdminRole'
+    }
+]);

@@ -88,6 +88,24 @@
                     }
                 }
             },
+            "S4HC_API_ENTERPRISE_PROJECT_SRV_0002": {
+                "kind": "odata-v2",
+                "model": "srv/external/S4HC_API_ENTERPRISE_PROJECT_SRV_0002",
+                "[sandbox]": {
+                    "credentials": {
+                        "url": "https://{{s4hc-hostname}}/sap/opu/odata/sap/API_ENTERPRISE_PROJECT_SRV;v=0002",
+                        "authentication": "BasicAuthentication",
+                        "username": "{{user}}",
+                        "password": "{{password}}"
+                    }
+                },
+                "[production]": {
+                    "credentials": {
+                        "destination": "s4hc",
+                        "path": "/sap/opu/odata/sap/API_ENTERPRISE_PROJECT_SRV;v=0002"
+                    }
+                }
+            },
             "audit-log": {
                 "[sandbox]": {
                     "kind": "audit-log-to-console"

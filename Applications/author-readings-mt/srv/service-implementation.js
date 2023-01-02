@@ -102,8 +102,10 @@ srv.after("READ", "AuthorReadings", (each) => {
     }
     if (each.projectID) {
         each.createByDProjectEnabled = false;
+        each.createS4HCProjectEnabled = false;
     } else {
         each.createByDProjectEnabled = true;
+        each.createS4HCProjectEnabled = true;
     }
 });
 

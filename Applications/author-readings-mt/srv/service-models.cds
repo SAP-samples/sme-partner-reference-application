@@ -20,7 +20,10 @@ service AuthorReadingManager @(
     entity AuthorReadings as select from armodels.AuthorReadings
         mixin {
             // ByD projects: Mix-in of ByD project data
-            toByDProject: Association to RemoteByDProject.ProjectCollection on toByDProject.ProjectID = $projection.projectID
+            toByDProject: Association to RemoteByDProject.ProjectCollection on toByDProject.ProjectID = $projection.projectID;
+
+            // S4HC projects: Mix-in of S4HC project data
+            toS4HCProject: Association to RemoteS4HCProject.A_EnterpriseProject on toS4HCProject.Project = $projection.projectID
         } 
         into  {
             *,
@@ -28,6 +31,10 @@ service AuthorReadingManager @(
             // ByD projects: visibility of button "Create project in ByD"
             virtual null as createByDProjectEnabled : Boolean  @title : '{i18n>createByDProjectEnabled}'  @odata.Type : 'Edm.Boolean',
             toByDProject,
+
+            // S4HC projects: visibility of button "Create project in S4HC"
+            virtual null as createS4HCProjectEnabled : Boolean  @title : '{i18n>createS4HCProjectEnabled}'  @odata.Type : 'Edm.Boolean',
+            toS4HCProject,
         }
         actions {
             @(
@@ -48,6 +55,13 @@ service AuthorReadingManager @(
                 cds.odata.bindingparameter.name : '_authorreading'
             )
             action createByDProject() returns AuthorReadings;
+
+            // S4HC projects: action to create a project in S4HC
+            @(
+                Common.SideEffects              : {TargetEntities: ['_authorreading','_authorreading/toS4HCProject']},
+                cds.odata.bindingparameter.name : '_authorreading'
+            )
+            action createS4HCProject() returns AuthorReadings;
         };
 
     // Participants
@@ -151,6 +165,54 @@ extend service AuthorReadingManager with {
         PlannedEndDateTime as endDateTime                    
     }
 };
+
+// Extend service AuthorReadingManager by S4HC projects (principal propagation)
+
+using { S4HC_API_ENTERPRISE_PROJECT_SRV_0002 as RemoteS4HCProject } from './external/S4HC_API_ENTERPRISE_PROJECT_SRV_0002';
+
+extend service AuthorReadingManager with {
+    entity S4HCProjects as projection on RemoteS4HCProject.A_EnterpriseProject {
+        key ProjectUUID as ProjectUUID,
+        ProjectInternalID as ProjectInternalID,
+        Project as Project,
+        ProjectDescription as ProjectDescription,
+        EnterpriseProjectType as EnterpriseProjectType,
+        ProjectStartDate as ProjectStartDate,
+        ProjectEndDate  as ProjectEndDate,
+        ProcessingStatus as ProcessingStatus,
+        ResponsibleCostCenter as ResponsibleCostCenter,
+        ProfitCenter as ProfitCenter,
+        ProjectProfileCode as ProjectProfileCode,
+        CompanyCode as CompanyCode,
+        ProjectCurrency as ProjectCurrency,
+        EntProjectIsConfidential as EntProjectIsConfidential,
+        to_EnterpriseProjectElement as to_EnterpriseProjectElement : redirected to S4HCEnterpriseProjectElement ,                
+        to_EntProjTeamMember as to_EntProjTeamMember : redirected to S4HCEntProjTeamMember    
+    }
+    entity S4HCEnterpriseProjectElement as projection on RemoteS4HCProject.A_EnterpriseProjectElement {
+        key ProjectElementUUID as ProjectElementUUID,
+        ProjectUUID as ProjectUUID,
+        ProjectElement as ProjectElement,
+        ProjectElementDescription as ProjectElementDescription,
+        PlannedStartDate as PlannedStartDate,
+        PlannedEndDate as PlannedEndDate
+    }
+
+    entity S4HCEntProjTeamMember as projection on RemoteS4HCProject.A_EnterpriseProjectTeamMember {
+        key TeamMemberUUID as TeamMemberUUID,        
+        ProjectUUID as ProjectUUID,
+        BusinessPartnerUUID as BusinessPartnerUUID,
+        to_EntProjEntitlement as to_EntProjEntitlement : redirected to S4HCEntProjEntitlement     
+    }
+
+    entity S4HCEntProjEntitlement as projection on RemoteS4HCProject.A_EntTeamMemberEntitlement {
+        key ProjectEntitlementUUID as ProjectEntitlementUUID,
+        TeamMemberUUID as TeamMemberUUID,
+        ProjectRoleType as ProjectRoleType        
+    }
+    
+};
+
 
 
 // -------------------------------------------------------------------------------

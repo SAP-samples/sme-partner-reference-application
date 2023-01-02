@@ -104,6 +104,20 @@ annotate service.AuthorReadings with @(UI : {
                     ]
                 }   
             }
+        },
+        {
+            $Type  : 'UI.DataFieldForAction',
+            Label  : '{i18n>createByDProject}',
+            Action : 'AuthorReadingManager.createS4HCProject',            
+            @UI.Hidden : { $edmJson : 
+                { $If : 
+                    [
+                        { $Eq : [ {$Path : 'createS4HCProjectEnabled'}, false ] },
+                        true,
+                        false
+                    ]
+                }   
+            }
         }
     ],
     

@@ -1,0 +1,10 @@
+{
+  "cds": {
+    "requires": {
+      "S4HC_API_ENTERPRISE_PROJECT_SRV_0002": {
+        "kind": "odata-v2",
+        "model": "srv/external/S4HC_API_ENTERPRISE_PROJECT_SRV_0002"
+      }
+    }
+  }
+}
