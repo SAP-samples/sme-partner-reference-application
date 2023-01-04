@@ -597,7 +597,7 @@ srv.on("userInfo", async (req) => {
 // ----------------------------------------------------------------------------
 // Implementation of remote OData services (back-channel integration with ByD)
 
-// Delegate OData requests to remote project entities
+// Delegate OData requests to ByD remote project entities
 srv.on("READ", "ByDProjects", async (req) => {
     return await connectorByD.delegateODataRequests(req,"byd_khproject");
 });
@@ -638,6 +638,57 @@ srv.on("READ", "ByDProjectsTechUser", async (req) => {
     return await connectorByD.delegateODataRequests(req,"byd_khproject_tech_user");
 });
 
+// ----------------------------------------------------------------------------
+// Implementation of remote OData services (back-channel integration with S4HC)
+// Delegate OData requests to S4HC remote project entities
+srv.on("READ", "S4HCProjects", async (req) => {
+    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+});
+srv.on("READ", "S4HCEnterpriseProjectElement", async (req) => {
+    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+});
+srv.on("READ", "S4HCEntProjEntitlement", async (req) => {
+    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+});
+srv.on("READ", "S4HCEntProjTeamMember", async (req) => {
+    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+});
+srv.on("CREATE", "S4HCProjects", async (req) => {
+    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+});
+srv.on("CREATE", "S4HCEnterpriseProjectElement", async (req) => {
+    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+});
+srv.on("CREATE", "S4HCEntProjEntitlement", async (req) => {
+    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+});
+srv.on("CREATE", "S4HCEntProjTeamMember", async (req) => {
+    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+});
+srv.on("UPDATE", "S4HCProjects", async (req) => {
+    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+});
+srv.on("UPDATE", "S4HCEnterpriseProjectElement", async (req) => {
+    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+});
+srv.on("UPDATE", "S4HCEntProjEntitlement", async (req) => {
+    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+});
+srv.on("UPDATE", "S4HCEntProjTeamMember", async (req) => {
+    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+});
+srv.on("DELETE", "S4HCProjects", async (req) => {
+    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+});
+srv.on("DELETE", "S4HCEnterpriseProjectElement", async (req) => {
+    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+});
+srv.on("DELETE", "S4HCEntProjEntitlement", async (req) => {
+    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+});
+srv.on("DELETE", "S4HCEntProjTeamMember", async (req) => {
+    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+});
 
 
 // ----------------------------------------------------------------------------
