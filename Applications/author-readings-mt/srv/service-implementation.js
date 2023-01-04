@@ -4,6 +4,7 @@
 const cds = require("@sap/cds");
 const reuse = require("./reuse");
 const connectorByD = require("./connector-byd");
+const connectorS4HC = require("./connector-s4hc");
 
 module.exports = cds.service.impl(async (srv) => {
 
@@ -490,11 +491,87 @@ srv.on("createByDProject", async (req) => {
     }
 });
 
+// Entity action "createByDProject"
+srv.on("createS4HCProject", async (req) => {
+    try {
+        const authorReadingID = (req.params.pop()).ID;
+        const authorReadings = await SELECT.from("sap.samples.authorreadings.AuthorReadings").where({ ID: authorReadingID });
+        // Allow action for active entity instances only
+        if ( authorReadings.length === 1 ) {
+            let authorReadingIdentifier, authorReadingDescription, authorReadingTitle, authorReadingDate, authorReadingProjectSystem;
+            authorReadings.forEach((authorReading) => {
+                authorReadingIdentifier = authorReading.identifier;
+                authorReadingDescription = authorReading.description;
+                authorReadingTitle = authorReading.title;
+                authorReadingDate = authorReading.date;
+                authorReadingProjectSystem = authorReading.projectSystem;
+            });
+
+            if ( authorReadingProjectSystem == "S4HC" || (!authorReadingProjectSystem) ) {
+                
+                var projectRecord = await connectorS4HC.projectDataRecord(authorReadingIdentifier, authorReadingTitle, authorReadingDate);
+
+                // Check and create the project instance
+                // If the project already exist, then read and update the local project elements in entity AuthorReadings
+                
+                // Get the entity service (entity "ByDProjects")
+                const { S4HCrojects } = srv.entities;
+                var remoteProjectID, remoteProjectObjectID;
+
+                // GET service call on remote project entity
+                const existingProject = await srv.run( SELECT.from(S4HCProjects).where({ Project: projectRecord.Project }) );
+
+                if (existingProject.length === 1) {
+                    remoteProjectID = existingProject[0].Project;
+                    remoteProjectObjectID = existingProject[0].ProjectUUID;
+                } else {
+                    // POST request to create the project via remote service
+                    const remoteCreatedProject = await srv.run( INSERT.into(S4HCProjects).entries(projectRecord) );
+                    if (remoteCreatedProject) {
+                        remoteProjectID = remoteCreatedProject.Project;
+                        remoteProjectObjectID = remoteCreatedProject.ProjectUUID;
+                    }
+                }
+
+                // Generate remote ByD Project URL and update the URL
+                if (remoteProjectID) {
+                    
+                    // Read the ByD system URL dynamically from BTP destination "byd-url"
+                    var S4HCRemoteSystem = await reuse.getDestinationURL(req , 's4hc-url'); 
+                    
+                    // Set the URL of ByD project overview screen for UI navigation
+                    var bydRemoteProjectExternalURL = "/ui#EnterpriseProject-displayFactSheet?Project=" +projectRecord.Project ;
+                    var bydRemoteProjectExternalCompleteURL = S4HCRemoteSystem.concat( bydRemoteProjectExternalURL );
+                    
+                    // Update project elements in entity AuthorReadings
+                    await UPDATE("sap.samples.authorreadings.AuthorReadings")
+                        .set({
+                            ProjectID: remoteProjectID,
+                            projectObjectID: remoteProjectObjectID,
+                            projectURL: bydRemoteProjectExternalCompleteURL,
+                            projectSystem : "S4HC"
+                        })
+                        .where({ ID: authorReadingID });
+                }
+            }                   
+        } else {
+            req.error(400, "ACTION_CREATE_PROJECT_DRAFT");
+        }
+    } catch (error) {
+        // App reacts error tolerant in case of calling the remote service, mostly if the remote service is not available of if the destination is missing
+        console.log("ACTION_CREATE_PROJECT_CONNECTION" + "; " + error);
+    }
+});
+
 // Expand author readings to remote projects
 srv.on("READ", "AuthorReadings", async (req, next) => {   
    var isByDProjectRequested = await connectorByD.isAssociationRequested(req, "toByDProject");
+   var isS4HCProjectRequested = await connectorS4HC.isAssociationRequested(req, "toS4HCProject");
    if (isByDProjectRequested){
     return await connectorByD.readProject(req, next); 
+   }
+   else if (isS4HCProjectRequested){
+    return await connectorS4HC.readProject(req, next); 
    }
    else{
     // Project information is not requested at runtime (no need to read the project information from remote project system)

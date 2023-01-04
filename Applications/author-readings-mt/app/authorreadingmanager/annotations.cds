@@ -302,6 +302,44 @@ annotate service.AuthorReadings with @(UI : {
             Label : '{i18n>projectEndDateTime}',
             Value : toByDProject.endDateTime,
             @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'ByD' ] }, false, true ] } }
+        },
+
+        // S4HC specific fields
+        {
+            $Type : 'UI.DataField',
+            Label : 'Project Description',
+            Value : toS4HCProject.ProjectDescription,
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'S4HC' ] }, false, true ] } }
+        },
+        {
+            $Type : 'UI.DataField',
+            Label : 'Project Profile Code',
+            Value : toS4HCProject.ProjectProfileCode,
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'S4HC' ] }, false, true ] } }
+        },
+        {
+            $Type : 'UI.DataField',
+            Label : 'Responsible Cost Center',
+            Value : toS4HCProject.ResponsibleCostCenter,
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'S4HC' ] }, false, true ] } }
+        },
+          {
+            $Type : 'UI.DataField',
+            Label : 'Processing Status',
+            Value : toS4HCProject.ProcessingStatus,
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'S4HC' ] }, false, true ] } }
+        },
+        {
+            $Type : 'UI.DataField',
+            Label : '{i18n>projectStartDateTime}',
+            Value : toS4HCProject.ProjectStartDate,
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'S4HC' ] }, false, true ] } }
+        },
+        {
+            $Type : 'UI.DataField',
+            Label : '{i18n>projectEndDateTime}',
+            Value : toS4HCProject.ProjectEndDate,
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'S4HC' ] }, false, true ] } }
         }
     ]},
     FieldGroup #AdminData : {Data : [

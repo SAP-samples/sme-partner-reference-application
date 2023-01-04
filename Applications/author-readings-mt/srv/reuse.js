@@ -105,8 +105,18 @@ async function getDestinationURL(req, destinationName) {
         }
         else{
             // In case the remote system destination URL is blank, then use some default URL (for testing and logging)
-            destinationURL = "https://myXXXXXX-sso.businessbydesign.cloud.sap"; 
-            console.log("ERP default destination URL : " + destinationURL);   
+            if(destinationName == 'byd-url') {
+              destinationURL = "https://myXXXXXX-sso.businessbydesign.cloud.sap"; 
+              
+            }
+            else if(destinationName == 's4hc-url'){
+              destinationURL = "https://myXXXXXX.s4hana.ondemand.com"; 
+              
+            }
+            else{
+              destinationURL = "https://myXXXXXX.XXXXXX.cloud.sap"; 
+            } 
+            console.log("ERP default destination URL : " + destinationURL);  
         }
         
     } catch (error) {
