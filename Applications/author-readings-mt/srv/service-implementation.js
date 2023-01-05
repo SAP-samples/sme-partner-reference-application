@@ -540,7 +540,7 @@ srv.on("createS4HCProject", async (req) => {
                     var S4HCRemoteSystem = await reuse.getDestinationURL(req , 's4hc-url'); 
                     
                     // Set the URL of ByD project overview screen for UI navigation
-                    var bydRemoteProjectExternalURL = "/ui#EnterpriseProject-displayFactSheet?Project=" +projectRecord.Project ;
+                    var bydRemoteProjectExternalURL = "/ui#EnterpriseProject-planProject?EnterpriseProject=" +projectRecord.Project ;
                     var bydRemoteProjectExternalCompleteURL = S4HCRemoteSystem.concat( bydRemoteProjectExternalURL );
                     
                     // Update project elements in entity AuthorReadings
