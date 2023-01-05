@@ -57,10 +57,10 @@
                 "model": "srv/external/byd_khproject",
                 "[sandbox]": {
                     "credentials": {
-                        "url": "https://{{byd-hostname}}/sap/byd/odata/cust/v1/khproject/",
+                        "url": "https://https://my426316.businessbydesign.cloud.sap/sap/byd/odata/cust/v1/khproject/",
                         "authentication": "BasicAuthentication",
-                        "username": "{{user}}",
-                        "password": "{{password}}"
+                        "username": "administration01",
+                        "password": "Welcome1"
                     }
                 },
                 "[production]": {
@@ -75,10 +75,10 @@
                 "model": "srv/external/byd_khproject_tech_user",
                 "[sandbox]": {
                     "credentials": {
-                        "url": "https://{{byd-hostname}}/sap/byd/odata/cust/v1/khproject/",
+                        "url": "https://https://my426316.businessbydesign.cloud.sap/sap/byd/odata/cust/v1/khproject/",
                         "authentication": "BasicAuthentication",
-                        "username": "{{user}}",
-                        "password": "{{password}}"
+                        "username": "administration01",
+                        "password": "Welcome1"
                     }
                 },
                 "[production]": {
@@ -93,7 +93,7 @@
                 "model": "srv/external/S4HC_API_ENTERPRISE_PROJECT_SRV_0002",
                 "[sandbox]": {
                     "credentials": {
-                        "url": "https://{{s4hc-hostname}}/sap/opu/odata/sap/API_ENTERPRISE_PROJECT_SRV;v=0002",
+                        "url": "https://my313380-api.s4hana.ondemand.com/sap/opu/odata/sap/API_ENTERPRISE_PROJECT_SRV;v=0002",
                         "authentication": "BasicAuthentication",
                         "username": "PRA-ARMT-S2-USER",
                         "password": "PartnerApplicationTenant-2"

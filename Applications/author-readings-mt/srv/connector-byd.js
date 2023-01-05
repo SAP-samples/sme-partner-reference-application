@@ -91,31 +91,11 @@ async function projectDataRecord(authorReadingIdentifier, authorReadingTitle, au
 
 // Expand author readings to remote projects
 // OData parameter following the UI-request pattern: "/AuthorReadings(ID=79ceab87-300d-4b66-8cc3-f82c679b77a1,IsActiveEntity=true)?$select=toByDProject&$expand=toByDProject($select=ID,costCenter,endDateTime,startDateTime,statusCodeText,typeCodeText)"
-async function readProject(req, next) {
+async function readProject(authorReadings) {
     try {     
-        const bydProject = await cds.connect.to('byd_khproject');
-        var expandIndex = -1;
-        // Check the if the object exists before running the findIndex-function
-        if(req){
-            if(req.query){                
-                if(req.query.SELECT){
-                    if(req.query.SELECT.columns){
-                        expandIndex = req.query.SELECT.columns.findIndex( ({ expand, ref }) => expand && ref[0] === "toByDProject" );
-                    }
-                }
-            }
-        }
-        if (expandIndex < 0) return next();
-        // Remove expand from query
-        req.query.SELECT.columns.splice(expandIndex, 1);
-        // Return projectID
-        if (!req.query.SELECT.columns.find(
-            column => column.ref.find((ref) => ref == "projectID"))
-        ) req.query.SELECT.columns.push({ ref: ["projectID"] });
+        const bydProject = await cds.connect.to('byd_khproject');  
 
-        const authorReadings = await next();
         const asArray = x => Array.isArray(x) ? x : [ x ];
-
         // Read Project ID's related to ByD
         let projectIDs = []; 
         for (const authorReading of asArray(authorReadings)) {

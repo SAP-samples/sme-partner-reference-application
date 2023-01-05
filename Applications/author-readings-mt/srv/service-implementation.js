@@ -515,7 +515,7 @@ srv.on("createS4HCProject", async (req) => {
                 // If the project already exist, then read and update the local project elements in entity AuthorReadings
                 
                 // Get the entity service (entity "ByDProjects")
-                const { S4HCrojects } = srv.entities;
+                const { S4HCProjects } = srv.entities;
                 var remoteProjectID, remoteProjectObjectID;
 
                 // GET service call on remote project entity
@@ -564,19 +564,23 @@ srv.on("createS4HCProject", async (req) => {
 });
 
 // Expand author readings to remote projects
-srv.on("READ", "AuthorReadings", async (req, next) => {   
+srv.on("READ", "AuthorReadings", async (req, next) => {
+    
+   let authorReadings = await next();
    var isByDProjectRequested = await connectorByD.isAssociationRequested(req, "toByDProject");
    var isS4HCProjectRequested = await connectorS4HC.isAssociationRequested(req, "toS4HCProject");
+    
    if (isByDProjectRequested){
-    return await connectorByD.readProject(req, next); 
+    authorReadings = await connectorByD.readProject(authorReadings); 
    }
-   else if (isS4HCProjectRequested){
-    return await connectorS4HC.readProject(req, next); 
+
+   if (isS4HCProjectRequested){
+    authorReadings =  await connectorS4HC.readProject(authorReadings); 
    }
-   else{
+
     // Project information is not requested at runtime (no need to read the project information from remote project system)
-    return next();
-   }
+    return authorReadings;
+  
 })
 
 // ----------------------------------------------------------------------------
@@ -642,52 +646,52 @@ srv.on("READ", "ByDProjectsTechUser", async (req) => {
 // Implementation of remote OData services (back-channel integration with S4HC)
 // Delegate OData requests to S4HC remote project entities
 srv.on("READ", "S4HCProjects", async (req) => {
-    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+    return await connectorS4HC.delegateODataRequests(req,"S4HC_API_ENTERPRISE_PROJECT_SRV_0002");
 });
 srv.on("READ", "S4HCEnterpriseProjectElement", async (req) => {
-    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+    return await connectorS4HC.delegateODataRequests(req,"S4HC_API_ENTERPRISE_PROJECT_SRV_0002");
 });
 srv.on("READ", "S4HCEntProjEntitlement", async (req) => {
-    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+    return await connectorS4HC.delegateODataRequests(req,"S4HC_API_ENTERPRISE_PROJECT_SRV_0002");
 });
 srv.on("READ", "S4HCEntProjTeamMember", async (req) => {
-    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+    return await connectorS4HC.delegateODataRequests(req,"S4HC_API_ENTERPRISE_PROJECT_SRV_0002");
 });
 srv.on("CREATE", "S4HCProjects", async (req) => {
-    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+    return await connectorS4HC.delegateODataRequests(req,"S4HC_API_ENTERPRISE_PROJECT_SRV_0002");
 });
 srv.on("CREATE", "S4HCEnterpriseProjectElement", async (req) => {
-    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+    return await connectorS4HC.delegateODataRequests(req,"S4HC_API_ENTERPRISE_PROJECT_SRV_0002");
 });
 srv.on("CREATE", "S4HCEntProjEntitlement", async (req) => {
-    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+    return await connectorS4HC.delegateODataRequests(req,"S4HC_API_ENTERPRISE_PROJECT_SRV_0002");
 });
 srv.on("CREATE", "S4HCEntProjTeamMember", async (req) => {
-    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+    return await connectorS4HC.delegateODataRequests(req,"S4HC_API_ENTERPRISE_PROJECT_SRV_0002");
 });
 srv.on("UPDATE", "S4HCProjects", async (req) => {
-    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+    return await connectorS4HC.delegateODataRequests(req,"S4HC_API_ENTERPRISE_PROJECT_SRV_0002");
 });
 srv.on("UPDATE", "S4HCEnterpriseProjectElement", async (req) => {
-    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+    return await connectorS4HC.delegateODataRequests(req,"S4HC_API_ENTERPRISE_PROJECT_SRV_0002");
 });
 srv.on("UPDATE", "S4HCEntProjEntitlement", async (req) => {
-    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+    return await connectorS4HC.delegateODataRequests(req,"S4HC_API_ENTERPRISE_PROJECT_SRV_0002");
 });
 srv.on("UPDATE", "S4HCEntProjTeamMember", async (req) => {
-    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+    return await connectorS4HC.delegateODataRequests(req,"S4HC_API_ENTERPRISE_PROJECT_SRV_0002");
 });
 srv.on("DELETE", "S4HCProjects", async (req) => {
-    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+    return await connectorS4HC.delegateODataRequests(req,"S4HC_API_ENTERPRISE_PROJECT_SRV_0002");
 });
 srv.on("DELETE", "S4HCEnterpriseProjectElement", async (req) => {
-    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+    return await connectorS4HC.delegateODataRequests(req,"S4HC_API_ENTERPRISE_PROJECT_SRV_0002");
 });
 srv.on("DELETE", "S4HCEntProjEntitlement", async (req) => {
-    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+    return await connectorS4HC.delegateODataRequests(req,"S4HC_API_ENTERPRISE_PROJECT_SRV_0002");
 });
 srv.on("DELETE", "S4HCEntProjTeamMember", async (req) => {
-    return await connectorS4HC.delegateODataRequests(req,"s4hc_khproject");
+    return await connectorS4HC.delegateODataRequests(req,"S4HC_API_ENTERPRISE_PROJECT_SRV_0002");
 });
 
 
