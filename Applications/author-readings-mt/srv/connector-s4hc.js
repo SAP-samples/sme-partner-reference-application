@@ -105,7 +105,7 @@ async function projectDataRecord(authorReadingIdentifier, authorReadingTitle, au
 }
 
 // Expand author readings to remote projects
-// OData parameter following the UI-request pattern: "/AuthorReadings(ID=79ceab87-300d-4b66-8cc3-f82c679b77a1,IsActiveEntity=true)?$select=toByDProject&$expand=toS4HCProject($select=ID,costCenter,endDateTime,startDateTime,statusCodeText,typeCodeText)"
+// OData parameter following the UI-request pattern: "/AuthorReadings(ID=79ceab87-300d-4b66-8cc3-f82c679b77a1,IsActiveEntity=true)?$select=toByDProject&$expand=toS4HCProject($select=ProcessingStatus,ProjectDescription,ProjectEndDate,ProjectProfileCode,ProjectStartDate,ProjectUUID,ResponsibleCostCenter)""
 async function readProject(authorReadings) {
     try {     
         const s4hcProject = await cds.connect.to('S4HC_API_ENTERPRISE_PROJECT_SRV_0002');

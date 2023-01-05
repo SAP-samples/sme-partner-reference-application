@@ -565,20 +565,23 @@ srv.on("createS4HCProject", async (req) => {
 
 // Expand author readings to remote projects
 srv.on("READ", "AuthorReadings", async (req, next) => {
-    
+   
+   // Read the AuthorReading instances
    let authorReadings = await next();
-   var isByDProjectRequested = await connectorByD.isAssociationRequested(req, "toByDProject");
-   var isS4HCProjectRequested = await connectorS4HC.isAssociationRequested(req, "toS4HCProject");
-    
+
+   // Check and Read ByD project related data 
+   var isByDProjectRequested = await connectorByD.isAssociationRequested(req, "toByDProject");  
    if (isByDProjectRequested){
     authorReadings = await connectorByD.readProject(authorReadings); 
    }
-
+   
+   // Check and Read S4HC project related data 
+   var isS4HCProjectRequested = await connectorS4HC.isAssociationRequested(req, "toS4HCProject");
    if (isS4HCProjectRequested){
     authorReadings =  await connectorS4HC.readProject(authorReadings); 
    }
 
-    // Project information is not requested at runtime (no need to read the project information from remote project system)
+    // Return the Project information filled with remote ByD/S4HC project information
     return authorReadings;
   
 })
