@@ -57,7 +57,7 @@
                 "model": "srv/external/byd_khproject",
                 "[sandbox]": {
                     "credentials": {
-                        "url": "https://https://my426316.businessbydesign.cloud.sap/sap/byd/odata/cust/v1/khproject/",
+                        "url": "https://{{ByD-hostname}}/sap/byd/odata/cust/v1/khproject/",
                         "authentication": "BasicAuthentication",
                         "username": "administration01",
                         "password": "Welcome1"
@@ -75,7 +75,7 @@
                 "model": "srv/external/byd_khproject_tech_user",
                 "[sandbox]": {
                     "credentials": {
-                        "url": "https://https://my426316.businessbydesign.cloud.sap/sap/byd/odata/cust/v1/khproject/",
+                        "url": "https://{{ByD-hostname}}/sap/byd/odata/cust/v1/khproject/",
                         "authentication": "BasicAuthentication",
                         "username": "administration01",
                         "password": "Welcome1"
@@ -93,7 +93,7 @@
                 "model": "srv/external/S4HC_API_ENTERPRISE_PROJECT_SRV_0002",
                 "[sandbox]": {
                     "credentials": {
-                        "url": "https://my313380-api.s4hana.ondemand.com/sap/opu/odata/sap/API_ENTERPRISE_PROJECT_SRV;v=0002",
+                        "url": "https://{{S4HC-hostname}}/sap/opu/odata/sap/API_ENTERPRISE_PROJECT_SRV;v=0002",
                         "authentication": "BasicAuthentication",
                         "username": "PRA-ARMT-S2-USER",
                         "password": "PartnerApplicationTenant-2"
