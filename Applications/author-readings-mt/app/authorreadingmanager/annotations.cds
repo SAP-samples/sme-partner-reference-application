@@ -93,7 +93,7 @@ annotate service.AuthorReadings with @(UI : {
         },
         {
             $Type  : 'UI.DataFieldForAction',
-            Label  : '{i18n>createByDProject}',
+            Label  : '{i18n>createProject}',
             Action : 'AuthorReadingManager.createByDProject',            
             @UI.Hidden : { $edmJson : 
                 { $If : 
@@ -107,7 +107,7 @@ annotate service.AuthorReadings with @(UI : {
         },
         {
             $Type  : 'UI.DataFieldForAction',
-            Label  : '{i18n>createS4HCProject}',
+            Label  : '{i18n>createProject}',
             Action : 'AuthorReadingManager.createS4HCProject',            
             @UI.Hidden : { $edmJson : 
                 { $If : 

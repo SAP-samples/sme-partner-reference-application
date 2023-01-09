@@ -6,6 +6,9 @@ const reuse = require("./reuse");
 const connectorByD = require("./connector-byd");
 const connectorS4HC = require("./connector-s4hc");
 
+let isDestinationByDExist  ;
+let isDestinationS4HCExist ;
+
 module.exports = cds.service.impl(async (srv) => {
 
 // ----------------------------------------------------------------------------
@@ -83,31 +86,36 @@ srv.on("DELETE", "AuthorReadings", async (req, next) => {
 });
 
 // Apply a colour code based on the author reading status
-srv.after("READ", "AuthorReadings", (each) => {
-    if(each.statusCode) {
-        switch (each.statusCode.code) {
-            case reuse.authorReadingStatusCode.inPreparation:
-                each.statusCriticality = reuse.color.yellow; // New author readings are yellow
-                break;
-            case reuse.authorReadingStatusCode.published:
-                each.statusCriticality = reuse.color.green; // Published author readings are Green
-                break;
-            case reuse.authorReadingStatusCode.booked:
-                each.statusCriticality = reuse.color.yellow; // Booked author readings are yellow
-                break;
-            case reuse.authorReadingStatusCode.blocked:
-                each.statusCriticality = reuse.color.red; // Blocked author readings are red
-                break;
-            default:
+srv.after("READ", "AuthorReadings", async (req) => {
+
+    const asArray = x => Array.isArray(x) ? x : [ x ];
+    for (const authorReading of asArray(req)) {    
+        if(authorReading.statusCode) {
+            switch (authorReading.statusCode.code) {
+                case reuse.authorReadingStatusCode.inPreparation:
+                    authorReading.statusCriticality = reuse.color.yellow; // New author readings are yellow
+                    break;
+                case reuse.authorReadingStatusCode.published:
+                    authorReading.statusCriticality = reuse.color.green; // Published author readings are Green
+                    break;
+                case reuse.authorReadingStatusCode.booked:
+                    authorReading.statusCriticality = reuse.color.yellow; // Booked author readings are yellow
+                    break;
+                case reuse.authorReadingStatusCode.blocked:
+                    authorReading.statusCriticality = reuse.color.red; // Blocked author readings are red
+                    break;
+                default:
+            }
         }
-    }
-    if (each.projectID) {
-        each.createByDProjectEnabled = false;
-        each.createS4HCProjectEnabled = false;
-    } else {
-        each.createByDProjectEnabled = true;
-        each.createS4HCProjectEnabled = true;
-    }
+        if (authorReading.projectID) {
+            authorReading.createByDProjectEnabled = false;
+            authorReading.createS4HCProjectEnabled = false;           
+        }else{            
+            authorReading.createByDProjectEnabled = isDestinationByDExist;
+            authorReading.createS4HCProjectEnabled = isDestinationS4HCExist;
+        }
+    };
+
 });
 
 // Entity action "block": Set the status of author reading to blocked
@@ -565,7 +573,7 @@ srv.on("createS4HCProject", async (req) => {
 
 // Expand author readings to remote projects
 srv.on("READ", "AuthorReadings", async (req, next) => {
-   
+       
    // Read the AuthorReading instances
    let authorReadings = await next();
 
@@ -580,6 +588,9 @@ srv.on("READ", "AuthorReadings", async (req, next) => {
    if (isS4HCProjectRequested){
     authorReadings =  await connectorS4HC.readProject(authorReadings); 
    }
+
+    isDestinationByDExist  =  await reuse.isDestinationExist(req,"byd"); 
+    isDestinationS4HCExist =  await reuse.isDestinationExist(req,"s4hc");
 
     // Return the Project information filled with remote ByD/S4HC project information
     return authorReadings;
