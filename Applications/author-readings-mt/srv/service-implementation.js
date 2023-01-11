@@ -6,8 +6,9 @@ const reuse = require("./reuse");
 const connectorByD = require("./connector-byd");
 const connectorS4HC = require("./connector-s4hc");
 
-let isDestinationByDExist  ;
-let isDestinationS4HCExist ;
+var backendConnectionsChecked = false;
+var ByDconnected;  
+var S4HCconnected;
 
 module.exports = cds.service.impl(async (srv) => {
 
@@ -111,8 +112,8 @@ srv.after("READ", "AuthorReadings", async (req) => {
             authorReading.createByDProjectEnabled = false;
             authorReading.createS4HCProjectEnabled = false;           
         }else{            
-            authorReading.createByDProjectEnabled = isDestinationByDExist;
-            authorReading.createS4HCProjectEnabled = isDestinationS4HCExist;
+            authorReading.createByDProjectEnabled = ByDconnected;
+            authorReading.createS4HCProjectEnabled = S4HCconnected;
         }
     };
 
@@ -573,29 +574,30 @@ srv.on("createS4HCProject", async (req) => {
 
 // Expand author readings to remote projects
 srv.on("READ", "AuthorReadings", async (req, next) => {
-       
-   // Read the AuthorReading instances
-   let authorReadings = await next();
 
-   // Check and Read ByD project related data 
-   var isByDProjectRequested = await connectorByD.isAssociationRequested(req, "toByDProject");  
-   if (isByDProjectRequested){
-    authorReadings = await connectorByD.readProject(authorReadings); 
-   }
+    if ( backendConnectionsChecked == false ) {
+        ByDconnected  =  await reuse.isDestinationExist(req,"byd"); 
+        S4HCconnected =  await reuse.isDestinationExist(req,"s4hc");    
+    };
+    
+    // Read the AuthorReading instances
+    let authorReadings = await next();
+
+    // Check and Read ByD project related data 
+    var isByDProjectRequested = await connectorByD.isAssociationRequested(req, "toByDProject");  
+    if (isByDProjectRequested){
+        authorReadings = await connectorByD.readProject(authorReadings); 
+    };
    
-   // Check and Read S4HC project related data 
-   var isS4HCProjectRequested = await connectorS4HC.isAssociationRequested(req, "toS4HCProject");
-   if (isS4HCProjectRequested){
-    authorReadings =  await connectorS4HC.readProject(authorReadings); 
-   }
-
-    isDestinationByDExist  =  await reuse.isDestinationExist(req,"byd"); 
-    isDestinationS4HCExist =  await reuse.isDestinationExist(req,"s4hc");
+    // Check and Read S4HC project related data 
+    var isS4HCProjectRequested = await connectorS4HC.isAssociationRequested(req, "toS4HCProject");
+    if (isS4HCProjectRequested){
+        authorReadings =  await connectorS4HC.readProject(authorReadings); 
+    };
 
     // Return the Project information filled with remote ByD/S4HC project information
     return authorReadings;
-  
-})
+});
 
 // ----------------------------------------------------------------------------
 // Implementation of service functions
