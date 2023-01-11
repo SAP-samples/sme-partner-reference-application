@@ -6,7 +6,6 @@ const reuse = require("./reuse");
 const connectorByD = require("./connector-byd");
 const connectorS4HC = require("./connector-s4hc");
 
-var backendConnectionsChecked = false;
 var ByDconnected;  
 var S4HCconnected;
 
@@ -86,9 +85,15 @@ srv.on("DELETE", "AuthorReadings", async (req, next) => {
     // nothing done here
 });
 
+// Check connected backend systems
+srv.before("READ", "AuthorReadings", async (req) => {
+    ByDconnected  = await reuse.checkDestination(req,"byd"); 
+    S4HCconnected = await reuse.checkDestination(req,"s4hc");  
+    console.log("Event handler BEFORE READ: ByD connected = " + ByDconnected + "; S4HC connected = " + S4HCconnected);  
+});
+
 // Apply a colour code based on the author reading status
 srv.after("READ", "AuthorReadings", async (req) => {
-
     const asArray = x => Array.isArray(x) ? x : [ x ];
     for (const authorReading of asArray(req)) {    
         if(authorReading.statusCode) {
@@ -116,7 +121,6 @@ srv.after("READ", "AuthorReadings", async (req) => {
             authorReading.createS4HCProjectEnabled = S4HCconnected;
         }
     };
-
 });
 
 // Entity action "block": Set the status of author reading to blocked
@@ -575,27 +579,24 @@ srv.on("createS4HCProject", async (req) => {
 // Expand author readings to remote projects
 srv.on("READ", "AuthorReadings", async (req, next) => {
 
-    if ( backendConnectionsChecked == false ) {
-        ByDconnected  =  await reuse.isDestinationExist(req,"byd"); 
-        S4HCconnected =  await reuse.isDestinationExist(req,"s4hc");    
-    };
-    
     // Read the AuthorReading instances
     let authorReadings = await next();
 
     // Check and Read ByD project related data 
     var isByDProjectRequested = await connectorByD.isAssociationRequested(req, "toByDProject");  
-    if (isByDProjectRequested){
+    if ( isByDProjectRequested && ByDconnected ){
         authorReadings = await connectorByD.readProject(authorReadings); 
+        console.log("Event handler ON READ: Read project data from ByD: " + authorReadings);  
     };
    
     // Check and Read S4HC project related data 
     var isS4HCProjectRequested = await connectorS4HC.isAssociationRequested(req, "toS4HCProject");
-    if (isS4HCProjectRequested){
+    if ( isS4HCProjectRequested && S4HCconnected ){
         authorReadings =  await connectorS4HC.readProject(authorReadings); 
+        console.log("Event handler ON READ: Read project data from S4HC: " + authorReadings);  
     };
 
-    // Return the Project information filled with remote ByD/S4HC project information
+    // Return remote project data
     return authorReadings;
 });
 

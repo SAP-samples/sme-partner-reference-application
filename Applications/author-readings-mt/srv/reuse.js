@@ -127,7 +127,7 @@ async function getDestinationURL(req, destinationName) {
 }
 
 // Reuse function to check if BTP destination exists  
-async function isDestinationExist(req, destinationName) {
+async function checkDestination(req, destinationName) {
   try {
       // Check if the destination exist using the SAP Cloud SDK reusable getDestination function:
       // The JWT-token contains the subaccount information, such that the function works for single tenant as well as for multi-tenant apps:
@@ -136,10 +136,12 @@ async function isDestinationExist(req, destinationName) {
       const destination = await getDestination({ destinationName: destinationName, jwt: retrieveJwt(req) });
       
       if(destination){
-          return true;
+        console.log("Check ERP destination: " + destinationName + " found"); 
+        return true;
       }
       else{
-          return false;           
+        console.log("Check ERP destination: " + destinationName + " not found"); 
+        return false;           
       }      
   } catch (error) {
       // App reacts error tolerant if the destination is missing
@@ -157,5 +159,5 @@ module.exports = {
   validatePhone,
   emitAuthorReadingEvent,
   getDestinationURL,
-  isDestinationExist
+  checkDestination
 };
