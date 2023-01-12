@@ -59,8 +59,8 @@
                     "credentials": {
                         "url": "https://{{ByD-hostname}}/sap/byd/odata/cust/v1/khproject/",
                         "authentication": "BasicAuthentication",
-                        "username": "administration01",
-                        "password": "Welcome1"
+                        "username": "{{test-user}}",
+                        "password": "{{test-password}}"
                     }
                 },
                 "[production]": {
@@ -77,8 +77,8 @@
                     "credentials": {
                         "url": "https://{{ByD-hostname}}/sap/byd/odata/cust/v1/khproject/",
                         "authentication": "BasicAuthentication",
-                        "username": "administration01",
-                        "password": "Welcome1"
+                        "username": "{{test-user}}",
+                        "password": "{{test-password}}"
                     }
                 },
                 "[production]": {
@@ -95,8 +95,8 @@
                     "credentials": {
                         "url": "https://{{S4HC-hostname}}/sap/opu/odata/sap/API_ENTERPRISE_PROJECT_SRV;v=0002",
                         "authentication": "BasicAuthentication",
-                        "username": "PRA-ARMT-S2-USER",
-                        "password": "PartnerApplicationTenant-2"
+                        "username": "{{test-user}}",
+                        "password": "{{test-password}}"
                     }
                 },
                 "[production]": {
