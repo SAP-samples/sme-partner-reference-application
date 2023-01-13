@@ -89,7 +89,6 @@ srv.on("DELETE", "AuthorReadings", async (req, next) => {
 srv.before("READ", "AuthorReadings", async (req) => {
     ByDconnected  = await reuse.checkDestination(req,"byd"); 
     S4HCconnected = await reuse.checkDestination(req,"s4hc");  
-    console.log("Event handler BEFORE READ: ByD connected = " + ByDconnected + "; S4HC connected = " + S4HCconnected);  
 });
 
 // Apply a colour code based on the author reading status
@@ -584,14 +583,12 @@ srv.on("READ", "AuthorReadings", async (req, next) => {
 
     // Check and Read ByD project related data 
     if ( ByDconnected ){
-        authorReadings = await connectorByD.readProject(authorReadings); 
-        console.log("Event handler ON READ: Read project data from ByD: " + authorReadings);  
+        authorReadings = await connectorByD.readProject(authorReadings);
     };
    
     // Check and Read S4HC project related data 
     if ( S4HCconnected ){
-        authorReadings =  await connectorS4HC.readProject(authorReadings); 
-        console.log("Event handler ON READ: Read project data from S4HC: " + authorReadings);  
+        authorReadings =  await connectorS4HC.readProject(authorReadings);  
     };
 
     // Return remote project data

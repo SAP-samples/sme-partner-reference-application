@@ -111,10 +111,8 @@ async function readProject(authorReadings) {
             // Add suppliers to result
             for (const authorReading of asArray(authorReadings)) {
                 authorReading.toS4HCProject = projectsMap[authorReading.projectID];
-                console.log("READ S4HC PROJECT : "+authorReading.toS4HCProject.ProjectDescription);
             };
         }
-        console.log("READ S4HC PROJECT DONE ");
         return authorReadings;    
     } catch (error) {
         // App reacts error tolerant in case of calling the remote service, mostly if the remote service is not available of if the destination is missing
