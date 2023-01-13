@@ -17,28 +17,6 @@ async function delegateODataRequests(req,remoteService) {
     }
 }
 
-// Check OData request URL for expand using an association name
-async function isAssociationRequested(req, association) {
-    try{
-        // Expand author readings to remote projects
-        // OData parameter following the UI-request pattern: "/AuthorReadings(ID=79ceab87-300d-4b66-8cc3-f82c679b77a1,IsActiveEntity=true)?$select=toByDProject&$expand=toS4HCProject($select=ID,costCenter,endDateTime,startDateTime,statusCodeText,typeCodeText)"
-        var expandIndex = -1;
-        // Check the if the object exists before running the findIndex-function
-        if(req){
-            if(req.query){                
-                if(req.query.SELECT){
-                    if(req.query.SELECT.columns){
-                        expandIndex = req.query.SELECT.columns.findIndex( ({ expand, ref }) => expand && ref[0] === association );
-                    }
-                }
-            }
-        }
-        if (expandIndex >= 0) return true;
-    }catch (error) {
-        console.log(error);
-    }
-}
-
 // Return json-payload to create S4HC projects 
 async function projectDataRecord(authorReadingIdentifier, authorReadingTitle, authorReadingDate) {
     try{
@@ -143,7 +121,6 @@ async function readProject(authorReadings) {
 // Publish constants and functions
 module.exports = {
     readProject,
-    isAssociationRequested,
     projectDataRecord,
     delegateODataRequests
   };

@@ -93,7 +93,7 @@ srv.before("READ", "AuthorReadings", async (req) => {
 });
 
 // Apply a colour code based on the author reading status
-srv.after("READ", "AuthorReadings", async (req) => {
+srv.after("READ", "AuthorReadings", (req) => {
     const asArray = x => Array.isArray(x) ? x : [ x ];
     for (const authorReading of asArray(req)) {    
         if(authorReading.statusCode) {
@@ -583,15 +583,13 @@ srv.on("READ", "AuthorReadings", async (req, next) => {
     let authorReadings = await next();
 
     // Check and Read ByD project related data 
-    var isByDProjectRequested = await connectorByD.isAssociationRequested(req, "toByDProject");  
-    if ( isByDProjectRequested && ByDconnected ){
+    if ( ByDconnected ){
         authorReadings = await connectorByD.readProject(authorReadings); 
         console.log("Event handler ON READ: Read project data from ByD: " + authorReadings);  
     };
    
     // Check and Read S4HC project related data 
-    var isS4HCProjectRequested = await connectorS4HC.isAssociationRequested(req, "toS4HCProject");
-    if ( isS4HCProjectRequested && S4HCconnected ){
+    if ( S4HCconnected ){
         authorReadings =  await connectorS4HC.readProject(authorReadings); 
         console.log("Event handler ON READ: Read project data from S4HC: " + authorReadings);  
     };
