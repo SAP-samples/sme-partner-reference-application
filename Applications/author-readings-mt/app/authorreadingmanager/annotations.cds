@@ -257,6 +257,10 @@ annotate service.AuthorReadings with @(UI : {
             $Type : 'UI.DataFieldWithUrl',
             Value : projectID,
             Url   : projectURL
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : projectSystem
         }
     ]},    
     FieldGroup #ProjectData : {Data : [
@@ -273,6 +277,11 @@ annotate service.AuthorReadings with @(UI : {
             @UI.Hidden : false
         },
         // SAP Business ByDesign specific fields
+        {
+            $Type : 'UI.DataField',
+            Value : toByDProject.projectID,
+            @UI.Hidden : true 
+        },
         {
             $Type : 'UI.DataField',
             Label : '{i18n>projectTypeCodeText}',
@@ -305,6 +314,11 @@ annotate service.AuthorReadings with @(UI : {
         },
 
         // S4HC specific fields
+        {
+            $Type : 'UI.DataField',
+            Value : toS4HCProject.Project,
+            @UI.Hidden : true 
+        },
         {
             $Type : 'UI.DataField',
             Label : 'Project Description',

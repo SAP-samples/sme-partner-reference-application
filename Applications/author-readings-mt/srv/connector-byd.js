@@ -94,6 +94,7 @@ async function projectDataRecord(authorReadingIdentifier, authorReadingTitle, au
 async function readProject(authorReadings) {
     try {     
         const bydProject = await cds.connect.to('byd_khproject');  
+        let isProjectIDs = false;
 
         const asArray = x => Array.isArray(x) ? x : [ x ];
         // Read Project ID's related to ByD
@@ -102,11 +103,12 @@ async function readProject(authorReadings) {
             //Check if the Project ID exist in the aurthor reading record AND backend ERP is ByD => then project information is read from ByD
             if(authorReading.projectSystem == "ByD" && authorReading.projectID ){               
                 projectIDs.push(authorReading.projectID);
+                isProjectIDs = true;
             }
         }
         
         // Read the ByD Projects data only if ProjectIDs is filled ( other wise with blank entries in projectIDs , the SELECT with fetch all projects from ByD )
-        if(projectIDs.length > 0){
+        if(isProjectIDs){
             // Request all associated projects        
             const projects = await bydProject.run( SELECT.from('AuthorReadingManager.ByDProjects').where({ projectID: projectIDs }) );
 

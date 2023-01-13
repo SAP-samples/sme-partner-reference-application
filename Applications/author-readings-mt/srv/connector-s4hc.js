@@ -87,6 +87,7 @@ async function projectDataRecord(authorReadingIdentifier, authorReadingTitle, au
 async function readProject(authorReadings) {
     try {     
         const s4hcProject = await cds.connect.to('S4HC_API_ENTERPRISE_PROJECT_SRV_0002');
+        let isProjectIDs = false;
         
         const asArray = x => Array.isArray(x) ? x : [ x ];
         // Read Project ID's related to ByD
@@ -95,11 +96,12 @@ async function readProject(authorReadings) {
             //Check if the Project ID exist in the aurthor reading record AND backend ERP is S4HC => then project information is read from S4HC
             if(authorReading.projectSystem == "S4HC" && authorReading.projectID ){               
                 projectIDs.push(authorReading.projectID);
+                isProjectIDs = true;
             }
         }
         
         // Read the S4HC Projects data only if ProjectIDs is filled ( other wise with blank entries in projectIDs , the SELECT with fetch all projects from S4HC )
-        if(projectIDs.length > 0){
+        if(isProjectIDs){
             // Request all associated projects        
             const projects = await s4hcProject.run( SELECT.from('AuthorReadingManager.S4HCProjects').where({ Project: projectIDs }) );
 
@@ -109,8 +111,10 @@ async function readProject(authorReadings) {
             // Add suppliers to result
             for (const authorReading of asArray(authorReadings)) {
                 authorReading.toS4HCProject = projectsMap[authorReading.projectID];
+                console.log("READ S4HC PROJECT : "+authorReading.toS4HCProject.ProjectDescription);
             };
         }
+        console.log("READ S4HC PROJECT DONE ");
         return authorReadings;    
     } catch (error) {
         // App reacts error tolerant in case of calling the remote service, mostly if the remote service is not available of if the destination is missing
