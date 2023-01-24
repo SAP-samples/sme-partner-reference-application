@@ -275,6 +275,12 @@ annotate service.AuthorReadings with @(UI : {
     FieldGroup #ProjectData : {Data : [
         // Project system independend fields:
         {
+            $Type : 'UI.DataFieldWithUrl',
+            Value : projectID,
+            Url   : projectURL,
+            @UI.Hidden : false
+        },
+        {
             $Type : 'UI.DataField',
             Value : projectSystemName,
             @UI.Hidden : false
@@ -284,12 +290,7 @@ annotate service.AuthorReadings with @(UI : {
             Value : projectSystem,
             @UI.Hidden : false
         },
-                {
-            $Type : 'UI.DataFieldWithUrl',
-            Value : projectID,
-            Url   : projectURL,
-            @UI.Hidden : false
-        },
+        
         // SAP Business ByDesign specific fields
         {
             $Type : 'UI.DataField',
