@@ -8,6 +8,8 @@ const connectorS4HC = require("./connector-s4hc");
 
 var ByDconnected;  
 var S4HCconnected;
+var ByDSystemName;
+var S4HCSystemName;
 
 module.exports = cds.service.impl(async (srv) => {
 
@@ -89,6 +91,8 @@ srv.on("DELETE", "AuthorReadings", async (req, next) => {
 srv.before("READ", "AuthorReadings", async (req) => {
     ByDconnected  = await reuse.checkDestination(req,"byd"); 
     S4HCconnected = await reuse.checkDestination(req,"s4hc");  
+    ByDSystemName = await reuse.getDestinationDescription(req,"byd-url");
+    S4HCSystemName = await reuse.getDestinationDescription(req,"s4hc-url");
 });
 
 // Apply a colour code based on the author reading status
@@ -114,7 +118,9 @@ srv.after("READ", "AuthorReadings", (req) => {
         }
         if (authorReading.projectID) {
             authorReading.createByDProjectEnabled = false;
-            authorReading.createS4HCProjectEnabled = false;           
+            authorReading.createS4HCProjectEnabled = false;   
+            if(authorReading.projectSystem == 'ByD')  authorReading.projectSystemName = ByDSystemName;
+            if(authorReading.projectSystem == 'S4HC') authorReading.projectSystemName = S4HCSystemName;        
         }else{            
             authorReading.createByDProjectEnabled = ByDconnected;
             authorReading.createS4HCProjectEnabled = S4HCconnected;

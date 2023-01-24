@@ -35,6 +35,8 @@ service AuthorReadingManager @(
             // S4HC projects: visibility of button "Create project in S4HC"
             virtual null as createS4HCProjectEnabled : Boolean  @title : '{i18n>createS4HCProjectEnabled}'  @odata.Type : 'Edm.Boolean',
             toS4HCProject,
+
+            virtual null as projectSystemName : String @title : '{i18n>projectSystemName}' @odata.Type : 'Edm.String',
         }
         actions {
             @(

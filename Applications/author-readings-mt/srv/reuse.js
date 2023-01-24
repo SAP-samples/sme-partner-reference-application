@@ -145,8 +145,33 @@ async function checkDestination(req, destinationName) {
       }      
   } catch (error) {
       // App reacts error tolerant if the destination is missing
-      console.log("GET_DESTINATION" + "; " + error);
+      console.log("CHECK_DESTINATION" + "; " + error);
   }  
+}
+
+// Reuse function to get the ERP Name
+async function getDestinationDescription(req, destinationName) {
+  let destinationDescription;
+  try {
+      // Read the destination details using the SAP Cloud SDK reusable getDestinationDescription function:
+      // The JWT-token contains the subaccount information, such that the function works for single tenant as well as for multi-tenant apps:
+      // - Single tenant: Get destination from the subaccount that hosts the app.
+      // - Multi tenant: Get destination from subscriber subaccount.
+      const destination = await getDestination({ destinationName: destinationName, jwt: retrieveJwt(req) });
+      
+      if(destination){
+        for(var originalProperty in destination.originalProperties){         
+          if (originalProperty == "Description"){
+            destinationDescription = destination.originalProperties[originalProperty];
+          }
+        }            
+      }     
+      
+  } catch (error) {
+      // App reacts error tolerant if the destination is missing
+      console.log("GET_DESTINATION_DESCRIPTION" + "; " + error);
+  }
+  return destinationDescription;    
 }
 
 
@@ -159,5 +184,6 @@ module.exports = {
   validatePhone,
   emitAuthorReadingEvent,
   getDestinationURL,
-  checkDestination
+  checkDestination,
+  getDestinationDescription
 };
