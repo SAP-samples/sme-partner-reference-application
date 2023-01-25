@@ -24,7 +24,7 @@
         "sqlite3": "^5.0.2"
     },
     "engines": {
-        "node": "^16"
+        "node": "^16.17.1"
     },
     "scripts": {
         "start": "cds run",
