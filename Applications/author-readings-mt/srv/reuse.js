@@ -163,6 +163,7 @@ async function getDestinationDescription(req, destinationName) {
         for(var originalProperty in destination.originalProperties){         
           if (originalProperty == "Description"){
             destinationDescription = destination.originalProperties[originalProperty];
+            break;  
           }
         }            
       }     
