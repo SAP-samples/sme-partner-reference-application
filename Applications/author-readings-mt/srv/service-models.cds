@@ -36,7 +36,9 @@ service AuthorReadingManager @(
             virtual null as createS4HCProjectEnabled : Boolean  @title : '{i18n>createS4HCProjectEnabled}'  @odata.Type : 'Edm.Boolean',
             toS4HCProject,
 
-            virtual null as projectSystemName : String @title : '{i18n>projectSystemName}' @odata.Type : 'Edm.String',
+            virtual null as projectSystemName      : String @title : '{i18n>projectSystemName}' @odata.Type : 'Edm.String',
+            virtual null as projectProfileCodeText : String @title : '{i18n>projectSystemName}' @odata.Type : 'Edm.String',
+            virtual null as processingStatusText    : String @title : '{i18n>projectSystemName}' @odata.Type : 'Edm.String',
         }
         actions {
             @(
@@ -215,7 +217,27 @@ extend service AuthorReadingManager with {
     
 };
 
+// Extend service AuthorReadingManager by S4HC Projects ProjectProfileCode
 
+using { S4HC_ENTPROJECTPROCESSINGSTATUS_0001 as RemoteS4HCProjectProcessingStatus } from './external/S4HC_ENTPROJECTPROCESSINGSTATUS_0001';
+
+extend service AuthorReadingManager with {
+    entity S4HCProjectsProcessingStatus as projection on RemoteS4HCProjectProcessingStatus.ProcessingStatus {
+        key ProcessingStatus as ProcessingStatus,
+        ProcessingStatusText as ProcessingStatusText    
+    }    
+};
+
+// Extend service AuthorReadingManager by S4HC Projects ProcessingStatus
+
+using { S4HC_ENTPROJECTPROFILECODE_0001 as RemoteS4HCProjectProjectProfileCode } from './external/S4HC_ENTPROJECTPROFILECODE_0001';
+
+extend service AuthorReadingManager with {
+    entity S4HCProjectsProjectProfileCode as projection on RemoteS4HCProjectProjectProfileCode.ProjectProfileCode {
+        key ProjectProfileCode as ProjectProfileCode,
+        ProjectProfileCodeText as ProjectProfileCodeText    
+    }    
+};
 
 // -------------------------------------------------------------------------------
 // Annotations for data privacy

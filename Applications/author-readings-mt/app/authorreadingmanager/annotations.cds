@@ -336,26 +336,26 @@ annotate service.AuthorReadings with @(UI : {
         },
         {
             $Type : 'UI.DataField',
-            Label : 'Project Description',
+            Label : '{i18n>projectDescription}',
             Value : toS4HCProject.ProjectDescription,
             @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'S4HC' ] }, false, true ] } }
         },
         {
             $Type : 'UI.DataField',
-            Label : 'Project Profile Code',
-            Value : toS4HCProject.ProjectProfileCode,
+            Label : '{i18n>projectProfile}',
+            Value : projectProfileCodeText,
             @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'S4HC' ] }, false, true ] } }
         },
         {
             $Type : 'UI.DataField',
-            Label : 'Responsible Cost Center',
+            Label : '{i18n>responsibleCostCenter}',
             Value : toS4HCProject.ResponsibleCostCenter,
             @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'S4HC' ] }, false, true ] } }
         },
-          {
+         {
             $Type : 'UI.DataField',
-            Label : 'Processing Status',
-            Value : toS4HCProject.ProcessingStatus,
+            Label : '{i18n>processingStatus}',
+            Value : processingStatusText,
             @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'S4HC' ] }, false, true ] } }
         },
         {

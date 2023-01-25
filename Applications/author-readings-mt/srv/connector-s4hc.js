@@ -87,6 +87,8 @@ async function projectDataRecord(authorReadingIdentifier, authorReadingTitle, au
 async function readProject(authorReadings) {
     try {     
         const s4hcProject = await cds.connect.to('S4HC_API_ENTERPRISE_PROJECT_SRV_0002');
+        const s4hcProjectsProjectProfileCode = await cds.connect.to('S4HC_ENTPROJECTPROFILECODE_0001');
+        const s4hcProjectsProcessingStatus = await cds.connect.to('S4HC_ENTPROJECTPROCESSINGSTATUS_0001');
         let isProjectIDs = false;
         
         const asArray = x => Array.isArray(x) ? x : [ x ];
@@ -111,6 +113,20 @@ async function readProject(authorReadings) {
             // Add suppliers to result
             for (const authorReading of asArray(authorReadings)) {
                 authorReading.toS4HCProject = projectsMap[authorReading.projectID];
+
+                // Get Project Profile Code Text from S4HC 
+                var projectProfileCode = authorReading.toS4HCProject.ProjectProfileCode;
+                const S4HCProjectsProjectProfileCodeRecords = await s4hcProjectsProjectProfileCode.run( SELECT.from('AuthorReadingManager.S4HCProjectsProjectProfileCode').where({ ProjectProfileCode: projectProfileCode }) );
+                for (const S4HCProjectsProjectProfileCodeRecord of S4HCProjectsProjectProfileCodeRecords) {
+                    authorReading.projectProfileCodeText = S4HCProjectsProjectProfileCodeRecord.ProjectProfileCodeText;
+                }
+
+                // Get Project Processing Status Text from S4HC 
+                var processingStatus = authorReading.toS4HCProject.ProcessingStatus;;
+                const S4HCProjectsProcessingStatusRecords = await s4hcProjectsProcessingStatus.run( SELECT.from('AuthorReadingManager.S4HCProjectsProcessingStatus').where({ ProcessingStatus: processingStatus }) );
+                for (const S4HCProjectsProcessingStatusRecord of S4HCProjectsProcessingStatusRecords) {
+                    authorReading.processingStatusText = S4HCProjectsProcessingStatusRecord.ProcessingStatusText;
+                }
             };
         }
         return authorReadings;    

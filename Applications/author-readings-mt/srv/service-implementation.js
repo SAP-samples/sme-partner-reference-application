@@ -675,6 +675,12 @@ srv.on("READ", "S4HCEntProjEntitlement", async (req) => {
 srv.on("READ", "S4HCEntProjTeamMember", async (req) => {
     return await connectorS4HC.delegateODataRequests(req,"S4HC_API_ENTERPRISE_PROJECT_SRV_0002");
 });
+srv.on("READ", "S4HCProjectsProcessingStatus", async (req) => {
+    return await connectorS4HC.delegateODataRequests(req,"S4HC_ENTPROJECTPROCESSINGSTATUS_0001");
+});
+srv.on("READ", "S4HCProjectsProjectProfileCode", async (req) => {
+    return await connectorS4HC.delegateODataRequests(req,"S4HC_ENTPROJECTPROFILECODE_0001");
+});
 srv.on("CREATE", "S4HCProjects", async (req) => {
     return await connectorS4HC.delegateODataRequests(req,"S4HC_API_ENTERPRISE_PROJECT_SRV_0002");
 });
@@ -686,6 +692,12 @@ srv.on("CREATE", "S4HCEntProjEntitlement", async (req) => {
 });
 srv.on("CREATE", "S4HCEntProjTeamMember", async (req) => {
     return await connectorS4HC.delegateODataRequests(req,"S4HC_API_ENTERPRISE_PROJECT_SRV_0002");
+});
+srv.on("CREATE", "S4HCProjectsProcessingStatus", async (req) => {
+    return await connectorS4HC.delegateODataRequests(req,"S4HC_ENTPROJECTPROCESSINGSTATUS_0001");
+});
+srv.on("CREATE", "S4HCProjectsProjectProfileCode", async (req) => {
+    return await connectorS4HC.delegateODataRequests(req,"S4HC_ENTPROJECTPROFILECODE_0001");
 });
 srv.on("UPDATE", "S4HCProjects", async (req) => {
     return await connectorS4HC.delegateODataRequests(req,"S4HC_API_ENTERPRISE_PROJECT_SRV_0002");
@@ -699,6 +711,12 @@ srv.on("UPDATE", "S4HCEntProjEntitlement", async (req) => {
 srv.on("UPDATE", "S4HCEntProjTeamMember", async (req) => {
     return await connectorS4HC.delegateODataRequests(req,"S4HC_API_ENTERPRISE_PROJECT_SRV_0002");
 });
+srv.on("UPDATE", "S4HCProjectsProcessingStatus", async (req) => {
+    return await connectorS4HC.delegateODataRequests(req,"S4HC_ENTPROJECTPROCESSINGSTATUS_0001");
+});
+srv.on("UPDATE", "S4HCProjectsProjectProfileCode", async (req) => {
+    return await connectorS4HC.delegateODataRequests(req,"S4HC_ENTPROJECTPROFILECODE_0001");
+});
 srv.on("DELETE", "S4HCProjects", async (req) => {
     return await connectorS4HC.delegateODataRequests(req,"S4HC_API_ENTERPRISE_PROJECT_SRV_0002");
 });
@@ -710,6 +728,12 @@ srv.on("DELETE", "S4HCEntProjEntitlement", async (req) => {
 });
 srv.on("DELETE", "S4HCEntProjTeamMember", async (req) => {
     return await connectorS4HC.delegateODataRequests(req,"S4HC_API_ENTERPRISE_PROJECT_SRV_0002");
+});
+srv.on("DELETE", "S4HCProjectsProcessingStatus", async (req) => {
+    return await connectorS4HC.delegateODataRequests(req,"S4HC_ENTPROJECTPROCESSINGSTATUS_0001");
+});
+srv.on("DELETE", "S4HCProjectsProjectProfileCode", async (req) => {
+    return await connectorS4HC.delegateODataRequests(req,"S4HC_ENTPROJECTPROFILECODE_0001");
 });
 
 
