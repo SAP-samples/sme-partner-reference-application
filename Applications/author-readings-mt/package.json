@@ -1,130 +1,166 @@
 {
-    "name": "author-readings",
-    "version": "1.0.0",
-    "description": "SAP-SME Partner Reference Application",
-    "repository": "https://github.com/SAP-samples/sme-partner-reference-application",
-    "author": "SAP",
-    "license": "SAP SAMPLE CODE LICENSE",
-    "dependencies": {
-        "@sap-cloud-sdk/connectivity": "^2.8.0",
-        "@sap/audit-logging": "^5.1.0",
-        "@sap/cds": "^5.9.4",
-        "@sap/cds-mtx": "^2",
-        "cors": "^2.8.5",
-        "express": "4.17.1",
-        "hdb": "0.19.1",
-        "passport": "^0.6.0",
-        "request": "^2.88.2"
+  "name": "author-readings",
+  "version": "1.0.0",
+  "description": "SAP-SME Partner Reference Application",
+  "repository": "https://github.com/SAP-samples/sme-partner-reference-application",
+  "author": "SAP",
+  "license": "SAP SAMPLE CODE LICENSE",
+  "dependencies": {
+    "@sap-cloud-sdk/connectivity": "^2.8.0",
+    "@sap/audit-logging": "^5.1.0",
+    "@sap/cds": "^5.9.4",
+    "@sap/cds-mtx": "^2",
+    "cors": "^2.8.5",
+    "express": "4.17.1",
+    "hdb": "0.19.1",
+    "passport": "^0.6.0",
+    "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "@sap/ux-specification": "^1.96.9",
+    "chai": "^4.3.4",
+    "chai-http": "^4.3.0",
+    "mocha": "^9.2.2",
+    "sqlite3": "^5.0.2"
+  },
+  "engines": {
+    "node": "^16.17.1"
+  },
+  "scripts": {
+    "start": "cds run",
+    "test": "mocha 'test/*.test.js' --recursive --timeout 10000 --exit",
+    "undeploy": "cf undeploy author-readings --delete-services --delete-service-keys"
+  },
+  "cds": {
+    "features": {
+      "fetch_csrf": true,
+      "audit_personal_data": true
     },
-    "devDependencies": {
-        "@sap/ux-specification": "^1.96.9",
-        "chai": "^4.3.4",
-        "chai-http": "^4.3.0",
-        "mocha": "^9.2.2",
-        "sqlite3": "^5.0.2"
-    },
-    "engines": {
-        "node": "^16.17.1"
-    },
-    "scripts": {
-        "start": "cds run",
-        "test": "mocha 'test/*.test.js' --recursive --timeout 10000 --exit",
-        "undeploy": "cf undeploy author-readings --delete-services --delete-service-keys"
-    },
-    "cds": {
-        "features": {
-            "fetch_csrf": true,
-            "audit_personal_data": true
+    "requires": {
+      "db": {
+        "kind": "sql"
+      },
+      "uaa": {
+        "kind": "xsuaa"
+      },
+      "[production]": {
+        "db": {
+          "kind": "hana-mt"
         },
-        "requires": {
-            "db": {
-                "kind": "sql"
-            },
-            "uaa": {
-                "kind": "xsuaa"
-            },
-            "[production]": {
-                "db": {
-                    "kind": "hana-mt"
-                },
-                "auth": {
-                    "kind": "xsuaa"
-                },
-                "multitenancy": true
-            },
-            "byd_khproject": {
-                "kind": "odata-v2",
-                "model": "srv/external/byd_khproject",
-                "[sandbox]": {
-                    "credentials": {
-                        "url": "https://{{ByD-hostname}}/sap/byd/odata/cust/v1/khproject/",
-                        "authentication": "BasicAuthentication",
-                        "username": "{{test-user}}",
-                        "password": "{{test-password}}"
-                    }
-                },
-                "[production]": {
-                    "credentials": {
-                        "destination": "byd",
-                        "path": "/sap/byd/odata/cust/v1/khproject"
-                    }
-                }
-            },
-            "byd_khproject_tech_user": {
-                "kind": "odata-v2",
-                "model": "srv/external/byd_khproject_tech_user",
-                "[sandbox]": {
-                    "credentials": {
-                        "url": "https://{{ByD-hostname}}/sap/byd/odata/cust/v1/khproject/",
-                        "authentication": "BasicAuthentication",
-                        "username": "{{test-user}}",
-                        "password": "{{test-password}}"
-                    }
-                },
-                "[production]": {
-                    "credentials": {
-                        "destination": "byd-tech-user",
-                        "path": "/sap/byd/odata/cust/v1/khproject"
-                    }
-                }
-            },
-            "S4HC_API_ENTERPRISE_PROJECT_SRV_0002": {
-                "kind": "odata-v2",
-                "model": "srv/external/S4HC_API_ENTERPRISE_PROJECT_SRV_0002",
-                "[sandbox]": {
-                    "credentials": {
-                        "url": "https://{{S4HC-hostname}}/sap/opu/odata/sap/API_ENTERPRISE_PROJECT_SRV;v=0002",
-                        "authentication": "BasicAuthentication",
-                        "username": "{{test-user}}",
-                        "password": "{{test-password}}"
-                    }
-                },
-                "[production]": {
-                    "credentials": {
-                        "destination": "s4hc",
-                        "path": "/sap/opu/odata/sap/API_ENTERPRISE_PROJECT_SRV;v=0002"
-                    }
-                }
-            },
-            "audit-log": {
-                "[sandbox]": {
-                    "kind": "audit-log-to-console"
-                },
-                "[production]": {
-                    "kind": "audit-log-service"
-                }
-            }
+        "auth": {
+          "kind": "xsuaa"
         },
-        "hana": {
-            "deploy-format": "hdbtable"
+        "multitenancy": true
+      },
+      "byd_khproject": {
+        "kind": "odata-v2",
+        "model": "srv/external/byd_khproject",
+        "[sandbox]": {
+          "credentials": {
+            "url": "https://{{ByD-hostname}}/sap/byd/odata/cust/v1/khproject/",
+            "authentication": "BasicAuthentication",
+            "username": "{{test-user}}",
+            "password": "{{test-password}}"
+          }
         },
-        "mtx": {
-            "element-prefix": "Z_",
-            "namespace-blocklist": [],
-            "extension-allowlist": []
+        "[production]": {
+          "credentials": {
+            "destination": "byd",
+            "path": "/sap/byd/odata/cust/v1/khproject"
+          }
         }
+      },
+      "byd_khproject_tech_user": {
+        "kind": "odata-v2",
+        "model": "srv/external/byd_khproject_tech_user",
+        "[sandbox]": {
+          "credentials": {
+            "url": "https://{{ByD-hostname}}/sap/byd/odata/cust/v1/khproject/",
+            "authentication": "BasicAuthentication",
+            "username": "{{test-user}}",
+            "password": "{{test-password}}"
+          }
+        },
+        "[production]": {
+          "credentials": {
+            "destination": "byd-tech-user",
+            "path": "/sap/byd/odata/cust/v1/khproject"
+          }
+        }
+      },
+      "S4HC_API_ENTERPRISE_PROJECT_SRV_0002": {
+        "kind": "odata-v2",
+        "model": "srv/external/S4HC_API_ENTERPRISE_PROJECT_SRV_0002",
+        "[sandbox]": {
+          "credentials": {
+            "url": "https://{{S4HC-hostname}}/sap/opu/odata/sap/API_ENTERPRISE_PROJECT_SRV;v=0002",
+            "authentication": "BasicAuthentication",
+            "username": "{{test-user}}",
+            "password": "{{test-password}}"
+          }
+        },
+        "[production]": {
+          "credentials": {
+            "destination": "s4hc",
+            "path": "/sap/opu/odata/sap/API_ENTERPRISE_PROJECT_SRV;v=0002"
+          }
+        }
+      },
+      "audit-log": {
+        "[sandbox]": {
+          "kind": "audit-log-to-console"
+        },
+        "[production]": {
+          "kind": "audit-log-service"
+        }
+      },
+      "S4HC_ENTPROJECTPROCESSINGSTATUS_0001": {
+        "kind": "odata",
+        "model": "srv/external/S4HC_ENTPROJECTPROCESSINGSTATUS_0001",
+        "[sandbox]": {
+          "credentials": {
+            "url": "https://{{S4HC-hostname}}/sap/opu/odata4/sap/api_entprojprocessingstat/srvd_a2x/sap/entprojectprocessingstatus/0001",
+            "authentication": "BasicAuthentication",
+            "username": "{{test-user}}",
+            "password": "{{test-password}}"
+          }
+        },
+        "[production]": {
+          "credentials": {
+            "destination": "s4hc",
+            "path": "/sap/opu/odata4/sap/api_entprojprocessingstat/srvd_a2x/sap/entprojectprocessingstatus/0001"
+          }
+        }
+      },
+      "S4HC_ENTPROJECTPROFILECODE_0001": {
+        "kind": "odata",
+        "model": "srv/external/S4HC_ENTPROJECTPROFILECODE_0001",
+        "[sandbox]": {
+          "credentials": {
+            "url": "https://{{S4HC-hostname}}/sap/opu/odata4/sap/api_entprojectprofilecode/srvd_a2x/sap/entprojectprofilecode/0001",
+            "authentication": "BasicAuthentication",
+            "username": "{{test-user}}",
+            "password": "{{test-password}}"
+          }
+        },
+        "[production]": {
+          "credentials": {
+            "destination": "s4hc",
+            "path": "/sap/opu/odata4/sap/api_entprojectprofilecode/srvd_a2x/sap/entprojectprofilecode/0001"
+          }
+        }
+      }
     },
-    "sapux": [
-        "app/authorreadingmanager"
-    ]
+    "hana": {
+      "deploy-format": "hdbtable"
+    },
+    "mtx": {
+      "element-prefix": "Z_",
+      "namespace-blocklist": [],
+      "extension-allowlist": []
+    }
+  },
+  "sapux": [
+    "app/authorreadingmanager"
+  ]
 }
