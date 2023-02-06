@@ -42,24 +42,6 @@ async function projectDataRecord(authorReadingIdentifier, authorReadingTitle, au
             "ProfitCenter": "YB900",
             "ProjectProfileCode": "YP03",
             "ProjectCurrency": "EUR",
-            "to_EntProjTeamMember": [
-                {
-                    "BusinessPartnerUUID": "fa163ef3-01de-1edc-a2e5-b4de0917af16",
-                    "to_EntProjEntitlement": [
-                        {
-                            "ProjectRoleType": "YP_RL_0001"
-                        }
-                    ]
-                },
-                {
-                    "BusinessPartnerUUID": "fa163ef3-01de-1edc-b1a9-e163ddc535b6",
-                    "to_EntProjEntitlement": [
-                        {
-                            "ProjectRoleType": "YP_RL_0004"
-                        }
-                    ]
-                }
-            ],
             "to_EnterpriseProjectElement": [
                 {
                     "ProjectElement": generatedPLANID,
