@@ -1,4 +1,4 @@
-/* checksum : 2bc5b1f38dfa3f3be83850432cb2c3b2 */
+/* checksum : 45b95e44e2be308a99ec89e60ccbbee6 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -213,6 +213,18 @@ entity S4HC_API_ENTERPRISE_PROJECT_SRV_0002.A_EnterpriseProjectElement {
   @sap.updatable : 'false'
   @sap.sortable : 'false'
   @sap.filterable : 'false'
+  to_EntProjElmntDlvbrl_oc : Boolean null;
+  @sap.label : 'Dynamic CbA-Control'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  to_EntProjElmntWorkItem_oc : Boolean null;
+  @sap.label : 'Dynamic CbA-Control'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
   to_SubProjElement_oc : Boolean null;
   @sap.display.format : 'UpperCase'
   @sap.field.control : 'ProjectElement_fc'
@@ -361,6 +373,10 @@ entity S4HC_API_ENTERPRISE_PROJECT_SRV_0002.A_EnterpriseProjectElement {
   @cds.ambiguous : 'missing on condition?'
   to_EntProjElmntBlkFunc : Composition of S4HC_API_ENTERPRISE_PROJECT_SRV_0002.A_EntProjElmntBlockFunc on to_EntProjElmntBlkFunc.ProjectElementUUID = ProjectElementUUID;
   @cds.ambiguous : 'missing on condition?'
+  to_EntProjElmntDlvbrl : Composition of many S4HC_API_ENTERPRISE_PROJECT_SRV_0002.A_EntProjElmntDlvbrl on to_EntProjElmntDlvbrl.ProjectElementUUID = ProjectElementUUID;
+  @cds.ambiguous : 'missing on condition?'
+  to_EntProjElmntWorkItem : Composition of many S4HC_API_ENTERPRISE_PROJECT_SRV_0002.A_EntProjElmntWorkItem on to_EntProjElmntWorkItem.ProjectElementUUID = ProjectElementUUID;
+  @cds.ambiguous : 'missing on condition?'
   to_ParentProjElement : Association to S4HC_API_ENTERPRISE_PROJECT_SRV_0002.A_EnterpriseProjectElement {  };
   @cds.ambiguous : 'missing on condition?'
   to_SubProjElement : Association to many S4HC_API_ENTERPRISE_PROJECT_SRV_0002.A_EnterpriseProjectElement {  };
@@ -405,7 +421,7 @@ entity S4HC_API_ENTERPRISE_PROJECT_SRV_0002.A_EnterpriseProjectJVA {
   @sap.label : 'Recovery Indicator'
   JointVentureCostRecoveryCode : String(2) null;
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Equity type'
+  @sap.label : 'Equity Type'
   JointVentureEquityType : String(3) null;
   @sap.display.format : 'UpperCase'
   @sap.label : 'JV Object Type'
@@ -570,6 +586,13 @@ entity S4HC_API_ENTERPRISE_PROJECT_SRV_0002.A_EnterpriseProject {
   @sap.updatable : 'false'
   @sap.sortable : 'false'
   @sap.filterable : 'false'
+  CostingSheet_fc : Integer null;
+  @odata.Type : 'Edm.Byte'
+  @sap.label : 'Dyn. Field Control'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
   EnterpriseProjectType_fc : Integer null;
   @odata.Type : 'Edm.Byte'
   @sap.label : 'Dyn. Field Control'
@@ -720,7 +743,7 @@ entity S4HC_API_ENTERPRISE_PROJECT_SRV_0002.A_EnterpriseProject {
   @sap.filterable : 'false'
   to_EntProjTeamMember_oc : Boolean null;
   @sap.display.format : 'NonNegative'
-  @sap.label : 'Project def.'
+  @sap.label : 'Project Def.'
   @sap.quickinfo : 'Project (internal)'
   @sap.creatable : 'false'
   @sap.updatable : 'false'
@@ -832,7 +855,7 @@ entity S4HC_API_ENTERPRISE_PROJECT_SRV_0002.A_EnterpriseProject {
   AvailabilityControlProfile : String(6) null;
   @sap.display.format : 'UpperCase'
   @sap.field.control : 'AvailabilityControlIsActive_fc'
-  @sap.label : 'AVC is active'
+  @sap.label : 'AVC is Active'
   @sap.quickinfo : 'Availability control indicator(AVC)'
   AvailabilityControlIsActive : Boolean null;
   @sap.display.format : 'UpperCase'
@@ -872,6 +895,10 @@ entity S4HC_API_ENTERPRISE_PROJECT_SRV_0002.A_EnterpriseProject {
   @sap.label : 'Project Assigned'
   @sap.quickinfo : 'Enterprise Project Assigned to Multiple SO Items'
   EntProjIsMultiSlsOrdItmsEnbld : Boolean null;
+  @sap.display.format : 'UpperCase'
+  @sap.field.control : 'CostingSheet_fc'
+  @sap.label : 'Costing Sheet'
+  CostingSheet : String(6) null;
   @cds.ambiguous : 'missing on condition?'
   to_EnterpriseProjectElement : Composition of many S4HC_API_ENTERPRISE_PROJECT_SRV_0002.A_EnterpriseProjectElement on to_EnterpriseProjectElement.ProjectUUID = ProjectUUID;
   @cds.ambiguous : 'missing on condition?'
@@ -965,7 +992,7 @@ entity S4HC_API_ENTERPRISE_PROJECT_SRV_0002.A_EntProjectElementJVA {
   JointVentureCostRecoveryCode : String(2) null;
   @sap.display.format : 'UpperCase'
   @sap.field.control : 'JointVentureEquityType_fc'
-  @sap.label : 'Equity type'
+  @sap.label : 'Equity Type'
   JointVentureEquityType : String(3) null;
   @sap.display.format : 'UpperCase'
   @sap.field.control : 'JntVntrProjectType_fc'
@@ -1123,6 +1150,127 @@ entity S4HC_API_ENTERPRISE_PROJECT_SRV_0002.A_EntProjElmntBlockFunc {
 @sap.deletable : 'false'
 @sap.content.version : '2'
 @sap.updatable.path : 'Update_mc'
+@sap.label : 'Project Element Deliverable'
+entity S4HC_API_ENTERPRISE_PROJECT_SRV_0002.A_EntProjElmntDlvbrl {
+  @sap.label : 'Entity GUID'
+  @sap.quickinfo : 'Entity Guid'
+  key EntProjElmntDeliverableUUID : UUID not null;
+  @sap.label : 'Dyn. Method Control'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  Update_mc : Boolean null;
+  @sap.label : 'Dynamic CbA-Control'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  to_EntProjElmntDlvDistr_oc : Boolean null;
+  @sap.label : 'Entity GUID'
+  @sap.quickinfo : 'Entity Guid'
+  @sap.updatable : 'false'
+  ProjectElementUUID : UUID null;
+  @sap.label : 'Entity GUID'
+  @sap.quickinfo : 'Entity Guid'
+  @sap.updatable : 'false'
+  ProjectUUID : UUID null;
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Deliverable Type'
+  @sap.quickinfo : 'Type of a Project Element Deliverable'
+  EntProjElmntDeliverableType : String(6) null;
+  @sap.unit : 'EntProjElmntDlvbrlQuantityUnit'
+  @sap.label : 'Deliverable Quantity'
+  @sap.quickinfo : 'Total Quantity of a Project Element Deliverable'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  EntProjElmntDlvbrlQuantity : Decimal(23, 2) null;
+  @sap.label : 'Quantity Unit'
+  @sap.quickinfo : 'Unit of Measure for the Deliverable Quantity'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.semantics : 'unit-of-measure'
+  EntProjElmntDlvbrlQuantityUnit : String(3) null;
+  @sap.label : 'Created By'
+  @sap.quickinfo : 'Name of Person Who Created Object'
+  CreatedByUser : String(12) null;
+  @odata.Type : 'Edm.DateTimeOffset'
+  @sap.label : 'Created On'
+  @sap.quickinfo : 'Timestamp of Object Creation'
+  CreationDateTime : DateTime null;
+  @odata.Type : 'Edm.DateTimeOffset'
+  @sap.label : 'Changed On'
+  @sap.quickinfo : 'Timestamp of Last Object Change'
+  LastChangeDateTime : DateTime null;
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Changed By'
+  @sap.quickinfo : 'Name of Person Who Changed Object'
+  LastChangedByUser : String(12) null;
+  @cds.ambiguous : 'missing on condition?'
+  to_EnterpriseProjectElement : Association to S4HC_API_ENTERPRISE_PROJECT_SRV_0002.A_EnterpriseProjectElement on to_EnterpriseProjectElement.ProjectElementUUID = ProjectElementUUID;
+  @cds.ambiguous : 'missing on condition?'
+  to_EntProjElmntDlvDistr : Composition of many S4HC_API_ENTERPRISE_PROJECT_SRV_0002.A_EntProjElmntDlvbrlDistr on to_EntProjElmntDlvDistr.EntProjElmntDeliverableUUID = EntProjElmntDeliverableUUID;
+};
+
+@cds.external : true
+@cds.persistence.skip : true
+@sap.creatable : 'false'
+@sap.deletable : 'false'
+@sap.content.version : '2'
+@sap.updatable.path : 'Update_mc'
+@sap.label : 'Project Element Deliverable Distribution'
+entity S4HC_API_ENTERPRISE_PROJECT_SRV_0002.A_EntProjElmntDlvbrlDistr {
+  @sap.label : 'Entity GUID'
+  @sap.quickinfo : 'Entity Guid'
+  key EntProjElmntDlvbrlDistrUUID : UUID not null;
+  @sap.label : 'Dyn. Method Control'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  Update_mc : Boolean null;
+  @sap.label : 'Entity GUID'
+  @sap.quickinfo : 'Entity Guid'
+  @sap.updatable : 'false'
+  EntProjElmntDeliverableUUID : UUID null;
+  @sap.label : 'Entity GUID'
+  @sap.quickinfo : 'Entity Guid'
+  @sap.updatable : 'false'
+  ProjectElementUUID : UUID null;
+  @sap.label : 'Entity GUID'
+  @sap.quickinfo : 'Entity Guid'
+  @sap.updatable : 'false'
+  ProjectUUID : UUID null;
+  @sap.display.format : 'NonNegative'
+  @sap.label : 'Year of Distribution'
+  @sap.quickinfo : 'Year of a Distribution Period for a Deliverable'
+  @sap.updatable : 'false'
+  EntProjElmntDlvbrlDistrYearVal : String(4) null;
+  @sap.display.format : 'NonNegative'
+  @sap.label : 'Distribution Period'
+  @sap.quickinfo : 'Period to Which a Deliverable Quantity is Distributed'
+  @sap.updatable : 'false'
+  EntProjElmntDlvbrlDistrPerdVal : String(3) null;
+  @sap.unit : 'EntProjElmntDlvbrlDistrQtyUnit'
+  @sap.label : 'Distributed Quantity'
+  @sap.quickinfo : 'Deliverable Quantity Planned for a Distribution Period'
+  EntProjElmntDlvbrlDistrQty : Decimal(23, 2) null;
+  @sap.label : 'Quantity Unit'
+  @sap.quickinfo : 'Unit of Measure for the Distributed Deliverable Quantity'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.semantics : 'unit-of-measure'
+  EntProjElmntDlvbrlDistrQtyUnit : String(3) null;
+  @cds.ambiguous : 'missing on condition?'
+  to_EntProjElmntDlvbrl : Association to S4HC_API_ENTERPRISE_PROJECT_SRV_0002.A_EntProjElmntDlvbrl on to_EntProjElmntDlvbrl.EntProjElmntDeliverableUUID = EntProjElmntDeliverableUUID;
+};
+
+@cds.external : true
+@cds.persistence.skip : true
+@sap.creatable : 'false'
+@sap.deletable : 'false'
+@sap.content.version : '2'
+@sap.updatable.path : 'Update_mc'
 @sap.label : 'Project Element Public Sector'
 entity S4HC_API_ENTERPRISE_PROJECT_SRV_0002.A_EntProjectElmntPublicSector {
   @sap.label : 'Entity GUID'
@@ -1208,6 +1356,88 @@ entity S4HC_API_ENTERPRISE_PROJECT_SRV_0002.A_EntProjectElmntPublicSector {
   @sap.field.control : 'SponsoredProgram_fc'
   @sap.label : 'Sponsored Program'
   SponsoredProgram : String(20) null;
+  @cds.ambiguous : 'missing on condition?'
+  to_EnterpriseProjectElement : Association to S4HC_API_ENTERPRISE_PROJECT_SRV_0002.A_EnterpriseProjectElement on to_EnterpriseProjectElement.ProjectElementUUID = ProjectElementUUID;
+  @cds.ambiguous : 'missing on condition?'
+  to_EnterpriseProject : Association to S4HC_API_ENTERPRISE_PROJECT_SRV_0002.A_EnterpriseProject on to_EnterpriseProject.ProjectUUID = ProjectUUID;
+};
+
+@cds.external : true
+@cds.persistence.skip : true
+@sap.creatable : 'false'
+@sap.content.version : '2'
+@sap.deletable.path : 'Delete_mc'
+@sap.updatable.path : 'Update_mc'
+@sap.label : 'Project Element Work Item'
+entity S4HC_API_ENTERPRISE_PROJECT_SRV_0002.A_EntProjElmntWorkItem {
+  @sap.label : 'Entity GUID'
+  @sap.quickinfo : 'Entity Guid'
+  key EntProjElmntWorkItemUUID : UUID not null;
+  @sap.label : 'Dyn. Method Control'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  Delete_mc : Boolean null;
+  @sap.label : 'Dyn. Method Control'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  Update_mc : Boolean null;
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'ProjElmnt Work Item'
+  @sap.quickinfo : 'Enterprise Project Element Work Item'
+  EntProjElmntWorkItem : String(10) not null;
+  @sap.label : 'Work Item Name'
+  @sap.quickinfo : 'Enterprise Project Element Work Item Name'
+  @sap.updatable : 'false'
+  EntProjElmntWorkItemName : String(40) null;
+  @sap.label : 'Inactive Work Item'
+  @sap.quickinfo : 'Enterprise Project Element Work Item is Inactive'
+  EntProjElmntWorkItemIsInactive : Boolean null;
+  @sap.label : 'Work Item Configured'
+  @sap.quickinfo : 'Enterprise Project Element Work Item is Configured'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  EntProjElmntWorkItemIsCnfgrd : Boolean null;
+  @sap.label : 'Entity GUID'
+  @sap.quickinfo : 'Entity Guid'
+  @sap.updatable : 'false'
+  ProjectUUID : UUID null;
+  @sap.label : 'Entity GUID'
+  @sap.quickinfo : 'Entity Guid'
+  @sap.updatable : 'false'
+  ProjectElementUUID : UUID null;
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Source of Update'
+  @sap.quickinfo : 'Enterprise Project Element Work Item - Source of Update'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  EntProjElmntWrkItmLastUpdtSrce : String(1) null;
+  @sap.label : 'Created By'
+  @sap.quickinfo : 'Name of Person Who Created Object'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  EntProjElmntWrkItmCrtedByUsr : String(12) null;
+  @odata.Type : 'Edm.DateTimeOffset'
+  @sap.label : 'Created On'
+  @sap.quickinfo : 'Timestamp of Object Creation'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  EntProjElmntWrkItmCrtnDteTme : DateTime null;
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Changed By'
+  @sap.quickinfo : 'Name of Person Who Changed Object'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  EntProjElmntWrkItmLstChgByUsr : String(12) null;
+  @odata.Type : 'Edm.DateTimeOffset'
+  @sap.label : 'Changed On'
+  @sap.quickinfo : 'Timestamp of Last Object Change'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  EntProjElmntWrkItmLstChgDteTme : DateTime null;
   @cds.ambiguous : 'missing on condition?'
   to_EnterpriseProjectElement : Association to S4HC_API_ENTERPRISE_PROJECT_SRV_0002.A_EnterpriseProjectElement on to_EnterpriseProjectElement.ProjectElementUUID = ProjectElementUUID;
   @cds.ambiguous : 'missing on condition?'
