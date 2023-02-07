@@ -124,7 +124,7 @@ With the SAP Custom Domain Service you can configure subdomains for your applica
         - Once the above process is complete the status of the server certificate would change to *Active*
     - In result after performing above steps related to *Server Certificates* would create an *Custom Domain* with status *Active*  
     - Goto the *Domains* application (manage reserved and custom doamins), navigate to **Custom Domains**, user should view a custom domain with name {alias name}.{cloud foundry endpoint} and with  **active** status
-    > Note: sample custom domain would look like armt-runtime.{cloud foundry endpoint}
+    > Note: sample custom domain would look like armt-runtime.
     
 
 ### Setup the Subscription Management Dashboard

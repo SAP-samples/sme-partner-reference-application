@@ -13,7 +13,7 @@ With this repository we want to provide guidance for SAP partners in the market 
 
 The repository includes a sample application that is ready to deploy and run, and tutorials to re-build the sample application from scratch following an incremental development approach from one-off to multi-consumer solutions.
 
-<img src="./Tutorials/images/readme_progressive_dev.jpg" width="100%">  
+<img src="./Tutorials/images/readme_incremental-approach.jpg" width="100%">  
 
 **About the sample application "Author Readings":**
 
@@ -46,8 +46,7 @@ Additionally, the sample showcases qualities relevant for enterprise-grade partn
 13. Enterprise-ready compliance by personal data management and audit log
 14. Seamless and secure frontend and back-channel integration with SAP ERP solutions
 15.	Delivering “open solutions” by integration-ready OData APIs and business events following SAP technology alignments
-16. Extensible by citizen user tools (AppGyver) to add web apps and mobile apps for customer specific use cases and user groups (planned)
-17. Deployment as one-off and multi-customer solution 
+16. Deployment as one-off and multi-customer solution 
 
 **Join our community!**
 
@@ -57,7 +56,8 @@ Do you like to share your own ideas and best practices? Please feel welcome to a
 
 The application is based on the *SAP Business Technology Platform* (BTP) and SAP Cloud ERP Solutions. Therefore you need 
 - administrative access to a BTP account with entitlements for *SAP Business Application Studio*, *Cloud Foundry Runtime*, *SAP HANA Cloud*, *SAP HANA Schemas & HDI Containers*, *Launchpad Service*, *SAP Event Mesh*, *Auditlog Service*, *Audit Log Viewer Service*,
-- access to a *SAP Business ByDesign* tenant and authorizations for work centers *Application and User Management* and *Project Management*,
+- access to an *SAP Business ByDesign* tenant and authorizations for work centers *Application and User Management* and *Project Management*,
+- access to an *SAP S/4HANA Cloud, public edition* tenant and authorizations for administration and project management apps,
 - admin access to an *SAP Identity Authentication Service* tenant (IAS) that is assigned to the same customer ID as the BTP global account.
 
 We are using the *Business Application Studio* as standardized development environment and *Github* as code repository.
@@ -89,13 +89,21 @@ Starting easy, we create, deploy and run a one-off (single-tenant) version of th
 
 3. [A Guided Tour to explore the Capabilities of the Sample Application](Tutorials/30-Guided-Tour.md)
 
-Following a progressive development approach we now enhance the application to support multible customers using shared BTP resources:
+Enhance the application to support multiple customers using shared BTP resources:
 
 4. [Enhance the BTP Application for Multi-Tenancy](Tutorials/40-Multi-Tenancy.md)
 
 5. [Deploy the Multi-Tenant Application to a Provider Subaccount](Tutorials/44-Multi-Tenancy-Deployment.md)
 
 6. [Provision Tenants of the Multi-Tenant Application to Customers](Tutorials/45-Multi-Tenancy-Provisioning.md)
+
+7. [Connect a Tenant to *SAP Business ByDesign*](Tutorials/46-Multi-Tenancy-Provisioning-Connect-ByD.md)
+
+Enhance your market reach and add *S/4HANA Cloud, public edition* as ERP-backend:
+
+8. [Integrate the BTP Application with *S/4HANA Cloud, public edition*](Tutorials/51-S4HC-Integration.md)
+
+9. [Connect a Tenant to *S/4HANA Cloud, public edition*](Tutorials/52-Multi-Tenancy-Provisioning-Connect-S4HC.md)
 
 Related resources:
 - [SAP Cloud Application Programming Model](https://cap.cloud.sap/docs/)
