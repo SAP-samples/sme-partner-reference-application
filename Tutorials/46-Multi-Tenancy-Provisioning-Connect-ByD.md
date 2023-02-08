@@ -132,7 +132,7 @@ BTP consumer subaccount: Create destination "byd" to connect to ByD with princip
     | *scope*:        | Enter the **ByD OAuth Scope** (*UIWC:CC_HOME*)           |
     | *userIdSource*: | *email*                                                  |
 
-    > Note: You may need to upload the ByD server certificate into the destination service for SSL authentication using the link *Upload and Delete Certificates* on the destinations screen. You can download the ByD server certificate from the brower (Open the ByD UI and view the site information; then display and export the certificate details into a ".cer"-file).
+    > Note: You may need to upload the ByD server certificate into the destination service for SSL authentication using the link *Upload and Delete Certificates* on the destinations screen. You can download the ByD server certificate from the browser (Open the ByD UI and view the site information; then display and export the certificate details into a ".cer"-file).
 
 BTP consumer subaccount: Create destination "byd-url" to launch ByD screens. 
 
@@ -199,7 +199,7 @@ Add the BTP apps to the ByD Launchpad:
 
 ## Create Users and Assign Authorizations
 
-In our app design we rely on the business users and authorizations being created and managed in the Cloud ERP solution (here: *SAP Business ByDesign*) and the customers identity provisioning provider (here: *Identity Authentication Service*).
+In our app design we rely on the business users and authorizations being created and managed in the Cloud ERP solution (here: *SAP Business ByDesign*) and the customers identity provider (here: *Identity Authentication Service*).
 As a general approach you create the user in the ERP solution and the IdP, and then assign the user group that includes the authorization to the partner application to the user.
 
 Step for *SAP Business ByDesign* as Cloud ERP:
