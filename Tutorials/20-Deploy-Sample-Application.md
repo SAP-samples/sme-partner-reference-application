@@ -17,7 +17,7 @@ We use this subaccount to host the *SAP Business Application Studio* (BAS), whic
     - *Cloud Foundry Runtime* (3 units)
     - *SAP HANA Cloud*
     - *SAP HANA Schemas & HDI Containers*
-    - *Launchpad Service*, service plan *standard (Application)*
+    - *SAP Build Work Zone, standard edition*, service plan *standard*
     - *SAP Event Mesh*, service plan *Default*
     - *SAP Event Mesh*, service plan *Standard (Application)*
     - *Auditlog Service*, service plan *standard*
@@ -42,7 +42,7 @@ We use this subaccount to host the *SAP Business Application Studio* (BAS), whic
 6. BTP Cockpit (subaccount level): Navigate to the *Service Marketplace* and subscribe/create instances of the following entities: 
     - *SAP Business Application Studio*, service plan *standard-edition (Application)*
     - *Event Mesh*, service plan *Standard (Application)*.
-    - *Launchpad Service*, service plan *standard (Application)*
+    - *SAP Build Work Zone, standard edition*, service plan *standard*
 
 7. BTP Cockpit (subaccount level): Navigate to the *Security* > *Users* and assign the following role collections to the development user:
     - All 3 roles of *SAP Business Application Studio*
@@ -84,7 +84,7 @@ Configure ByD to emit event notifications for projects as described in chapter [
 
 Create and configure a launchpad site as described in chapter [Configure the Launchpad](03-One-Off-Deployment.md#configure-the-launchpad).
 
-> Note: The launchpad service has already been subscribed in chapter "*Setup BTP Subaccount*".
+> Note: SAP Build Work Zone has already been subscribed in chapter "*Setup BTP Subaccount*".
 
 ## Configure Authentication and Authorization
 

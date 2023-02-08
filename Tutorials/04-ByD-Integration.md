@@ -754,7 +754,7 @@ As last step we add the BTP application for author readings and BTP admin apps t
 
 Create mashup for the BTP application "Author Readings":
 
-1. BTP provider subaccount: Open the *Launchpad Site Manager* by launching the application *Launchpad Service* from your section *Instance and Subscriptions* in your BTP subaccount. On the launchpad, open the context menu of the tile "Author Readings" and take note of the URL as **BTP Application URL**.
+1. BTP provider subaccount: Open the *Launchpad Site Manager* by launching the application *SAP Build Work Zone* from your section *Instance and Subscriptions* in your BTP subaccount. On the launchpad, open the context menu of the tile "Author Readings" and take note of the URL as **BTP Application URL**.
 
 2. ByD: Open work center view *Application and User Management - Mashup Authoring* and create a new URL mashup with the following data:
 	- *Port Binding Type*: Select *1 - Without Port Binding*
@@ -763,7 +763,7 @@ Create mashup for the BTP application "Author Readings":
 	- *URL*: Enter the URL of the web application taken from the launchpad site (**BTP Application URL**)
 	- *HTTP Method*: Select *Get*
 
-    > Note: The URL of the web application as provided in the BTP provider subaccount under *HTML5 Applications* does not route request via the managed application router of the SAP Launchpad service and hence user attributes are not propagated to the application. You may encounter this by observing a login user "Default User" and the fact that the single sign-on does not work. Furthermore, any integration with ByD using principal propagation/SAML bearer authentication does not work and return the error message "Bad gateway".
+    > Note: The URL of the web application as provided in the BTP provider subaccount under *HTML5 Applications* does not route requests via the managed application router of SAP Build Work Zone and hence user attributes are not propagated to the application. You may encounter this by observing a login user "Default User" and the fact that the single sign-on does not work. Furthermore, any integration with ByD using principal propagation/SAML bearer authentication does not work and return the error message "Bad gateway".
 
 Create a mashup for the IAS Admin app:
 

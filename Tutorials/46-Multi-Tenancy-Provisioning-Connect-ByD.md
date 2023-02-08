@@ -194,8 +194,6 @@ Add the BTP apps to the ByD Launchpad:
 
 <img src="./images/mt_byd_launchpad.jpg" width="80%">
 
-> Note: If the SAP Launchpad raises the error message *"[…] refuse to connect"* or *"Refused to display '[…]' in a frame because it set 'X-Frame-Options' to 'sameorigin'"* on opening the web app (click on the app tile), then add the property `httpHeaders: "[{ \"Content-Security-Policy\": \"frame-ancestors 'self' https://*.hana.ondemand.com\" }]"` to the application router module in your `mta.yaml` file. See tutorial [Enhance the BTP Application for Multi-Tenancy](Tutorials/40-Multi-Tenancy.md) for more details.
-
 
 ## Create Users and Assign Authorizations
 

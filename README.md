@@ -55,10 +55,10 @@ Do you like to share your own ideas and best practices? Please feel welcome to a
 ## Requirements
 
 The application is based on the *SAP Business Technology Platform* (BTP) and SAP Cloud ERP Solutions. Therefore you need 
-- administrative access to a BTP account with entitlements for *SAP Business Application Studio*, *Cloud Foundry Runtime*, *SAP HANA Cloud*, *SAP HANA Schemas & HDI Containers*, *Launchpad Service*, *SAP Event Mesh*, *Auditlog Service*, *Audit Log Viewer Service*,
+- administrative access to a BTP account with entitlements for *SAP Business Application Studio*, *Cloud Foundry Runtime*, *SAP HANA Cloud*, *SAP HANA Schemas & HDI Containers*, *SAP Build Work Zone*, *SAP Event Mesh*, *Auditlog Service*, *Audit Log Viewer Service*,
 - access to an *SAP Business ByDesign* tenant and authorizations for work centers *Application and User Management* and *Project Management*,
 - access to an *SAP S/4HANA Cloud, public edition* tenant and authorizations for administration and project management apps,
-- admin access to an *SAP Identity Authentication Service* tenant (IAS) that is assigned to the same customer ID as the BTP global account.
+- administrator access to an *SAP Identity Authentication Service* tenant (IAS).
 
 We are using the *Business Application Studio* as standardized development environment and *Github* as code repository.
 

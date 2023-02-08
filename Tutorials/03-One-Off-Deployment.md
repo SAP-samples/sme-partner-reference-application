@@ -14,13 +14,13 @@ Check if sufficient service assignments are available in your global account:
 - Cloud Foundry Runtime (3 units of Application runtime)
 - SAP HANA Cloud (1 unit)
 - SAP HANA Schemas & HDI Containers
-- Launchpad Service 
+- SAP Build Work Zone 
 
 Open *Entity Assignments* and assign quotas for the following entities to your subaccount in which you want to deploy the application: 
 - *Cloud Foundry Runtime* (3 units of Application runtime)
 - *SAP HANA Cloud* (1 unit)
 - *SAP HANA Schemas & HDI Containers*
-- *Launchpad Service* (plan: *standard (Application)*)
+- *SAP Build Work Zone* (plan: *standard edition*)
 
 > Note: The value help may not offer an item referring to "Cloud Foundry". In this case select "Application runtime" and save the change, the name of item in the list of entity assignment is changed to "Cloud Foundry Runtime". 
 
@@ -53,14 +53,14 @@ Open the Cloud Foundry space, navigate to SAP HANA Cloud and create a HANA datab
 
 BTP Cockpit (subaccount):
 
-Open the *Service Marketplace* and select the *Launchpad Service*.
-Create a subscription of the *Launchpad Service* with
-- Service: *Launchpad*
-- Plan: *standard - Subscription*
+Open the *Service Marketplace* and select the service *SAP Build Work Zone*.
+Create a subscription of *SAP Build Work Zone* with
+- Service: *SAP Build Work Zone*
+- Plan: *standard*
 
 Open *Users* and add the role collection *Launchpad_Admin* to your user.
 
-> Note: The SAP Launchpad provides the managed application router, which we are using to manage application authentication and tokens. You need to subscribe the Launchpad service before deploying your application to ensure that the Web app can be published as "HTML5 Application".
+> Note: The SAP Build Work Zone provides the managed application router, which we are using to manage application authentication and tokens. You need to subscribe the SAP Build Work Zone before deploying your application to ensure that the Web app can be published as "HTML5 Application".
 
 ***Prepare project configuration (make adjustments) for Cloud Foundry deployments***
 
