@@ -258,7 +258,7 @@ BAS: Extend the authorization annotation of the CAP service model by restriction
 ### Create a file with Reuse Functions for S/4
 
 Some reuse functions specific for S/4 have been defined in a separate file. 
-Copy the S/4 reuse functions in file [connector-s4hc.js](../Applications/author-readings/srv/connector-s4hc.js) into your project.
+Copy the S/4 reuse functions in file [connector-s4hc.js](../Applications/author-readings-mt/srv/connector-s4hc.js) into your project.
 
 ### Enhance the Business Logic to operate on S/4 Data
 
@@ -371,9 +371,9 @@ BAS: Enhance the implementation of the CAP services in file `./application/autho
             S4HCSystemName = await reuse.getDestinationDescription(req,"s4hc-url");
         });
     ```
-    > Note: The resuse function *getDestinationDescription* in [reuse.js](./Applications/author-readings-mt/srv/reuse.js), returns the destination description from BTP subscriber sub account.
+    > Note: The resuse function *getDestinationDescription* in [reuse.js](../Applications/author-readings-mt/srv/reuse.js), returns the destination description from BTP subscriber sub account.
 
-4. Add a new function *getDestinationURL* in the file [reuse.js](./Applications/author-readings-mt/srv/reuse.js) in folder `./srv` (Refer to the file to check the required code). 
+4. Add a new function *getDestinationURL* in the file [reuse.js](../Applications/author-readings-mt/srv/reuse.js) in folder `./srv` (Refer to the file to check the required code). 
 
     > Note: The reuse function *getDestinationURL* is designed such that it works for single-tenant as well as for multi-tenant applications. For single-tenant deployments it reads the destination from the BTP subaccount that hosts the app, for multi-tenant deployments it reads the destination from the subscriber subaccount. We achieve this system behavior by pasing the JWT-token of the logged-in user to the function to get the destination. The JWT-token contains the tenant information.
 
@@ -388,7 +388,7 @@ BAS: Enhance the implementation of the CAP services in file `./application/autho
 
 ### Enhance the Web App to display S/4 Data and navigate to the S/4 Project Overview
 
-BAS: Edit the Fiori Element annotations of the web app in file [annotations.cds](./app/authorreadingmanager/annotations.cds)
+BAS: Edit the Fiori Element annotations of the web app in file [annotations.cds](../Applications/author-readings-mt/app/authorreadingmanager/annotations.cds)
 
 1. Add a facet *Project Data* to display information from the remote service by following the *toS4HCProject*-association:
 
