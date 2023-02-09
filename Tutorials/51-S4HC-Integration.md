@@ -42,9 +42,10 @@ repeat the `cds import`  command for other two services
 
   6. After running the above command `cds import ...` the file *package.json* is updated with a cds configuration referring to the      
      remote odata services, and a folder "./srv/external" with configuration files for the remote services has been created.
-     Enhance the file `package.json` by sandbox-configurations for local testing and productive configurations:
-    ```json
-        "S4HC_API_ENTERPRISE_PROJECT_SRV_0002": {
+     Enhance the file [package.json](../Applications/author-readings-mt/package.json) by sandbox-configurations for local testing and productive configurations:
+
+     ```json
+       "S4HC_API_ENTERPRISE_PROJECT_SRV_0002": {
             "kind": "odata-v2",
             "model": "srv/external/S4HC_API_ENTERPRISE_PROJECT_SRV_0002",
             "[sandbox]": {
@@ -63,41 +64,41 @@ repeat the `cds import`  command for other two services
             }
         },
         "S4HC_ENTPROJECTPROCESSINGSTATUS_0001": {
-        "kind": "odata",
-        "model": "srv/external/S4HC_ENTPROJECTPROCESSINGSTATUS_0001",
-        "[sandbox]": {
-          "credentials": {
-            "url": "https://{{S4HC-hostname}}/sap/opu/odata4/sap/api_entprojprocessingstat/srvd_a2x/sap/entprojectprocessingstatus/0001",
-            "authentication": "BasicAuthentication",
-            "username": "{{test-user}}",
-            "password": "{{test-password}}"
-          }
+            "kind": "odata",
+            "model": "srv/external/S4HC_ENTPROJECTPROCESSINGSTATUS_0001",
+            "[sandbox]": {
+            "credentials": {
+                "url": "https://{{S4HC-hostname}}/sap/opu/odata4/sap/api_entprojprocessingstat/srvd_a2x/sap/entprojectprocessingstatus/0001",
+                "authentication": "BasicAuthentication",
+                "username": "{{test-user}}",
+                "password": "{{test-password}}"
+            }
+            },
+            "[production]": {
+            "credentials": {
+                "destination": "s4hc",
+                "path": "/sap/opu/odata4/sap/api_entprojprocessingstat/srvd_a2x/sap/entprojectprocessingstatus/0001"
+            }
+            }
         },
-        "[production]": {
-          "credentials": {
-            "destination": "s4hc",
-            "path": "/sap/opu/odata4/sap/api_entprojprocessingstat/srvd_a2x/sap/entprojectprocessingstatus/0001"
-          }
-        }
-      },
-      "S4HC_ENTPROJECTPROFILECODE_0001": {
-        "kind": "odata",
-        "model": "srv/external/S4HC_ENTPROJECTPROFILECODE_0001",
-        "[sandbox]": {
-          "credentials": {
-            "url": "https://{{S4HC-hostname}}/sap/opu/odata4/sap/api_entprojectprofilecode/srvd_a2x/sap/entprojectprofilecode/0001",
-            "authentication": "BasicAuthentication",
-            "username": "{{test-user}}",
-            "password": "{{test-password}}"
-          }
-        },
-        "[production]": {
-          "credentials": {
-            "destination": "s4hc",
-            "path": "/sap/opu/odata4/sap/api_entprojectprofilecode/srvd_a2x/sap/entprojectprofilecode/0001"
-          }
-        }
-      }
+        "S4HC_ENTPROJECTPROFILECODE_0001": {
+            "kind": "odata",
+            "model": "srv/external/S4HC_ENTPROJECTPROFILECODE_0001",
+            "[sandbox]": {
+            "credentials": {
+                "url": "https://{{S4HC-hostname}}/sap/opu/odata4/sap/api_entprojectprofilecode/srvd_a2x/sap/entprojectprofilecode/0001",
+                "authentication": "BasicAuthentication",
+                "username": "{{test-user}}",
+                "password": "{{test-password}}"
+            }
+            },
+            "[production]": {
+            "credentials": {
+                "destination": "s4hc",
+                "path": "/sap/opu/odata4/sap/api_entprojectprofilecode/srvd_a2x/sap/entprojectprofilecode/0001"
+            }
+            }
+        }  
     ```
     > Note: The *package.json* refers to two destinations `s4hc` that need to be created in the consumer BTP subaccount. The destinations `s4hc` should refer to business users with principal propagation. Compare next chapter.
 
