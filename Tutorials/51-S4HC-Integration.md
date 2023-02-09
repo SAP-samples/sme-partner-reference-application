@@ -40,7 +40,7 @@ repeat the `cds import`  command for other two services
 
     > Note: Do not use the cds import command parameter `--keep-namespace`, because it may lead to service name clashes if you import multiple S/4 odata services.
 
-  6. After running the above command `cds import ...` the file *package.json* is updated with a cds configuration referring to the      
+  6. After running the above command `cds import ...` the file [package.json](../Applications/author-readings-mt/package.json) is updated with a cds configuration referring to the      
      remote odata services, and a folder "./srv/external" with configuration files for the remote services has been created.
      Enhance the file [package.json](../Applications/author-readings-mt/package.json) by sandbox-configurations for local testing and productive configurations:
 
@@ -106,7 +106,7 @@ repeat the `cds import`  command for other two services
 
 BAS: Extend the CAP service model by the remote entities:
 
-1. Open file `./application/author-readings/srv/service-models.cds` with the service models.
+1. Open file [service-models.cds](../Applications/author-readings-mt/srv/service-models.cds) with the service models.
 
 2. Expose S/4 project data throughout the CAP service model for principal propagation:
     ```javascript
@@ -225,7 +225,7 @@ BAS: Extend the CAP service model by the remote entities:
 
 BAS: Extend the authorization annotation of the CAP service model by restrictions referring to the remote services:
 
-1. Open file `./application/author-readings/srv/service-auth.cds` with the authorization annotations.
+1. Open file [service-auth.cds](../Applications/author-readings-mt/srv/service-auth.cds) with the authorization annotations.
 
 2. Enhance the authorization model for the service entities `S4HCProjects`, `S4HCEnterpriseProjectElement`, `S4HCEntProjTeamMember` and `S4HCEntProjEntitlement`:
     ```javascript
@@ -299,7 +299,7 @@ Copy the S/4 reuse functions in file [connector-s4hc.js](../Applications/author-
 
 ### Enhance the Business Logic to operate on S/4 Data
 
-BAS: Enhance the implementation of the CAP services in file `./application/author-readings/srv/service-implementation.js` to create and read S/4 enterprise project data using the remote S/4 OData service. 
+BAS: Enhance the implementation of the CAP services in file [service-implementation.js](../Applications/author-readings-mt/srv/service-implementation.js) to create and read S/4 enterprise project data using the remote S/4 OData service. 
 
 1. Delegate requests to the remote OData service: 
     ```javascript
@@ -516,7 +516,7 @@ BAS: Edit the Fiori Element annotations of the web app in file [annotations.cds]
     ```
     > Note: We dynamically control the visibility of the button *Create Project in S4HC* based on the value of the transient field *createS4HCProjectEnabled*.    
 
-BAS: Edit language dependend labels in file `./db/i18n/i18n.properties`:
+BAS: Edit language dependend labels in file [i18n.properties]`./db/i18n/i18n.properties`:
 
 4. Add labels for project fields and the button to create projects:
     ```
