@@ -40,9 +40,9 @@ repeat the `cds import`  command for other two services
 
     > Note: Do not use the cds import command parameter `--keep-namespace`, because it may lead to service name clashes if you import multiple S/4 odata services.
 
-    After running the above command `cds import ...` the file *package.json* is updated with a cds configuration referring to the remote odata services, and a folder "./srv/external" with configuration files for the remote services has been created.
-
-  6. Enhance the file `package.json` by sandbox-configurations for local testing and productive configurations:
+  6. After running the above command `cds import ...` the file *package.json* is updated with a cds configuration referring to the      
+     remote odata services, and a folder "./srv/external" with configuration files for the remote services has been created.
+     Enhance the file `package.json` by sandbox-configurations for local testing and productive configurations:
     ```json
         "S4HC_API_ENTERPRISE_PROJECT_SRV_0002": {
             "kind": "odata-v2",
@@ -61,7 +61,43 @@ repeat the `cds import`  command for other two services
                 "path": "/sap/opu/odata/sap/API_ENTERPRISE_PROJECT_SRV;v=0002"
             }
             }
+        },
+        "S4HC_ENTPROJECTPROCESSINGSTATUS_0001": {
+        "kind": "odata",
+        "model": "srv/external/S4HC_ENTPROJECTPROCESSINGSTATUS_0001",
+        "[sandbox]": {
+          "credentials": {
+            "url": "https://{{S4HC-hostname}}/sap/opu/odata4/sap/api_entprojprocessingstat/srvd_a2x/sap/entprojectprocessingstatus/0001",
+            "authentication": "BasicAuthentication",
+            "username": "{{test-user}}",
+            "password": "{{test-password}}"
+          }
+        },
+        "[production]": {
+          "credentials": {
+            "destination": "s4hc",
+            "path": "/sap/opu/odata4/sap/api_entprojprocessingstat/srvd_a2x/sap/entprojectprocessingstatus/0001"
+          }
         }
+      },
+      "S4HC_ENTPROJECTPROFILECODE_0001": {
+        "kind": "odata",
+        "model": "srv/external/S4HC_ENTPROJECTPROFILECODE_0001",
+        "[sandbox]": {
+          "credentials": {
+            "url": "https://{{S4HC-hostname}}/sap/opu/odata4/sap/api_entprojectprofilecode/srvd_a2x/sap/entprojectprofilecode/0001",
+            "authentication": "BasicAuthentication",
+            "username": "{{test-user}}",
+            "password": "{{test-password}}"
+          }
+        },
+        "[production]": {
+          "credentials": {
+            "destination": "s4hc",
+            "path": "/sap/opu/odata4/sap/api_entprojectprofilecode/srvd_a2x/sap/entprojectprofilecode/0001"
+          }
+        }
+      }
     ```
     > Note: The *package.json* refers to two destinations `s4hc` that need to be created in the consumer BTP subaccount. The destinations `s4hc` should refer to business users with principal propagation. Compare next chapter.
 
@@ -373,9 +409,11 @@ BAS: Enhance the implementation of the CAP services in file `./application/autho
     ```
     > Note: The resuse function *getDestinationDescription* in [reuse.js](../Applications/author-readings-mt/srv/reuse.js), returns the destination description from BTP subscriber sub account.
 
-4. Add a new function *getDestinationURL* in the file [reuse.js](../Applications/author-readings-mt/srv/reuse.js) in folder `./srv` (Refer to the file to check the required code). 
+4. Add a new functions *getDestinationURL* , *checkDestination* and *getDestinationDescription* in the file [reuse.js](../Applications/author-readings-mt/srv/reuse.js) in folder `./srv` (Refer to the file to check the required code). 
 
     > Note: The reuse function *getDestinationURL* is designed such that it works for single-tenant as well as for multi-tenant applications. For single-tenant deployments it reads the destination from the BTP subaccount that hosts the app, for multi-tenant deployments it reads the destination from the subscriber subaccount. We achieve this system behavior by pasing the JWT-token of the logged-in user to the function to get the destination. The JWT-token contains the tenant information.
+
+    > Note: The reuse function *checkDestination* will checks if the destionation with given name exist in BTP sub-account, the returned result is used to decide which backend ERP (SAP Business ByDesign / SAP S/4HANA Cloud, public edition) to be used for project related information (for reading project information / for creating project information).
 
 5. Add implementation to expand the author readings to remote projects (OData parameter `/AuthorReadings?$expand=toS4HCProject`) as outlined in code block:
     ```javascript
