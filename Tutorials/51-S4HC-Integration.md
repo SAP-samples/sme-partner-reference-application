@@ -37,7 +37,7 @@ BAS: Import the S/4 odata service into the CAP project:
 
 5. Open a terminal, navigate to folder "./application/author-readings", and import both edmx files using the commands `cds import ./external_resources/S4HC_API_ENTERPRISE_PROJECT_SRV_0002.edmx --as cds` . 
 
-    > Note: Do not use the cds import command parameter `--keep-namespace`, because this results in a cds service name "cust", which would lead to service name clashes if you import multiple ByD custom odata services.
+    > Note: Do not use the cds import command parameter `--keep-namespace`, because this results in a cds service name "cust", which would lead to service name clashes if you import multiple S/4 custom odata services.
 
     After running the above command `cds import ...` the file *package.json* is updated with a cds configuration referring to the remote odata services, and a folder "./srv/external" with configuration files for the remote services has been created.
     
@@ -75,7 +75,7 @@ BAS: Extend the CAP service model by the remote entities:
 
 1. Open file `./application/author-readings/srv/service-models.cds` with the service models.
 
-2. Expose ByD project data throughout the CAP service model for principal propagation:
+2. Expose S/4 project data throughout the CAP service model for principal propagation:
     ```javascript
     // -------------------------------------------------------------------------------
     // Extend service AuthorReadingManager by S/4 projects (principal propagation)
@@ -173,9 +173,9 @@ BAS: Extend the authorization annotation of the CAP service model by restriction
 
 1. Open file `./application/author-readings/srv/service-auth.cds` with the authorization annotations.
 
-2. Enhance the authorization model for the service entities `ByDProjects`, `ByDProjectSummaryTasks`, `ByDProjectTasks` and `ByDProjectsTechUser`:
+2. Enhance the authorization model for the service entities `S4HCProjects`, `S4HCEnterpriseProjectElement`, `S4HCEntProjTeamMember` and `S4HCEntProjEntitlement`:
     ```javascript
-    // ByD projects: Managers and Administrators can read and create remote projects
+    // S/4 projects: Managers and Administrators can read and create remote projects
     annotate AuthorReadingManager.S4HCProjects with @(restrict : [
         {
             grant : ['*'],
@@ -218,12 +218,12 @@ BAS: Extend the authorization annotation of the CAP service model by restriction
     ]);
     ```
 
-### Create a file with Reuse Functions for ByD
+### Create a file with Reuse Functions for S/4
 
 Some reuse functions specific for S/4 have been defined in a separate file. 
 Copy the S/4 reuse functions in file [connector-s4hc.js](../Applications/author-readings/srv/connector-s4hc.js) into your project.
 
-### Enhance the Business Logic to operate on ByD Data
+### Enhance the Business Logic to operate on S/4 Data
 
 BAS: Enhance the implementation of the CAP services in file `./application/author-readings/srv/service-implementation.js` to create and read S/4 enterprise project data using the remote S/4 OData service. 
 
@@ -327,7 +327,7 @@ BAS: Enhance the implementation of the CAP services in file `./application/autho
      const reuse = require("./reuse");
      const connectorS4HC = require("./connector-s4hc");
     ```
-    > Note: The code block *Read the S/4 system URL dynamically from BTP destination "byd-sh4c"* reads the URL of the S/4 system used to navigate to the S/4 enterprise project screen. We are using the reuse function *getDestinationURL* to read dynamically the BTP destination (refer to file `./srv/reuse.js` for details of the reusable function getDestinationURL).
+    > Note: The code block *Read the S/4 system URL dynamically from BTP destination "sh4c"* reads the URL of the S/4 system used to navigate to the S/4 enterprise project screen. We are using the reuse function *getDestinationURL* to read dynamically the BTP destination (refer to file `./srv/reuse.js` for details of the reusable function getDestinationURL).
     
     > Note: The code block *Set URL of S/4 enterprise project screen for UI navigation* assembles the URL of the S/4 project screen used for UI navigations lateron. 
 
@@ -356,7 +356,7 @@ BAS: Enhance the implementation of the CAP services in file `./application/autho
     ```
     > Note: OData features like *$expand*, *$filter*, *$orderby*, ... need to be implemented in the service implementation.
 
-### Enhance the Web App to display ByD Data and navigate to the ByD Project Overview
+### Enhance the Web App to display S/4 Data and navigate to the S/4 Project Overview
 
 BAS: Edit the Fiori Element annotations of the web app in file `./app/authorreadingmanager/annotations.cds`:
 
@@ -395,7 +395,7 @@ BAS: Edit the Fiori Element annotations of the web app in file `./app/authorread
         }        
         ```
 
-2. Add a facet *Project Data* to display information from the remote service by following the *toByDProject*-association:
+2. Add a facet *Project Data* to display information from the remote service by following the *toS4HCProject*-association:
     - Add facet:
         ```javascript
         {
@@ -430,43 +430,6 @@ BAS: Edit the Fiori Element annotations of the web app in file `./app/authorread
                 @UI.Hidden : false
             },
             
-            // SAP Business ByDesign specific fields
-            {
-                $Type : 'UI.DataField',
-                Value : toByDProject.projectID,
-                @UI.Hidden : true 
-            },
-            {
-                $Type : 'UI.DataField',
-                Label : '{i18n>projectTypeCodeText}',
-                Value : toByDProject.typeCodeText,
-                @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'ByD' ] }, false, true ] } }
-            },
-            {
-                $Type : 'UI.DataField',
-                Label : '{i18n>projectStatusCodeText}',
-                Value : toByDProject.statusCodeText,
-                @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'ByD' ] }, false, true ] } }
-            },
-            {
-                $Type : 'UI.DataField',
-                Label : '{i18n>projectCostCenter}',
-                Value : toByDProject.costCenter,
-                @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'ByD' ] }, false, true ] } }
-            },
-            {
-                $Type : 'UI.DataField',
-                Label : '{i18n>projectStartDateTime}',
-                Value : toByDProject.startDateTime,
-                @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'ByD' ] }, false, true ] } }
-            },
-            {
-                $Type : 'UI.DataField',
-                Label : '{i18n>projectEndDateTime}',
-                Value : toByDProject.endDateTime,
-                @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'ByD' ] }, false, true ] } }
-            },
-
             // S4HC specific fields
             {
                 $Type : 'UI.DataField',
@@ -598,16 +561,16 @@ Add a new cds-feature `fetch_csrf` in file *package.json* to enable the manageme
 ### Local Test
 
 BAS: Open a terminal and start the app with the sandbox profile using the run command `cds watch --profile sandbox`. 
-Use the test users as listed in file `.cdsrc.json`. Test the critical connection points to ByD.
+Use the test users as listed in file `.cdsrc.json`. Test the critical connection points to S/4.
 
-1. Test the *Service Endpoints* for `Projects`, `ProjectSummaryTasks`, `ProjectTasks` and `ProjectsTechUser`: The system should return the respective data from ByD (without filtering).
+1. Test the *Service Endpoints* for `Projects`, `ProjectSummaryTasks`, `ProjectTasks` and `ProjectsTechUser`: The system should return the respective data from S/4 (without filtering).
 
-2. Open the *Web Application* `/authorreadingmanager/webapp/index.html` and open one of the author readings. Click on `Create Project`. The system should create a project in ByD and display the details in section *Project Details*.
-Click on the project link and the system should open a browser window with the ByD project overview.
+2. Open the *Web Application* `/authorreadingmanager/webapp/index.html` and open one of the author readings. Click on `Create Project`. The system should create a project in S/4 and display the details in section *Project Details*.
+Click on the project link and the system should open a browser window with the S/4 project overview.
 
-3. Test the *Service Endpoints* for `AuthorReadings` and note the ID of the author reading for whwich you created the ByD project in test 2 as **author-reading-ID**.
+3. Test the *Service Endpoints* for `AuthorReadings` and note the ID of the author reading for whwich you created the S/4 project in test 2 as **author-reading-ID**.
 Append `(ID={{author-reading-ID}},IsActiveEntity=true)?$select=toProject&$expand=toProject($select=ID,costCenter,endDateTime,startDateTime,statusCodeText,typeCodeText)` to the service endpoint URL, replace the place holder "{{author-reading-ID}}" by the **author-reading-ID** and run again.
-The system should return the record with the project ID and the ByD project details as sub-node.
+The system should return the record with the project ID and the S/4 project details as sub-node.
 
 > Note: If you would like to switch users, the browser cache needs to be cleared before. This can be for example done in Chrome by pressing CTRL+SHIFT+DEL (or in German: STRG+SHIFT+ENTF), go to `Advanced` and choose a time range and `Passwords and other sign-in data`.
 
