@@ -1,18 +1,13 @@
 # Integrate the BTP Application with *S/4HANA Cloud, public edition*
 
-In this chapter we integrate the BTP application with the enterprise project management of *SAP S/4HANA Cloud, public edition* (S/4).
+In this chapter we enhance the BTP application to support *SAP S/4HANA Cloud, public edition* (S/4) as backend. 
 
 Frontend integration:
-1. Launch the BTP app from the S/4 launchpad,
-2. Launch BTP administration applications such as the IAS admin app from the S/4 launchpad,
-3. Navigate from the BTP app to related S/4 enterprise projects,
-4. Single sign-on for S/4, the BTP app and all BTP admin apps using the S/4 IAS tenant as IDP.
+1. Navigate from the BTP app to related S/4 enterprise projects.
 
 Back-channel integration:
 
-5. Create S/4 enterprise projects from the BTP app and display S/4 project information in the BTP app using OData APIs with principal propagation.
-
-**--- THIS PAGE IS WORK IN PROCESS. ---**
+2. Create S/4 enterprise projects from the BTP app and display S/4 project information on the web application of the BTP app using OData APIs with principal propagation.
 
 ## Enhance the BTP App to Consume S/4 OData APIs
 
@@ -24,50 +19,51 @@ We will use the S/4 OData service for enterprise projects to read and write S/4 
 
 S/4: Create EDMX-file from S/4 Odata service:
 
-1. Run the $metadata url of the S/4 OData service in a browser window or Postman: https://{{hostname}}/sap/opu/odata/sap/API_ENTERPRISE_PROJECT_SRV;v=0002/$metadata?sap-label=true&sap-language=en
-
-2. Save the service response payload with the metadata in two files with file-extension ".edmx":
-    - File "S4HC_API_ENTERPRISE_PROJECT_SRV_0002" for user propagation
+1. Search for the following OData APIs on the [SAP API Business Hub](https://api.sap.com/package/SAPS4HANACloud/all) and download the metadata (edmx) files from API hub:
+    - [*Enterprise Project*](https://api.sap.com/api/API_ENTERPRISE_PROJECT_SRV_0002/overview) (OData v2)
+    - [*Enterprise Project - Read Project Processing Status*](https://api.sap.com/api/ENTPROJECTPROCESSINGSTATUS_0001/overview) (OData v4)
+    - [*Enterprise Project - Read Project Profile*](https://api.sap.com/api/ENTPROJECTPROFILECODE_0001/overview) (OData v4)
+2. Rename the metadata files (edmx) as follows:
+    -  S4HC_API_ENTERPRISE_PROJECT_SRV_0002.edmx
+    -  S4HC_ENTPROJECTPROCESSINGSTATUS_0001.edmx
+    -  S4HC_ENTPROJECTPROFILECODE_0001.edmx
 
 BAS: Import the S/4 odata service into the CAP project:
 
-3. Create a folder with name "external_resources" in the root folder of the application.
+3. Create a folder with name "external_resources" in the root folder of the application (create in case if the folder already doesn't exist).
 
 4. Open the context menu on folder "./external_resources" and upload both edmx-files with the OData services.
 
 5. Open a terminal, navigate to folder "./application/author-readings", and import both edmx files using the commands `cds import ./external_resources/S4HC_API_ENTERPRISE_PROJECT_SRV_0002.edmx --as cds` . 
 
-    > Note: Do not use the cds import command parameter `--keep-namespace`, because this results in a cds service name "cust", which would lead to service name clashes if you import multiple S/4 custom odata services.
+repeat the `cds import`  command for other two services
+
+    > Note: Do not use the cds import command parameter `--keep-namespace`, because it may lead to service name clashes if you import multiple S/4 odata services.
 
     After running the above command `cds import ...` the file *package.json* is updated with a cds configuration referring to the remote odata services, and a folder "./srv/external" with configuration files for the remote services has been created.
-    
-### Enhance the entity model to store key project information
 
-BAS: Enhance the CAP entity models in file `./application/author-readings/db/entity-models.cds` by elements to store project key information to associate author readings to projects in remote ERP systems.
-
-1. Enhance the entity `AuthorReadings` by the elements:
-    ```javascript
-    projectID               : String;
-    projectObjectID         : String;
-    projectURL              : String;
-    projectSystem           : String;  
-    ```  
-
-2. Enhance the annotations of entity `AuthorReadings` by the elements:
-    ```javascript
-    projectID               @title : '{i18n>projectID}';
-    projectObjectID         @title : '{i18n>projectObjectID}';
-    projectURL              @title : '{i18n>projectURL}';
-    projectSystem           @title : '{i18n>projectSystem}';
-    ```  
-
-3. Enhance the labels for entity AuthorReadings in file `./application/author-readings/db/i18n/i18n.properties` by the labels:
-    ```javascript
-    projectID               = Project
-    projectObjectID         = Project UUID
-    projectURL              = Project URL
-    projectSystem           = Project System
-    ```  
+  6. Enhance the file `package.json` by sandbox-configurations for local testing and productive configurations:
+    ```json
+        "S4HC_API_ENTERPRISE_PROJECT_SRV_0002": {
+            "kind": "odata-v2",
+            "model": "srv/external/S4HC_API_ENTERPRISE_PROJECT_SRV_0002",
+            "[sandbox]": {
+            "credentials": {
+                "url": "https://{{S4HC-hostname}}/sap/opu/odata/sap/API_ENTERPRISE_PROJECT_SRV;v=0002",
+                "authentication": "BasicAuthentication",
+                "username": "{{test-user}}",
+                "password": "{{test-password}}"
+            }
+            },
+            "[production]": {
+            "credentials": {
+                "destination": "s4hc",
+                "path": "/sap/opu/odata/sap/API_ENTERPRISE_PROJECT_SRV;v=0002"
+            }
+            }
+        }
+    ```
+    > Note: The *package.json* refers to two destinations `s4hc` that need to be created in the consumer BTP subaccount. The destinations `s4hc` should refer to business users with principal propagation. Compare next chapter.
 
 ### Enhance the Service Model by the Remote Service
 
@@ -124,6 +120,27 @@ BAS: Extend the CAP service model by the remote entities:
         }
     
     };
+
+    // Extend service AuthorReadingManager by S4HC Projects ProjectProfileCode
+    using { S4HC_ENTPROJECTPROCESSINGSTATUS_0001 as RemoteS4HCProjectProcessingStatus } from './external/S4HC_ENTPROJECTPROCESSINGSTATUS_0001';
+
+    extend service AuthorReadingManager with {
+        entity S4HCProjectsProcessingStatus as projection on RemoteS4HCProjectProcessingStatus.ProcessingStatus {
+            key ProcessingStatus as ProcessingStatus,
+            ProcessingStatusText as ProcessingStatusText    
+        }    
+    };
+
+    // Extend service AuthorReadingManager by S4HC Projects ProcessingStatus
+    using { S4HC_ENTPROJECTPROFILECODE_0001 as RemoteS4HCProjectProjectProfileCode } from './external/S4HC_ENTPROJECTPROFILECODE_0001';
+
+    extend service AuthorReadingManager with {
+        entity S4HCProjectsProjectProfileCode as projection on RemoteS4HCProjectProjectProfileCode.ProjectProfileCode {
+            key ProjectProfileCode as ProjectProfileCode,
+            ProjectProfileCodeText as ProjectProfileCodeText    
+        }    
+    };
+
     ```
     
 2. Enhance the service model of service *AuthorReadingManager* by an association to the remote project in S/4:
@@ -216,8 +233,28 @@ BAS: Extend the authorization annotation of the CAP service model by restriction
             to    : 'AuthorReadingAdminRole'
         }
     ]);
+    annotate AuthorReadingManager.S4HCProjectsProjectProfileCode with @(restrict : [
+    {
+        grant : ['*'],
+        to    : 'AuthorReadingManagerRole',
+    },
+    {
+        grand : ['*'],
+        to    : 'AuthorReadingAdminRole'
+    }
+    ]);
+    annotate AuthorReadingManager.S4HCProjectsProcessingStatus with @(restrict : [
+        {
+            grant : ['*'],
+            to    : 'AuthorReadingManagerRole',
+        },
+        {
+            grand : ['*'],
+            to    : 'AuthorReadingAdminRole'
+        }
+    ]);
     ```
-
+    
 ### Create a file with Reuse Functions for S/4
 
 Some reuse functions specific for S/4 have been defined in a separate file. 
@@ -322,32 +359,25 @@ BAS: Enhance the implementation of the CAP services in file `./application/autho
         // see code in file ./service-implementation.js
     }
     ```
-    Add two lines to import the reuse functions in the beginning of the file:
+4. Add two lines to import the reuse functions in the beginning of the file:
     ```javascript
-     const reuse = require("./reuse");
-     const connectorS4HC = require("./connector-s4hc");
+        const reuse = require("./reuse");
+        const connectorS4HC = require("./connector-s4hc");
     ```
-    > Note: The code block *Read the S/4 system URL dynamically from BTP destination "sh4c"* reads the URL of the S/4 system used to navigate to the S/4 enterprise project screen. We are using the reuse function *getDestinationURL* to read dynamically the BTP destination (refer to file `./srv/reuse.js` for details of the reusable function getDestinationURL).
-    
-    > Note: The code block *Set URL of S/4 enterprise project screen for UI navigation* assembles the URL of the S/4 project screen used for UI navigations lateron. 
+5.  Add implementation for reading dynamic destination description from BTP provider sub account.
+    ```javascript
+        srv.before("READ", "AuthorReadings", async (req) => {
+            ByDSystemName = await reuse.getDestinationDescription(req,"byd-url");
+            S4HCSystemName = await reuse.getDestinationDescription(req,"s4hc-url");
+        });
+    ```
+    > Note: The resuse function *getDestinationDescription* in [reuse.js](./Applications/author-readings-mt/srv/reuse.js), returns the destination description from BTP subscriber sub account.
 
-4. Add a new function *getDestinationURL* in the file `reuse.js` in folder `./srv` (Refer to the file to check the required code). 
+4. Add a new function *getDestinationURL* in the file [reuse.js](./Applications/author-readings-mt/srv/reuse.js) in folder `./srv` (Refer to the file to check the required code). 
 
     > Note: The reuse function *getDestinationURL* is designed such that it works for single-tenant as well as for multi-tenant applications. For single-tenant deployments it reads the destination from the BTP subaccount that hosts the app, for multi-tenant deployments it reads the destination from the subscriber subaccount. We achieve this system behavior by pasing the JWT-token of the logged-in user to the function to get the destination. The JWT-token contains the tenant information.
 
-5. Since we are using the npm module *@sap-cloud-sdk/connectivity* in file *reuse.js*, we need to add the corresponding npm module to the dependencies in the `package.json` file:
-    ```json
-    "dependencies": {
-        "@sap-cloud-sdk/connectivity": "^2.8.0"
-    },
-    ```
-
-6. Add system message in file `./application/author-readings/srv/i18n/messages.properties`: 
-    ```javascript
-    ACTION_CREATE_PROJECT_DRAFT=Projects cannot be created for draft author readings
-    ```
-
-7. Add implementation to expand the author readings to remote projects (OData parameter `/AuthorReadings?$expand=toS4HCProject`) as outlined in code block:
+5. Add implementation to expand the author readings to remote projects (OData parameter `/AuthorReadings?$expand=toS4HCProject`) as outlined in code block:
     ```javascript
     // Expand author readings to remote projects (OData parameter "/AuthorReadings?$expand=toS4HCProject")
     srv.on("READ", "AuthorReadings", async (req, next) => {     
@@ -358,58 +388,11 @@ BAS: Enhance the implementation of the CAP services in file `./application/autho
 
 ### Enhance the Web App to display S/4 Data and navigate to the S/4 Project Overview
 
-BAS: Edit the Fiori Element annotations of the web app in file `./app/authorreadingmanager/annotations.cds`:
+BAS: Edit the Fiori Element annotations of the web app in file [annotations.cds](./app/authorreadingmanager/annotations.cds)
 
-1. Add project elements to the Author readings floorplan (already done in previous steps):
-    - Selection fields:
-        ```javascript
-        SelectionFields : [
-            identifier,
-            date,
-            maxParticipantsNumber,
-            availableFreeSlots,
-            statusCode_code,
-            participantsFeeAmount,
-            projectID,
-            projectSystem        
-        ],
-        ```  
-    - Table columns:
-        ```javascript
-        {
-            $Type : 'UI.DataFieldWithUrl',
-            Value : projectID,
-            Url   : projectURL
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : projectSystem
-        },
-    	```
-    - Header facet, field group *#Values*:
-        ```javascript
-        {
-            $Type : 'UI.DataFieldWithUrl',
-            Value : projectID,
-            Url   : projectURL
-        }        
-        ```
+1. Add a facet *Project Data* to display information from the remote service by following the *toS4HCProject*-association:
 
-2. Add a facet *Project Data* to display information from the remote service by following the *toS4HCProject*-association:
-    - Add facet:
-        ```javascript
-        {
-            $Type  : 'UI.CollectionFacet',
-            Label  : '{i18n>projectData}',
-            ID     : 'ProjectData',
-            Facets : [{
-                $Type  : 'UI.ReferenceFacet',
-                Target : ![@UI.FieldGroup#ProjectData],
-                ID     : 'ProjectData'
-            }],
-        },         
-        ```
-    - Add a field group *#ProjectData*:         
+    - Add S/4 project specific fields to field group *#ProjectData*:         
         ```javascript
         FieldGroup #ProjectData : {Data : [
             // Project system independend fields:
@@ -518,62 +501,8 @@ BAS: Edit language dependend labels in file `./db/i18n/i18n.properties`:
 
 
     # -------------------------------------------------------------------------------------
-    # Web Application Titles
 
-    projectData             = Project Data
     ```        
 
-### Enhance the Configuration of the CAP Project
-
-Enhance the file `package.json` by sandbox-configurations for local testing and productive configurations:
-```json
-    "S4HC_API_ENTERPRISE_PROJECT_SRV_0002": {
-        "kind": "odata-v2",
-        "model": "srv/external/S4HC_API_ENTERPRISE_PROJECT_SRV_0002",
-        "[sandbox]": {
-          "credentials": {
-            "url": "https://{{S4HC-hostname}}/sap/opu/odata/sap/API_ENTERPRISE_PROJECT_SRV;v=0002",
-            "authentication": "BasicAuthentication",
-            "username": "{{test-user}}",
-            "password": "{{test-password}}"
-          }
-        },
-        "[production]": {
-          "credentials": {
-            "destination": "s4hc",
-            "path": "/sap/opu/odata/sap/API_ENTERPRISE_PROJECT_SRV;v=0002"
-          }
-        }
-      }
-```
-> Note: The *package.json* refers to two destinations `s4hc` that need to be created in the consumer BTP subaccount. The destinations `s4hc` should refer to business users with principal propagation. Compare next chapter.
-
-Add a new cds-feature `fetch_csrf` in file *package.json* to enable the management of cross site request forgery tokens (required for POST-requests at runtime using destinations of type *BasicAuthentication*):
-```json
-"cds": {
-    "features": {
-        "fetch_csrf": true
-    },
-}      
-```
-> Note: By default CAP does not handle csrf-tokens for POST requests. Remote services may fail if csrf-tokens are required.
-
-### Local Test
-
-BAS: Open a terminal and start the app with the sandbox profile using the run command `cds watch --profile sandbox`. 
-Use the test users as listed in file `.cdsrc.json`. Test the critical connection points to S/4.
-
-1. Test the *Service Endpoints* for `Projects`, `ProjectSummaryTasks`, `ProjectTasks` and `ProjectsTechUser`: The system should return the respective data from S/4 (without filtering).
-
-2. Open the *Web Application* `/authorreadingmanager/webapp/index.html` and open one of the author readings. Click on `Create Project`. The system should create a project in S/4 and display the details in section *Project Details*.
-Click on the project link and the system should open a browser window with the S/4 project overview.
-
-3. Test the *Service Endpoints* for `AuthorReadings` and note the ID of the author reading for whwich you created the S/4 project in test 2 as **author-reading-ID**.
-Append `(ID={{author-reading-ID}},IsActiveEntity=true)?$select=toProject&$expand=toProject($select=ID,costCenter,endDateTime,startDateTime,statusCodeText,typeCodeText)` to the service endpoint URL, replace the place holder "{{author-reading-ID}}" by the **author-reading-ID** and run again.
-The system should return the record with the project ID and the S/4 project details as sub-node.
-
-> Note: If you would like to switch users, the browser cache needs to be cleared before. This can be for example done in Chrome by pressing CTRL+SHIFT+DEL (or in German: STRG+SHIFT+ENTF), go to `Advanced` and choose a time range and `Passwords and other sign-in data`.
-
 ### Deploy the application
-
-See [Deploy to Cloud Foundry](03-One-Off-Deployment.md#deploy-to-cloud-foundry).
+Update your application in the provider sub-account and for detailed instructions refer to the section [Deploy the Multi-Tenant Application to a Provider Subaccount](44-Multi-Tenancy-Deployment.md#Deploy-the-Multi-Tenant-Application).
