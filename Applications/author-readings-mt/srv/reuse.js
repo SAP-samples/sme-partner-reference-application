@@ -100,27 +100,15 @@ async function getDestinationURL(req, destinationName) {
         const destination = await getDestination({ destinationName: destinationName, jwt: retrieveJwt(req) });
         
         if(destination){
-            console.log("ERP destination URL : " + destination.url);        
+            console.log("Get ERP destination URL: " + destination.url);        
             destinationURL = destination.url;
         }
         else{
-            // In case the remote system destination URL is blank, then use some default URL (for testing and logging)
-            if(destinationName == 'byd-url') {
-              destinationURL = "https://myXXXXXX-sso.businessbydesign.cloud.sap"; 
-              
-            }
-            else if(destinationName == 's4hc-url'){
-              destinationURL = "https://myXXXXXX.s4hana.ondemand.com"; 
-              
-            }
-            else{
-              destinationURL = "https://myXXXXXX.XXXXXX.cloud.sap"; 
-            } 
-            console.log("ERP default destination URL : " + destinationURL);  
+            // No destination found
+            console.log("Get ERP destination URL: " + destinationName + " not found");  
         }
-        
     } catch (error) {
-        // App reacts error tolerant if the destination is missing
+        // App reacts error tolerant if the destination cannot be retrieved
         console.log("GET_DESTINATION" + "; " + error);
     }
     return destinationURL;    
@@ -158,7 +146,6 @@ async function getDestinationDescription(req, destinationName) {
       // - Single tenant: Get destination from the subaccount that hosts the app.
       // - Multi tenant: Get destination from subscriber subaccount.
       const destination = await getDestination({ destinationName: destinationName, jwt: retrieveJwt(req) });
-      
       if(destination){
         for(var originalProperty in destination.originalProperties){         
           if (originalProperty == "Description"){
@@ -167,7 +154,6 @@ async function getDestinationDescription(req, destinationName) {
           }
         }            
       }     
-      
   } catch (error) {
       // App reacts error tolerant if the destination is missing
       console.log("GET_DESTINATION_DESCRIPTION" + "; " + error);

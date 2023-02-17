@@ -13,7 +13,8 @@ annotate service.AuthorReadings with @(UI : {
         statusCode_code,
         participantsFeeAmount,
         projectID,
-        projectSystem        
+        projectSystem,        
+        projectSystemName        
     ],
    
     // Table columns
@@ -51,6 +52,10 @@ annotate service.AuthorReadings with @(UI : {
             $Type : 'UI.DataFieldWithUrl',
             Value : projectID,
             Url   : projectURL
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : projectSystemName
         },
         {
             $Type : 'UI.DataField',
@@ -243,22 +248,41 @@ annotate service.AuthorReadings with @(UI : {
             $Type : 'UI.DataFieldWithUrl',
             Value : projectID,
             Url   : projectURL
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : projectSystemName
+        } ,
+        {
+            $Type : 'UI.DataField',
+            Value : projectSystem
         }
     ]},    
     FieldGroup #ProjectData : {Data : [
         // Project system independend fields:
         {
-            $Type : 'UI.DataField',
-            Value : projectSystem,
-            @UI.Hidden : false
-        },
-                {
             $Type : 'UI.DataFieldWithUrl',
             Value : projectID,
             Url   : projectURL,
             @UI.Hidden : false
         },
+                {
+            $Type : 'UI.DataField',
+            Value : projectSystemName,
+            @UI.Hidden : false
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : projectSystem,
+            @UI.Hidden : false
+        },
+
         // SAP Business ByDesign specific fields
+        {
+            $Type : 'UI.DataField',
+            Value : toByDProject.projectID,
+            @UI.Hidden : true 
+        },
         {
             $Type : 'UI.DataField',
             Label : '{i18n>projectTypeCodeText}',

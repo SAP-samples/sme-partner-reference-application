@@ -248,7 +248,7 @@ BAS: Extend the CAP service model by the remote entities:
         } 
     ```
 
-3. Enhance the service model of service *AuthorReadingManager* by virtual elements to control the visualization of actions and the coloring of status information:
+3. Enhance the service model of service *AuthorReadingManager* by virtual elements to control the coloring of status information, to pass on the name of the ERP system from the destination to the UI, and the visualization of actions:
     ```javascript
     // Author readings (combined with remote project using mixin)
     @odata.draft.enabled
@@ -259,7 +259,9 @@ BAS: Extend the CAP service model by the remote entities:
         } 
         into  {
             *,
-            virtual null as statusCriticality    : Integer  @title : '{i18n>statusCriticality}',
+            virtual null as statusCriticality    : Integer @title : '{i18n>statusCriticality}',
+            virtual null as projectSystemName    : String  @title : '{i18n>projectSystemName}' @odata.Type : 'Edm.String',
+
             // ByD projects: visibility of button "Create project in ByD"
             virtual null as createByDProjectEnabled : Boolean  @title : '{i18n>createByDProjectEnabled}'  @odata.Type : 'Edm.Boolean',
             toByDProject,
@@ -355,7 +357,7 @@ BAS: Extend the authorization annotation of the CAP service model by restriction
 ### Create a file with Reuse Functions for ByD
 
 Some reuse functions specific for ByD have been defined in a separate file. 
-Copy the ByD reuse functions in file [connector-byd.js](../Applications/author-readings/srv/connector-byd.js) into your project.
+Copy the ByD reuse functions in file [connector-byd.js](../Applications/author-readings/srv/connector-byd.js) into your project. The file contains functions to delegate OData requests to ByD, to read ByD project data, and to assemble a OData payload to create ByD projects using a project template.
 
 ### Enhance the Business Logic to operate on ByD Data
 
@@ -406,16 +408,29 @@ BAS: Enhance the implementation of the CAP services in file `./application/autho
     ```
     > Note: Without delegation, the remote entities return the error code 500 with message "SQLITE_ERROR: no such table" (local testing).
 
-2. Set the virtual element `createByDProjectEnabled` to control the visualization of the action to create projects dynamically in the read-event of author readings:
+2. Determine the connected backend systems and get system name in the before-read event of author readings:
     ```javascript
-    if (each.projectID) {
-        each.createByDProjectEnabled = false;
-    } else {
-        each.createByDProjectEnabled = true;
+    // Check connected backend systems
+    srv.before("READ", "AuthorReadings", async (req) => {
+
+        // ByD
+        ByDIsConnectedIndicator = await reuse.checkDestination(req,"byd"); 
+        ByDSystemName           = await reuse.getDestinationDescription(req,"byd-url");
+    });
+    ```
+
+3. Set the virtual element `createByDProjectEnabled` to control the visualization of the action to create projects dynamically in the after-read event of author readings and pass on the project system name:
+    ```javascript
+    // Update project system name and visibility of the "Create Project"-button
+    if (authorReading.projectID) {
+        authorReading.createByDProjectEnabled = false;
+        if(authorReading.projectSystem == 'ByD')  authorReading.projectSystemName = ByDSystemName;
+    }else{            
+        authorReading.createByDProjectEnabled = ByDIsConnectedIndicator;
     }
     ```
 
-3. Add implementation for action *CreateByDProject* as outlined in code block: 
+4. Add implementation for action *CreateByDProject* as outlined in code block: 
     ```javascript
     // Entity action "createByDProject"
     srv.on("createByDProject", async (req) => {
@@ -427,32 +442,45 @@ BAS: Enhance the implementation of the CAP services in file `./application/autho
      const reuse = require("./reuse");
      const connectorByD = require("./connector-byd");
     ```
-    > Note: The code block *Read the ByD system URL dynamically from BTP destination "byd-url"* reads the URL of the ByD system used to navigate to the ByD project overview screen. We are using the reuse function *getDestinationURL* to read dynamically the BTP destination (refer to file `./srv/reuse.js` for details of the reusable function getDestinationURL).
-    
-    > Note: The code block *Set URL of ByD project overview screen for UI navigation* assembles the URL of the ByD project overview screen used for UI navigations lateron. 
+    Add two global varibales to buffer the status and the name of remote project management systems:
+    ```javascript
+    // Buffer status and name of project management systems
+    var ByDIsConnectedIndicator;  
+    var ByDSystemName;
+    ```
 
-4. Add a new function *getDestinationURL* in the file `reuse.js` in folder `./srv` (Refer to the file to check the required code). 
+5. Add the functions *getDestinationURL*, *checkDestination* and *getDestinationDescription* in the file `reuse.js` in folder `./srv` (Refer to the file to check the required code). 
 
-    > Note: The reuse function *getDestinationURL* is designed such that it works for single-tenant as well as for multi-tenant applications. For single-tenant deployments it reads the destination from the BTP subaccount that hosts the app, for multi-tenant deployments it reads the destination from the subscriber subaccount. We achieve this system behavior by pasing the JWT-token of the logged-in user to the function to get the destination. The JWT-token contains the tenant information.
+    > Note: The reuse functions *getDestinationURL*, *checkDestination* and *getDestinationDescription* are designed to work for single-tenant as well as for multi-tenant deployments. For single-tenant deployments it reads the destination from the BTP subaccount that hosts the app, for multi-tenant deployments it reads the destination from the subscriber subaccount. We achieve this system behavior by pasing the JWT-token of the logged-in user to the function to get the destination. The JWT-token contains the tenant information.
 
-5. Since we are using the npm module *@sap-cloud-sdk/connectivity* in file *reuse.js*, we need to add the corresponding npm module to the dependencies in the `package.json` file:
+6. Since we are using the npm module *@sap-cloud-sdk/connectivity* in file *reuse.js*, we need to add the corresponding npm module to the dependencies in the `package.json` file:
     ```json
     "dependencies": {
         "@sap-cloud-sdk/connectivity": "^2.8.0"
     },
     ```
 
-6. Add system message in file `./application/author-readings/srv/i18n/messages.properties`: 
+7. Add system message in file `./application/author-readings/srv/i18n/messages.properties`: 
     ```javascript
     ACTION_CREATE_PROJECT_DRAFT=Projects cannot be created for draft author readings
     ```
 
-7. Add implementation to expand the author readings to remote projects (OData parameter `/AuthorReadings?$expand=toByDProject`) as outlined in code block:
+8. Add implementation to expand author readings to remote projects (OData parameter `/AuthorReadings?$expand=toByDProject`):
     ```javascript
-    // Expand author readings to remote projects (OData parameter "/AuthorReadings?$expand=toByDProject")
-    srv.on("READ", "AuthorReadings", async (req, next) => {     
-        // see code in file ./service-implementation.js        
-    }
+    // Expand author readings to remote projects
+    srv.on("READ", "AuthorReadings", async (req, next) => {
+
+        // Read the AuthorReading instances
+        let authorReadings = await next();
+
+        // Check and Read ByD project related data 
+        if ( ByDIsConnectedIndicator ){
+            authorReadings = await connectorByD.readProject(authorReadings);
+        };
+    
+        // Return remote project data
+        return authorReadings;
+    });
     ```
     > Note: OData features like *$expand*, *$filter*, *$orderby*, ... need to be implemented in the service implementation.
 
@@ -471,7 +499,8 @@ BAS: Edit the Fiori Element annotations of the web app in file `./app/authorread
             statusCode_code,
             participantsFeeAmount,
             projectID,
-            projectSystem        
+            projectSystem,
+            projectSystemName        
         ],
         ```  
     - Table columns:
@@ -480,6 +509,10 @@ BAS: Edit the Fiori Element annotations of the web app in file `./app/authorread
             $Type : 'UI.DataFieldWithUrl',
             Value : projectID,
             Url   : projectURL
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : projectSystemName
         },
         {
             $Type : 'UI.DataField',
@@ -492,7 +525,15 @@ BAS: Edit the Fiori Element annotations of the web app in file `./app/authorread
             $Type : 'UI.DataFieldWithUrl',
             Value : projectID,
             Url   : projectURL
-        }        
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : projectSystemName
+        } ,
+        {
+            $Type : 'UI.DataField',
+            Value : projectSystem
+        }                
         ```
 
 2. Add a facet *Project Data* to display information from the remote service by following the *toByDProject*-association:
@@ -514,17 +555,28 @@ BAS: Edit the Fiori Element annotations of the web app in file `./app/authorread
         FieldGroup #ProjectData : {Data : [
             // Project system independend fields:
             {
-                $Type : 'UI.DataField',
-                Value : projectSystem,
-                @UI.Hidden : false
-            },
-                    {
                 $Type : 'UI.DataFieldWithUrl',
                 Value : projectID,
                 Url   : projectURL,
                 @UI.Hidden : false
             },
+                    {
+                $Type : 'UI.DataField',
+                Value : projectSystemName,
+                @UI.Hidden : false
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : projectSystem,
+                @UI.Hidden : false
+            },
+
             // SAP Business ByDesign specific fields
+            {
+                $Type : 'UI.DataField',
+                Value : toByDProject.projectID,
+                @UI.Hidden : true 
+            },
             {
                 $Type : 'UI.DataField',
                 Label : '{i18n>projectTypeCodeText}',

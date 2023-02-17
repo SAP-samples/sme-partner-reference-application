@@ -125,23 +125,25 @@ A color coding for certain columns in the user interface can be achieved by addi
 
 - Field definition in [service-models.cds](../Applications/author-readings/srv/service-models.cds)
 - Logic to fill it in [service-implementation.js](../Applications/author-readings/srv/service-implementation.js)
-```javascript
-switch (each.statusCode.code) {
-    case reuse.authorReadingStatusCode.inPreparation:
-        each.statusCriticality = reuse.color.yellow; // New author readings are yellow
-        break;
-    case reuse.authorReadingStatusCode.published:
-        each.statusCriticality = reuse.color.green; // Published author readings are Green
-        break;
-    case reuse.authorReadingStatusCode.booked:
-        each.statusCriticality = reuse.color.yellow; // Booked author readings are yellow
-        break;
-    case reuse.authorReadingStatusCode.blocked:
-        each.statusCriticality = reuse.color.red; // Blocked author readings are red
-        break;
-    default:
-}
-```
+    ```javascript
+    if(authorReading.statusCode) {
+        switch (authorReading.statusCode.code) {
+            case reuse.authorReadingStatusCode.inPreparation:
+                authorReading.statusCriticality = reuse.color.yellow; // New author readings are yellow
+                break;
+            case reuse.authorReadingStatusCode.published:
+                authorReading.statusCriticality = reuse.color.green; // Published author readings are Green
+                break;
+            case reuse.authorReadingStatusCode.booked:
+                authorReading.statusCriticality = reuse.color.yellow; // Booked author readings are yellow
+                break;
+            case reuse.authorReadingStatusCode.blocked:
+                authorReading.statusCriticality = reuse.color.red; // Blocked author readings are red
+                break;
+            default:
+        }
+    }
+    ```
 - A couple of entries in the i18n files to get column headers right
 - An entry in the [annotations.cds](../Applications/author-readings/app/authorreadingmanager/annotations.cds) to get the column displayed
 

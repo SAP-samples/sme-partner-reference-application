@@ -127,7 +127,7 @@
         },
         "[production]": {
           "credentials": {
-            "destination": "s4hc",
+            "destination": "s4hc-tech-user",
             "path": "/sap/opu/odata4/sap/api_entprojprocessingstat/srvd_a2x/sap/entprojectprocessingstatus/0001"
           }
         }
@@ -145,7 +145,7 @@
         },
         "[production]": {
           "credentials": {
-            "destination": "s4hc",
+            "destination": "s4hc-tech-user",
             "path": "/sap/opu/odata4/sap/api_entprojectprofilecode/srvd_a2x/sap/entprojectprofilecode/0001"
           }
         }

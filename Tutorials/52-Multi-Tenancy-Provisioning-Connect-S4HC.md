@@ -17,13 +17,13 @@ Back-channel integration:
 
 ## Configure Single Sign-on for S/4HANA Cloud
 
-In our scenario we reuse the *SAP Identity and Authentication Service* (IAS) tenant that is used by the S/4HANA Cloud tenant for authentication.  
+In our scenario we reuse the *SAP Identity and Authentication Service* (IAS) tenant that is used by the *S/4HANA Cloud* tenant for authentication.  
 Therefore the trust-relationship between the S/4 tenant and the IAS tenant is already established and no further activities are required here.
 
 ## Configure Single Sign-on for the BTP Application
 
-In our scenario we reuse the *SAP Identity and Authentication Service* (IAS) tenant that is used by the S/4HANA Cloud tenant for authentication.  
-Therefore configure a trust relationship between the BTP consumer subaccount and the IAS tenant of S/4HANA Cloud as described in chapter [Configure Trust using SAML 2.0](45-Multi-Tenancy-Provisioning.md).
+In our scenario we reuse the *SAP Identity and Authentication Service* (IAS) tenant that is used by the *S/4HANA Cloud* tenant for authentication.  
+Therefore configure a trust relationship between the BTP consumer subaccount and the IAS tenant of *S/4HANA Cloud* as described in chapter [Configure Trust using SAML 2.0](45-Multi-Tenancy-Provisioning.md).
 
 ## Configure S/4HANA Cloud OData Services to create and read Enterprise Projects
 
@@ -133,6 +133,8 @@ BTP consumer subaccount: Create destination "s4hc" to consume S/4HANA Cloud ODat
     | *nameIdFormat*: | *urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress*        |
     | *scope*:        | Enter the **S/4 OAuth Scope** (API_ENTERPRISE_PROJECT_SRV_0002) |
     | *userIdSource*: | *email*                                                         |
+
+    > Note: For testing you may configure a basic authentication using the **S/4 Communication User** and **S/4 Communication User Password** for destination "s4hc".
 
     > Note: You may need to upload the **S/4 Server Certificate** into the destination service for SSL authentication using the link *Upload and Delete Certificates* on the destinations screen. You can download the S/4 server certificate from the browser (Open the ByD UI and view the site information; then display and export the certificate details into a ".cer"-file).
 

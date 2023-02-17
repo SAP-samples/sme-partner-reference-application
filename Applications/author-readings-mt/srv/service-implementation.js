@@ -6,8 +6,9 @@ const reuse = require("./reuse");
 const connectorByD = require("./connector-byd");
 const connectorS4HC = require("./connector-s4hc");
 
-var ByDconnected;  
-var S4HCconnected;
+// Buffer status and name of project management systems
+var ByDIsConnectedIndicator;  
+var S4HCIsConnectedIndicator;
 var ByDSystemName;
 var S4HCSystemName;
 
@@ -89,16 +90,22 @@ srv.on("DELETE", "AuthorReadings", async (req, next) => {
 
 // Check connected backend systems
 srv.before("READ", "AuthorReadings", async (req) => {
-    ByDconnected  = await reuse.checkDestination(req,"byd"); 
-    S4HCconnected = await reuse.checkDestination(req,"s4hc");  
-    ByDSystemName = await reuse.getDestinationDescription(req,"byd-url");
-    S4HCSystemName = await reuse.getDestinationDescription(req,"s4hc-url");
+
+    // ByD
+    ByDIsConnectedIndicator  = await reuse.checkDestination(req,"byd"); 
+    ByDSystemName            = await reuse.getDestinationDescription(req,"byd-url");
+
+    // S4HC
+    S4HCIsConnectedIndicator = await reuse.checkDestination(req,"s4hc");  
+    S4HCSystemName           = await reuse.getDestinationDescription(req,"s4hc-url");
 });
 
 // Apply a colour code based on the author reading status
 srv.after("READ", "AuthorReadings", (req) => {
     const asArray = x => Array.isArray(x) ? x : [ x ];
     for (const authorReading of asArray(req)) {    
+
+        // Set status colour code
         if(authorReading.statusCode) {
             switch (authorReading.statusCode.code) {
                 case reuse.authorReadingStatusCode.inPreparation:
@@ -116,14 +123,16 @@ srv.after("READ", "AuthorReadings", (req) => {
                 default:
             }
         }
+
+        // Update project system name and visibility of the "Create Project"-button
         if (authorReading.projectID) {
             authorReading.createByDProjectEnabled = false;
             authorReading.createS4HCProjectEnabled = false;   
             if(authorReading.projectSystem == 'ByD')  authorReading.projectSystemName = ByDSystemName;
             if(authorReading.projectSystem == 'S4HC') authorReading.projectSystemName = S4HCSystemName;        
         }else{            
-            authorReading.createByDProjectEnabled = ByDconnected;
-            authorReading.createS4HCProjectEnabled = S4HCconnected;
+            authorReading.createByDProjectEnabled = ByDIsConnectedIndicator;
+            authorReading.createS4HCProjectEnabled = S4HCIsConnectedIndicator;
         }
     };
 });
@@ -434,7 +443,7 @@ srv.on("confirmParticipation", async (req) => {
 // --------------------------------------------------------------------------------------
 // Implementation of entity events (entity AuthorReadings) with impact on remote services
 
-// Entity action "createByDProject"
+// Entity action: Create ByD Project
 srv.on("createByDProject", async (req) => {
     try {
         const authorReadingID = (req.params.pop()).ID;
@@ -509,7 +518,7 @@ srv.on("createByDProject", async (req) => {
     }
 });
 
-// Entity action "createByDProject"
+// Entity action: Create S4HC Enterprise Project
 srv.on("createS4HCProject", async (req) => {
     try {
         const authorReadingID = (req.params.pop()).ID;
@@ -532,7 +541,7 @@ srv.on("createS4HCProject", async (req) => {
                 // Check and create the project instance
                 // If the project already exist, then read and update the local project elements in entity AuthorReadings
                 
-                // Get the entity service (entity "ByDProjects")
+                // Get the entity service (entity "S4HCProjects")
                 const { S4HCProjects } = srv.entities;
                 var remoteProjectID, remoteProjectObjectID;
 
@@ -554,7 +563,7 @@ srv.on("createS4HCProject", async (req) => {
                 // Generate remote ByD Project URL and update the URL
                 if (remoteProjectID) {
                     
-                    // Read the ByD system URL dynamically from BTP destination "byd-url"
+                    // Read the ByD system URL dynamically from BTP destination "s4hc-url"
                     var S4HCRemoteSystem = await reuse.getDestinationURL(req , 's4hc-url'); 
                     
                     // Set the URL of ByD project overview screen for UI navigation
@@ -588,12 +597,12 @@ srv.on("READ", "AuthorReadings", async (req, next) => {
     let authorReadings = await next();
 
     // Check and Read ByD project related data 
-    if ( ByDconnected ){
+    if ( ByDIsConnectedIndicator ){
         authorReadings = await connectorByD.readProject(authorReadings);
     };
    
     // Check and Read S4HC project related data 
-    if ( S4HCconnected ){
+    if ( S4HCIsConnectedIndicator ){
         authorReadings =  await connectorS4HC.readProject(authorReadings);  
     };
 
@@ -608,14 +617,12 @@ srv.on("READ", "AuthorReadings", async (req, next) => {
 srv.on("userInfo", async (req) => {
     let results = {};
     results.user = req.user.id;
-    // if(req.user.hasOwnProperty('locale')){
-    //     results.locale = req.user.locale;
-    // }
     results.roles = {};
     results.roles.identified = req.user.is("identified-user");
     results.roles.authenticated = req.user.is("authenticated-user");
     return results;
 });
+
 // ----------------------------------------------------------------------------
 // Implementation of remote OData services (back-channel integration with ByD)
 

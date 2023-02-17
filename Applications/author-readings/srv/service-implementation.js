@@ -5,6 +5,10 @@ const cds = require("@sap/cds");
 const reuse = require("./reuse");
 const connectorByD = require("./connector-byd");
 
+// Buffer status and name of project management systems
+var ByDIsConnectedIndicator;  
+var ByDSystemName;
+
 module.exports = cds.service.impl(async (srv) => {
 
 // ----------------------------------------------------------------------------
@@ -81,30 +85,46 @@ srv.on("DELETE", "AuthorReadings", async (req, next) => {
     // nothing done here
 });
 
+// Check connected backend systems
+srv.before("READ", "AuthorReadings", async (req) => {
+
+    // ByD
+    ByDIsConnectedIndicator = await reuse.checkDestination(req,"byd"); 
+    ByDSystemName           = await reuse.getDestinationDescription(req,"byd-url");
+});
+
 // Apply a colour code based on the author reading status
-srv.after("READ", "AuthorReadings", (each) => {
-    if(each.statusCode) {
-        switch (each.statusCode.code) {
-            case reuse.authorReadingStatusCode.inPreparation:
-                each.statusCriticality = reuse.color.yellow; // New author readings are yellow
-                break;
-            case reuse.authorReadingStatusCode.published:
-                each.statusCriticality = reuse.color.green; // Published author readings are Green
-                break;
-            case reuse.authorReadingStatusCode.booked:
-                each.statusCriticality = reuse.color.yellow; // Booked author readings are yellow
-                break;
-            case reuse.authorReadingStatusCode.blocked:
-                each.statusCriticality = reuse.color.red; // Blocked author readings are red
-                break;
-            default:
+srv.after("READ", "AuthorReadings", (req) => {
+    const asArray = x => Array.isArray(x) ? x : [ x ];
+    for (const authorReading of asArray(req)) {    
+
+        // Set status colour code
+        if(authorReading.statusCode) {
+            switch (authorReading.statusCode.code) {
+                case reuse.authorReadingStatusCode.inPreparation:
+                    authorReading.statusCriticality = reuse.color.yellow; // New author readings are yellow
+                    break;
+                case reuse.authorReadingStatusCode.published:
+                    authorReading.statusCriticality = reuse.color.green; // Published author readings are Green
+                    break;
+                case reuse.authorReadingStatusCode.booked:
+                    authorReading.statusCriticality = reuse.color.yellow; // Booked author readings are yellow
+                    break;
+                case reuse.authorReadingStatusCode.blocked:
+                    authorReading.statusCriticality = reuse.color.red; // Blocked author readings are red
+                    break;
+                default:
+            }
         }
-    }
-    if (each.projectID) {
-        each.createByDProjectEnabled = false;
-    } else {
-        each.createByDProjectEnabled = true;
-    }
+
+        // Update project system name and visibility of the "Create Project"-button
+        if (authorReading.projectID) {
+            authorReading.createByDProjectEnabled = false;
+            if(authorReading.projectSystem == 'ByD')  authorReading.projectSystemName = ByDSystemName;
+        }else{            
+            authorReading.createByDProjectEnabled = ByDIsConnectedIndicator;
+        }
+    };
 });
 
 // Entity action "block": Set the status of author reading to blocked
@@ -413,7 +433,7 @@ srv.on("confirmParticipation", async (req) => {
 // --------------------------------------------------------------------------------------
 // Implementation of entity events (entity AuthorReadings) with impact on remote services
 
-// Entity action "createByDProject"
+// Entity action: Create ByD Project
 srv.on("createByDProject", async (req) => {
     try {
         const authorReadingID = (req.params.pop()).ID;
@@ -489,15 +509,18 @@ srv.on("createByDProject", async (req) => {
 });
 
 // Expand author readings to remote projects
-srv.on("READ", "AuthorReadings", async (req, next) => {   
-    var isByDProjectRequested = await connectorByD.isAssociationRequested(req, "toByDProject");
-    if (isByDProjectRequested){
-     return await connectorByD.readProject(req, next); 
-    }
-    else{
-     // Project information is not requested at runtime (no need to read the project information from remote project system)
-     return next();
-    }
+srv.on("READ", "AuthorReadings", async (req, next) => {
+
+    // Read the AuthorReading instances
+    let authorReadings = await next();
+
+    // Check and Read ByD project related data 
+    if ( ByDIsConnectedIndicator ){
+        authorReadings = await connectorByD.readProject(authorReadings);
+    };
+   
+    // Return remote project data
+    return authorReadings;
 });
  
 // ----------------------------------------------------------------------------
@@ -507,9 +530,6 @@ srv.on("READ", "AuthorReadings", async (req, next) => {
 srv.on("userInfo", async (req) => {
     let results = {};
     results.user = req.user.id;
-    // if(req.user.hasOwnProperty('locale')){
-    //     results.locale = req.user.locale;
-    // }
     results.roles = {};
     results.roles.identified = req.user.is("identified-user");
     results.roles.authenticated = req.user.is("authenticated-user");

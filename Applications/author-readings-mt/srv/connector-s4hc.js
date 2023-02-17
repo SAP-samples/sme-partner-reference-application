@@ -31,7 +31,7 @@ async function projectDataRecord(authorReadingIdentifier, authorReadingTitle, au
         var generatedEndDate   = moment(generatedStartDate).add(30, "days").toISOString().substr(0, 10) + "T00:00:00.0000000Z";
         var generatedTaskEndDate   = moment(generatedEndDate).add(30, "days").toISOString().substr(0, 10) + "T00:00:00.0000000Z";
         
-        // Assemble project payload based the sample data provided by *SAP Business ByDesign Partner Demo Tenants* (reference systems)
+        // Assemble project payload
         const projectRecord = {
             "Project": generatedID,
             "ProjectDescription": authorReadingTitle,
@@ -57,7 +57,6 @@ async function projectDataRecord(authorReadingIdentifier, authorReadingTitle, au
                 }
             ]
         };
-        
         return projectRecord;
     }catch (error) {
         console.log(error);
@@ -65,34 +64,35 @@ async function projectDataRecord(authorReadingIdentifier, authorReadingTitle, au
 }
 
 // Expand author readings to remote projects
-// OData parameter following the UI-request pattern: "/AuthorReadings(ID=79ceab87-300d-4b66-8cc3-f82c679b77a1,IsActiveEntity=true)?$select=toByDProject&$expand=toS4HCProject($select=ProcessingStatus,ProjectDescription,ProjectEndDate,ProjectProfileCode,ProjectStartDate,ProjectUUID,ResponsibleCostCenter)""
 async function readProject(authorReadings) {
     try {     
         const s4hcProject = await cds.connect.to('S4HC_API_ENTERPRISE_PROJECT_SRV_0002');
         const s4hcProjectsProjectProfileCode = await cds.connect.to('S4HC_ENTPROJECTPROFILECODE_0001');
         const s4hcProjectsProcessingStatus = await cds.connect.to('S4HC_ENTPROJECTPROCESSINGSTATUS_0001');
         let isProjectIDs = false;
-        
         const asArray = x => Array.isArray(x) ? x : [ x ];
-        // Read Project ID's related to ByD
+
+        // Read Project ID's related to S4HC
         let projectIDs = []; 
         for (const authorReading of asArray(authorReadings)) {
-            //Check if the Project ID exist in the aurthor reading record AND backend ERP is S4HC => then project information is read from S4HC
+            // Check if the Project ID exists in the author reading record AND backend ERP is S4HC => then read project information from S4HC
             if(authorReading.projectSystem == "S4HC" && authorReading.projectID ){               
                 projectIDs.push(authorReading.projectID);
                 isProjectIDs = true;
             }
         }
         
-        // Read the S4HC Projects data only if ProjectIDs is filled ( other wise with blank entries in projectIDs , the SELECT with fetch all projects from S4HC )
+        // Read S4HC projects data
         if(isProjectIDs){
+
             // Request all associated projects        
             const projects = await s4hcProject.run( SELECT.from('AuthorReadingManager.S4HCProjects').where({ Project: projectIDs }) );
 
             // Convert in a map for easier lookup
             const projectsMap = {};
             for (const project of projects) projectsMap[project.Project] = project;
-            // Add suppliers to result
+
+            // Assemble result
             for (const authorReading of asArray(authorReadings)) {
                 authorReading.toS4HCProject = projectsMap[authorReading.projectID];
 

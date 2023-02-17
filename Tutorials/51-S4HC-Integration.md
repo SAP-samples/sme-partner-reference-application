@@ -15,92 +15,102 @@ In this chapter we import the S/4 OData service as "remote service" into our CAP
 
 ### Import S/4 OData Services
 
-We will use the S/4 OData service for enterprise projects to read and write S/4 projects in context of a user interaction . We will consume the S/4 OData service using BTP destinations with a *OAuth 2.0 SAML Bearer authentication* to propagate the logged-in business user to S/4.
+We use the S/4 OData service for enterprise projects to read and write S/4 projects in context of a user interaction. 
 
 S/4: Create EDMX-file from S/4 Odata service:
 
-1. Search for the following OData APIs on the [SAP API Business Hub](https://api.sap.com/package/SAPS4HANACloud/all) and download the metadata (edmx) files from API hub:
+1. Search for the following OData APIs on the [SAP API Business Hub](https://api.sap.com/package/SAPS4HANACloud/all) and download the metadata files (edmx-files):
     - [*Enterprise Project*](https://api.sap.com/api/API_ENTERPRISE_PROJECT_SRV_0002/overview) (OData v2)
     - [*Enterprise Project - Read Project Processing Status*](https://api.sap.com/api/ENTPROJECTPROCESSINGSTATUS_0001/overview) (OData v4)
     - [*Enterprise Project - Read Project Profile*](https://api.sap.com/api/ENTPROJECTPROFILECODE_0001/overview) (OData v4)
-2. Rename the metadata files (edmx) as follows:
+2. Rename the metadata files (edmx-files) Add the prefix "S4HC_" to avoid future naming conflicts:
     -  S4HC_API_ENTERPRISE_PROJECT_SRV_0002.edmx
     -  S4HC_ENTPROJECTPROCESSINGSTATUS_0001.edmx
     -  S4HC_ENTPROJECTPROFILECODE_0001.edmx
 
-BAS: Import the S/4 odata service into the CAP project:
+Business Application Studio (BAS): Import the S/4 odata service into the CAP project:
 
-3. Create a folder with name "external_resources" in the root folder of the application (create in case if the folder already doesn't exist).
+3. Open the context menu on folder "./external_resources" and upload the edmx-files with the OData services as remote services.
 
-4. Open the context menu on folder "./external_resources" and upload both edmx-files with the OData services.
+4. Open a terminal, navigate to folder "./application/author-readings", and import the remote service using the command:  
+`cds import ./external_resources/S4HC_API_ENTERPRISE_PROJECT_SRV_0002.edmx --as cds`. 
 
-5. Open a terminal, navigate to folder "./application/author-readings", and import both edmx files using the commands `cds import ./external_resources/S4HC_API_ENTERPRISE_PROJECT_SRV_0002.edmx --as cds` . 
+    Repeat the `cds import` command for other two services.
 
-repeat the `cds import`  command for other two services
+    In result the system created cds-files in folder "./srv/external" for all remote services and enhanced file "package.json" by a cds-configurations referring to the remote services.
 
     > Note: Do not use the cds import command parameter `--keep-namespace`, because it may lead to service name clashes if you import multiple S/4 odata services.
 
-  6. After running the above command `cds import ...` the file [package.json](../Applications/author-readings-mt/package.json) is updated with a cds configuration referring to the      
-     remote odata services, and a folder "./srv/external" with configuration files for the remote services has been created.
-     Enhance the file [package.json](../Applications/author-readings-mt/package.json) by sandbox-configurations for local testing and productive configurations:
+  5. Enhance the file [package.json](../Applications/author-readings-mt/package.json) by sandbox-configurations for local testing and to refer to the destinations used for productive setups:  
 
-     ```json
-       "S4HC_API_ENTERPRISE_PROJECT_SRV_0002": {
-            "kind": "odata-v2",
-            "model": "srv/external/S4HC_API_ENTERPRISE_PROJECT_SRV_0002",
-            "[sandbox]": {
-            "credentials": {
-                "url": "https://{{S4HC-hostname}}/sap/opu/odata/sap/API_ENTERPRISE_PROJECT_SRV;v=0002",
-                "authentication": "BasicAuthentication",
-                "username": "{{test-user}}",
-                "password": "{{test-password}}"
-            }
+        ```json
+        "cds": {
+            "S4HC_API_ENTERPRISE_PROJECT_SRV_0002": {
+                "kind": "odata-v2",
+                "model": "srv/external/S4HC_API_ENTERPRISE_PROJECT_SRV_0002",
+                "[sandbox]": {
+                "credentials": {
+                    "url": "https://{{S4HC-hostname}}/sap/opu/odata/sap/API_ENTERPRISE_PROJECT_SRV;v=0002",
+                    "authentication": "BasicAuthentication",
+                    "username": "{{test-user}}",
+                    "password": "{{test-password}}"
+                }
+                },
+                "[production]": {
+                "credentials": {
+                    "destination": "s4hc",
+                    "path": "/sap/opu/odata/sap/API_ENTERPRISE_PROJECT_SRV;v=0002"
+                }
+                }
             },
-            "[production]": {
-            "credentials": {
-                "destination": "s4hc",
-                "path": "/sap/opu/odata/sap/API_ENTERPRISE_PROJECT_SRV;v=0002"
-            }
+            "audit-log": {
+                "[sandbox]": {
+                "kind": "audit-log-to-console"
+                },
+                "[production]": {
+                "kind": "audit-log-service"
+                }
+            },
+            "S4HC_ENTPROJECTPROCESSINGSTATUS_0001": {
+                "kind": "odata",
+                "model": "srv/external/S4HC_ENTPROJECTPROCESSINGSTATUS_0001",
+                "[sandbox]": {
+                "credentials": {
+                    "url": "https://{{S4HC-hostname}}/sap/opu/odata4/sap/api_entprojprocessingstat/srvd_a2x/sap/entprojectprocessingstatus/0001",
+                    "authentication": "BasicAuthentication",
+                    "username": "{{test-user}}",
+                    "password": "{{test-password}}"
+                }
+                },
+                "[production]": {
+                "credentials": {
+                    "destination": "s4hc-tech-user",
+                    "path": "/sap/opu/odata4/sap/api_entprojprocessingstat/srvd_a2x/sap/entprojectprocessingstatus/0001"
+                }
+                }
+            },
+            "S4HC_ENTPROJECTPROFILECODE_0001": {
+                "kind": "odata",
+                "model": "srv/external/S4HC_ENTPROJECTPROFILECODE_0001",
+                "[sandbox]": {
+                "credentials": {
+                    "url": "https://{{S4HC-hostname}}/sap/opu/odata4/sap/api_entprojectprofilecode/srvd_a2x/sap/entprojectprofilecode/0001",
+                    "authentication": "BasicAuthentication",
+                    "username": "{{test-user}}",
+                    "password": "{{test-password}}"
+                }
+                },
+                "[production]": {
+                "credentials": {
+                    "destination": "s4hc-tech-user",
+                    "path": "/sap/opu/odata4/sap/api_entprojectprofilecode/srvd_a2x/sap/entprojectprofilecode/0001"
+                }
+                }
             }
         },
-        "S4HC_ENTPROJECTPROCESSINGSTATUS_0001": {
-            "kind": "odata",
-            "model": "srv/external/S4HC_ENTPROJECTPROCESSINGSTATUS_0001",
-            "[sandbox]": {
-            "credentials": {
-                "url": "https://{{S4HC-hostname}}/sap/opu/odata4/sap/api_entprojprocessingstat/srvd_a2x/sap/entprojectprocessingstatus/0001",
-                "authentication": "BasicAuthentication",
-                "username": "{{test-user}}",
-                "password": "{{test-password}}"
-            }
-            },
-            "[production]": {
-            "credentials": {
-                "destination": "s4hc",
-                "path": "/sap/opu/odata4/sap/api_entprojprocessingstat/srvd_a2x/sap/entprojectprocessingstatus/0001"
-            }
-            }
-        },
-        "S4HC_ENTPROJECTPROFILECODE_0001": {
-            "kind": "odata",
-            "model": "srv/external/S4HC_ENTPROJECTPROFILECODE_0001",
-            "[sandbox]": {
-            "credentials": {
-                "url": "https://{{S4HC-hostname}}/sap/opu/odata4/sap/api_entprojectprofilecode/srvd_a2x/sap/entprojectprofilecode/0001",
-                "authentication": "BasicAuthentication",
-                "username": "{{test-user}}",
-                "password": "{{test-password}}"
-            }
-            },
-            "[production]": {
-            "credentials": {
-                "destination": "s4hc",
-                "path": "/sap/opu/odata4/sap/api_entprojectprofilecode/srvd_a2x/sap/entprojectprofilecode/0001"
-            }
-            }
-        }  
-    ```
-    > Note: The *package.json* refers to two destinations `s4hc` that need to be created in the consumer BTP subaccount. The destinations `s4hc` should refer to business users with principal propagation. Compare next chapter.
+        ```
+
+        > Note: The *package.json* refers to two destinations "s4hc" and "s4hc-tech-user" that need to be created in the consumer BTP subaccount. The destinations "s4hc" is used for remote service calls with principal propagation. Compare next chapter.
 
 ### Enhance the Service Model by the Remote Service
 
@@ -202,21 +212,25 @@ BAS: Extend the CAP service model by the remote entities:
         } 
         into  {
             *,
-            virtual null as statusCriticality    : Integer  @title : '{i18n>statusCriticality}',
-            // S4HC projects: visibility of button "Create project in S4HC"
+            virtual null as statusCriticality    : Integer @title : '{i18n>statusCriticality}',
+            virtual null as projectSystemName    : String  @title : '{i18n>projectSystemName}' @odata.Type : 'Edm.String',
+
+            // S4HC projects: visibility of button "Create project in S4HC", code texts
             virtual null as createS4HCProjectEnabled : Boolean  @title : '{i18n>createS4HCProjectEnabled}'  @odata.Type : 'Edm.Boolean',
             toS4HCProject,
+            virtual null as projectProfileCodeText : String @title : '{i18n>projectProfile}' @odata.Type : 'Edm.String',
+            virtual null as processingStatusText   : String @title : '{i18n>processingStatus}' @odata.Type : 'Edm.String',
         }
     ```
     
 4. Enhance the service model of service *AuthorReadingManager* by an action to create remote projects:
     ```javascript
     // S4HC projects: action to create a project in S4HC
-            @(
-                Common.SideEffects              : {TargetEntities: ['_authorreading','_authorreading/toS4HCProject']},
-                cds.odata.bindingparameter.name : '_authorreading'
-            )
-            action createS4HCProject() returns AuthorReadings;
+    @(
+        Common.SideEffects              : {TargetEntities: ['_authorreading','_authorreading/toS4HCProject']},
+        cds.odata.bindingparameter.name : '_authorreading'
+    )
+    action createS4HCProject() returns AuthorReadings;
     ```
     > Note: The side effect annotation refreshes the project data right after executing the action.
 
@@ -294,7 +308,7 @@ BAS: Extend the authorization annotation of the CAP service model by restriction
     
 ### Create a file with Reuse Functions for S/4
 
-Some reuse functions specific for S/4 have been defined in a separate file. 
+Some reuse functions specific for S/4 are defined in a separate file. 
 Copy the S/4 reuse functions in file [connector-s4hc.js](../Applications/author-readings-mt/srv/connector-s4hc.js) into your project.
 
 ### Enhance the Business Logic to operate on S/4 Data
@@ -380,12 +394,25 @@ BAS: Enhance the implementation of the CAP services in file [service-implementat
     ```
     > Note: Without delegation, the remote entities return the error code 500 with message "SQLITE_ERROR: no such table" (local testing).
 
-2. Set the virtual element `createS4HCProjectEnabled` to control the visualization of the action to create projects dynamically in the read-event of author readings:
+2.  Determine the connected backend systems and get system name in the before-read event of author readings:
     ```javascript
-    if (each.projectID) {
-        each.createS4HCProjectEnabled = false;
-    } else {
-        each.createS4HCProjectEnabled = true;
+    // Check connected backend systems
+    srv.before("READ", "AuthorReadings", async (req) => {
+        // S4HC
+        S4HCIsConnectedIndicator = await reuse.checkDestination(req,"s4hc");  
+        S4HCSystemName           = await reuse.getDestinationDescription(req,"s4hc-url");
+    });
+    ```
+    > Note: The reuse function *getDestinationDescription* in file [reuse.js](../Applications/author-readings-mt/srv/reuse.js), returns the destination description from BTP consumer subaccount.
+
+3.  Set the virtual element `createByDProjectEnabled` to control the visualization of the action to create projects dynamically in the after-read event of author readings and pass on the project system name:
+    ```javascript
+    // Update project system name and visibility of the "Create Project"-button
+    if (authorReading.projectID) {
+        authorReading.createS4HCProjectEnabled = false;   
+        if(authorReading.projectSystem == 'S4HC') authorReading.projectSystemName = S4HCSystemName;        
+    }else{            
+        authorReading.createS4HCProjectEnabled = S4HCIsConnectedIndicator;
     }
     ```
 
@@ -396,40 +423,43 @@ BAS: Enhance the implementation of the CAP services in file [service-implementat
         // see code in file ./service-implementation.js
     }
     ```
+
 4. Add two lines to import the reuse functions in the beginning of the file:
     ```javascript
         const reuse = require("./reuse");
         const connectorS4HC = require("./connector-s4hc");
     ```
-5.  Add implementation for reading dynamic destination description from BTP provider sub account.
+    Add two global varibales to buffer the status and the name of remote project management systems:
     ```javascript
-        srv.before("READ", "AuthorReadings", async (req) => {
-            ByDSystemName = await reuse.getDestinationDescription(req,"byd-url");
-            S4HCSystemName = await reuse.getDestinationDescription(req,"s4hc-url");
-        });
+    // Buffer status and name of project management systems
+    var S4HCIsConnectedIndicator;
+    var S4HCSystemName;
     ```
-    > Note: The resuse function *getDestinationDescription* in [reuse.js](../Applications/author-readings-mt/srv/reuse.js), returns the destination description from BTP subscriber sub account.
-
-4. Add a new functions *getDestinationURL* , *checkDestination* and *getDestinationDescription* in the file [reuse.js](../Applications/author-readings-mt/srv/reuse.js) in folder `./srv` (Refer to the file to check the required code). 
-
-    > Note: The reuse function *getDestinationURL* is designed such that it works for single-tenant as well as for multi-tenant applications. For single-tenant deployments it reads the destination from the BTP subaccount that hosts the app, for multi-tenant deployments it reads the destination from the subscriber subaccount. We achieve this system behavior by pasing the JWT-token of the logged-in user to the function to get the destination. The JWT-token contains the tenant information.
-
-    > Note: The reuse function *checkDestination* will checks if the destionation with given name exist in BTP sub-account, the returned result is used to decide which backend ERP (SAP Business ByDesign / SAP S/4HANA Cloud, public edition) to be used for project related information (for reading project information / for creating project information).
 
 5. Add implementation to expand the author readings to remote projects (OData parameter `/AuthorReadings?$expand=toS4HCProject`) as outlined in code block:
     ```javascript
-    // Expand author readings to remote projects (OData parameter "/AuthorReadings?$expand=toS4HCProject")
-    srv.on("READ", "AuthorReadings", async (req, next) => {     
-        // see code in file ./service-implementation.js        
-    }
+    // Expand author readings to remote projects
+    srv.on("READ", "AuthorReadings", async (req, next) => {
+
+        // Read the AuthorReading instances
+        let authorReadings = await next();
+    
+        // Check and Read S4HC project related data 
+        if ( S4HCIsConnectedIndicator ){
+            authorReadings =  await connectorS4HC.readProject(authorReadings);  
+        };
+
+        // Return remote project data
+        return authorReadings;
+    });
     ```
     > Note: OData features like *$expand*, *$filter*, *$orderby*, ... need to be implemented in the service implementation.
 
 ### Enhance the Web App to display S/4 Data and navigate to the S/4 Project Overview
 
-BAS: Edit the Fiori Element annotations of the web app in file [annotations.cds](../Applications/author-readings-mt/app/authorreadingmanager/annotations.cds)
+BAS: Edit the Fiori Elements annotations of the web app in file [annotations.cds](../Applications/author-readings-mt/app/authorreadingmanager/annotations.cds).
 
-1. Add a facet *Project Data* to display information from the remote service by following the *toS4HCProject*-association:
+1. Add a facet "Project Data" to display information from the remote service by following the "toS4HCProject"-association:
 
     - Add S/4 project specific fields to field group *#ProjectData*:         
         ```javascript
@@ -514,9 +544,9 @@ BAS: Edit the Fiori Element annotations of the web app in file [annotations.cds]
         }
     }
     ```
-    > Note: We dynamically control the visibility of the button *Create Project in S4HC* based on the value of the transient field *createS4HCProjectEnabled*.    
+    > Note: We dynamically control the visibility of the button "Create Project in S4HC" based on the value of the transient field "createS4HCProjectEnabled".    
 
-BAS: Edit language dependend labels in file [i18n.properties]`./db/i18n/i18n.properties`:
+BAS: Edit language dependend labels in file [i18n.properties](./db/i18n/i18n.properties):
 
 4. Add labels for project fields and the button to create projects:
     ```
@@ -537,11 +567,8 @@ BAS: Edit language dependend labels in file [i18n.properties]`./db/i18n/i18n.pro
     projectProfile          = Project Profile
     responsibleCostCenter   = Responsible Cost Center
     processingStatus        = Processing Status
-
-
-    # -------------------------------------------------------------------------------------
-
     ```        
 
 ### Deploy the application
+
 Update your application in the provider sub-account and for detailed instructions refer to the section [Deploy the Multi-Tenant Application to a Provider Subaccount](44-Multi-Tenancy-Deployment.md#Deploy-the-Multi-Tenant-Application).

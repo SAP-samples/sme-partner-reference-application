@@ -24,18 +24,23 @@ service AuthorReadingManager @(
         } 
         into  {
             *,
-            virtual null as statusCriticality    : Integer  @title : '{i18n>statusCriticality}',
+            virtual null as statusCriticality    : Integer @title : '{i18n>statusCriticality}',
+            virtual null as projectSystemName    : String  @title : '{i18n>projectSystemName}' @odata.Type : 'Edm.String',
+
             // ByD projects: visibility of button "Create project in ByD"
             virtual null as createByDProjectEnabled : Boolean  @title : '{i18n>createByDProjectEnabled}'  @odata.Type : 'Edm.Boolean',
             toByDProject,
         }
         actions {
+
+            // Action: Block
             @(
                 Common.SideEffects              : {TargetEntities : ['_authorreading']},
                 cds.odata.bindingparameter.name : '_authorreading'
             )
             action block()   returns AuthorReadings;
 
+            // Action: Publish
             @(
                 Common.SideEffects              : {TargetEntities : ['_authorreading']},
                 cds.odata.bindingparameter.name : '_authorreading'
@@ -55,6 +60,8 @@ service AuthorReadingManager @(
         *,
         virtual null as statusCriticality : Integer @title : '{i18n>statusCriticality}',
     } actions {
+
+        // Action: Cancel Participation
         @(
             Common.SideEffects              : {TargetEntities : [
                 '_participant',
@@ -64,6 +71,7 @@ service AuthorReadingManager @(
         )
         action cancelParticipation()  returns Participants;
 
+        // Action: Confirm Participation
         @(
             Common.SideEffects              : {TargetEntities : [
                 '_participant',
