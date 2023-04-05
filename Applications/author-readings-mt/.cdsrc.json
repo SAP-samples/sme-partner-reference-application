@@ -19,6 +19,14 @@
                         "authenticated-user"
                     ]
                 },
+                "B Menson": {
+                    "password": "welcome",
+                    "ID": "bmenson",
+                    "roles": [
+                        "AuthorReadingParticipantRole",
+                        "authenticated-user"
+                    ]
+                },
                 "Julia Brunner": {
                     "password": "welcome",
                     "ID": "jbrunner",

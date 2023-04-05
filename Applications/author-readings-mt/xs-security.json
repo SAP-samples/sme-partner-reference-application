@@ -9,6 +9,10 @@
             "description": "AuthorReadingAdminRole"
         },
         {
+            "name": "$XSAPPNAME.AuthorReadingParticipantRole",
+            "description": "AuthorReadingParticipantRole"
+        },
+        {
             "name": "$XSAPPNAME.MtxDiagnose",
             "description": "Diagnose MTX"
           },
@@ -50,6 +54,14 @@
             "attribute-references": []
         },
         {
+            "name": "AuthorReadingParticipantRole",
+            "description": "generated",
+            "scope-references": [
+                "$XSAPPNAME.AuthorReadingParticipantRole"
+            ],
+            "attribute-references": []
+        },
+        {
             "name": "MultitenancyAdministrator",
             "description": "Administrate multitenant applications",
             "scope-references": [
@@ -73,11 +85,21 @@
             "role-template-references": [
                 "$XSAPPNAME.AuthorReadingAdminRole"
             ]
+        },
+        {
+            "name": "AuthorReadingParticipantRoleCollection",
+            "description": "Author Readings Participant",
+            "role-template-references": [
+                "$XSAPPNAME.AuthorReadingParticipantRole"
+            ]
         }
     ],
     "authorities": [
         "$XSAPPNAME.MtxDiagnose",
         "$XSAPPNAME.mtdeployment",
-        "$XSAPPNAME.mtcallback"
+        "$XSAPPNAME.mtcallback",
+        "$XSAPPNAME.AuthorReadingManagerRole",
+        "$XSAPPNAME.AuthorReadingAdminRole",
+        "$XSAPPNAME.AuthorReadingParticipantRole"
     ]    
 }

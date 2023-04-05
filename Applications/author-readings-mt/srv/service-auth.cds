@@ -1,10 +1,14 @@
-using {AuthorReadingManager} from './service-models';
+using {AuthorReadingManager, AuthorReadingParticipant} from './service-models';
 
 // ----------------------------------------------------------------------------
 // Required authorization roles
 annotate AuthorReadingManager with @(requires : [
     'AuthorReadingManagerRole',
     'AuthorReadingAdminRole'
+]);
+
+annotate AuthorReadingParticipant with @(requires : [
+    'AuthorReadingParticipantRole'
 ]);
 
 // ----------------------------------------------------------------------------
@@ -51,6 +55,38 @@ annotate AuthorReadingManager.Participants with @(restrict : [
         to    : 'AuthorReadingAdminRole'
     }
 ]);
+
+// Participants can only read the AuthorReadings data
+annotate AuthorReadingParticipant.AuthorReadings with @(restrict : [
+    {
+        grant : [
+            'READ'
+        ],
+        to    : 'AuthorReadingParticipantRole'
+    }
+]);
+
+// Participants can read only his own participant data, add new participant information, change his own participant data
+// Administrators have no restrictions
+annotate AuthorReadingParticipant.Participants with @(restrict : [
+    {
+        grant : [
+            'CREATE'
+        ],
+        to    : 'AuthorReadingParticipantRole'
+    },
+    {
+        grant : ['READ'],
+        to    : 'AuthorReadingParticipantRole',
+        where : 'email = $user'
+    },
+    {
+        grant : ['*'],
+        to    : 'AuthorReadingParticipantRole',
+        where : 'email = $user'
+    }
+]);
+
 
 // ByD projects: Managers and Administrators can read and create remote projects
 annotate AuthorReadingManager.ByDProjects with @(restrict : [
