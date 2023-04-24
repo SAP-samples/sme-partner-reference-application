@@ -9,6 +9,10 @@
             "description": "AuthorReadingAdminRole"
         },
         {
+            "name": "$XSAPPNAME.authorreadingsapi",
+            "description": "authorreadingsapi"
+        },
+        {
             "name": "$XSAPPNAME.AuthorReadingParticipantRole",
             "description": "AuthorReadingParticipantRole"
         },
@@ -41,7 +45,8 @@
             "name": "AuthorReadingManagerRole",
             "description": "generated",
             "scope-references": [
-                "$XSAPPNAME.AuthorReadingManagerRole"
+                "$XSAPPNAME.AuthorReadingManagerRole",
+                "$XSAPPNAME.authorreadingsapi"
             ],
             "attribute-references": []
         },
@@ -49,7 +54,8 @@
             "name": "AuthorReadingAdminRole",
             "description": "generated",
             "scope-references": [
-                "$XSAPPNAME.AuthorReadingAdminRole"
+                "$XSAPPNAME.AuthorReadingAdminRole",
+                "$XSAPPNAME.authorreadingsapi"
             ],
             "attribute-references": []
         },
@@ -57,7 +63,8 @@
             "name": "AuthorReadingParticipantRole",
             "description": "generated",
             "scope-references": [
-                "$XSAPPNAME.AuthorReadingParticipantRole"
+                "$XSAPPNAME.AuthorReadingParticipantRole",
+                "$XSAPPNAME.authorreadingsapi"
             ],
             "attribute-references": []
         },
