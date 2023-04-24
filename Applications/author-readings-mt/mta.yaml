@@ -166,7 +166,7 @@ modules:
   properties:
     SBF_CATALOG_SUFFIX: ${space}  # Make the service broker unique in the deployed space
     SBF_ENABLE_AUDITLOG: false
-    SBF_BROKER_CREDENTIALS: '{ "brokeruser": "e5jS3jVzchJK3b8cRR88R3CW0qMaFK7V" }'  # use command  "npx hash-broker-password -b" and generate a random password and hashes it ( use the plain password in mta.yaml )  
+    SBF_BROKER_CREDENTIALS: '{ "<BrokerUser>": "<BrokerPassword>" }'                # use command  "npx hash-broker-password -b" and generate a random password and hashes it ( use the plain password in mta.yaml )  
     #SBF_BROKER_CREDENTIALS: '{ "${generated-user}": "${generated-password}" }'     # user could opt to use random generated user and password everytime the mta.yaml is deployed ( but this option will generate the password with every deployment)
     SBF_SERVICE_CONFIG: 
       authorreadings:             
