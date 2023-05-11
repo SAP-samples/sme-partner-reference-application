@@ -44,6 +44,14 @@
       "uaa": {
         "kind": "xsuaa"
       },
+      "audit-log": {
+        "[sandbox]": {
+          "kind": "audit-log-to-console"
+        },
+        "[production]": {
+          "kind": "audit-log-service"
+        }
+      },  
       "[production]": {
         "db": {
           "kind": "hana-mt"
@@ -107,14 +115,6 @@
           }
         }
       },
-      "audit-log": {
-        "[sandbox]": {
-          "kind": "audit-log-to-console"
-        },
-        "[production]": {
-          "kind": "audit-log-service"
-        }
-      },
       "S4HC_ENTPROJECTPROCESSINGSTATUS_0001": {
         "kind": "odata",
         "model": "srv/external/S4HC_ENTPROJECTPROCESSINGSTATUS_0001",
@@ -150,6 +150,26 @@
             "path": "/sap/opu/odata4/sap/api_entprojectprofilecode/srvd_a2x/sap/entprojectprofilecode/0001"
           }
         }
+      },
+      "c4p_ProjectService": {
+        "kind": "odata",
+        "model": "srv/external/c4p_ProjectService",
+        "[production]": {
+          "credentials": {
+            "destination": "c4p",
+            "path": "/ProjectService/v1"
+          }
+        }
+      },
+      "c4p_TaskService": {
+        "kind": "odata",
+        "model": "srv/external/c4p_TaskService",
+        "[production]": {
+          "credentials": {
+            "destination": "c4p",
+            "path": "/TaskService/v1"
+          }
+        }
       }
     },
     "hana": {
@@ -160,7 +180,7 @@
       "namespace-blocklist": [],
       "extension-allowlist": []
     }
-  },
+},
   "sapux": [
     "app/authorreadingmanager"
   ]

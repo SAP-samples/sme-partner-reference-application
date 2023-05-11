@@ -191,3 +191,25 @@ annotate AuthorReadingManager.S4HCProjectsProcessingStatus with @(restrict : [
         to    : 'AuthorReadingAdminRole'
     }
 ]);
+
+// C4P projects: Managers and Administrators can read and create remote projects
+annotate AuthorReadingManager.C4PProject with @(restrict : [
+    {
+        grant : ['*'],
+        to    : 'AuthorReadingManagerRole',
+    },
+    {
+        grand : ['*'],
+        to    : 'AuthorReadingAdminRole'
+    }
+]);
+annotate AuthorReadingManager.C4PTask with @(restrict : [
+    {
+        grant : ['*'],
+        to    : 'AuthorReadingManagerRole',
+    },
+    {
+        grand : ['*'],
+        to    : 'AuthorReadingAdminRole'
+    }
+]);

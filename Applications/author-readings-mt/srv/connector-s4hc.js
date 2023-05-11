@@ -4,7 +4,7 @@
 const cds = require("@sap/cds");
 
 // ----------------------------------------------------------------------------
-// ByD specific reuse functions
+// S4HC specific reuse functions
 // ----------------------------------------------------------------------------
 
 // Delegate OData requests to remote S4HC project entities

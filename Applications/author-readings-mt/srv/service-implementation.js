@@ -5,12 +5,15 @@ const cds = require("@sap/cds");
 const reuse = require("./reuse");
 const connectorByD = require("./connector-byd");
 const connectorS4HC = require("./connector-s4hc");
+const connectorC4P = require("./connector-c4p");
 
 // Buffer status and name of project management systems
 var ByDIsConnectedIndicator;  
 var S4HCIsConnectedIndicator;
+var C4PIsConnectedIndicator;
 var ByDSystemName;
 var S4HCSystemName;
+var C4PSystemName;
 
 module.exports = cds.service.impl(async (srv) => {
 
@@ -98,6 +101,10 @@ srv.before("READ", "AuthorReadings", async (req) => {
     // S4HC
     S4HCIsConnectedIndicator = await reuse.checkDestination(req,"s4hc");  
     S4HCSystemName           = await reuse.getDestinationDescription(req,"s4hc-url");
+
+    // C4P
+    C4PIsConnectedIndicator  = await reuse.checkDestination(req,"c4p"); 
+    C4PSystemName            = await reuse.getDestinationDescription(req,"c4p-url");
 });
 
 // Apply a colour code based on the author reading status
@@ -128,11 +135,14 @@ srv.after("READ", "AuthorReadings", (req) => {
         if (authorReading.projectID) {
             authorReading.createByDProjectEnabled = false;
             authorReading.createS4HCProjectEnabled = false;   
+            authorReading.createC4PProjectEnabled = false;   
             if(authorReading.projectSystem == 'ByD')  authorReading.projectSystemName = ByDSystemName;
             if(authorReading.projectSystem == 'S4HC') authorReading.projectSystemName = S4HCSystemName;        
+            if(authorReading.projectSystem == 'C4P') authorReading.projectSystemName = C4PSystemName;        
         }else{            
             authorReading.createByDProjectEnabled = ByDIsConnectedIndicator;
             authorReading.createS4HCProjectEnabled = S4HCIsConnectedIndicator;
+            authorReading.createC4PProjectEnabled = C4PIsConnectedIndicator;
         }
     };
 });
@@ -560,13 +570,13 @@ srv.on("createS4HCProject", async (req) => {
                     }
                 }
 
-                // Generate remote ByD Project URL and update the URL
+                // Generate remote S4HC Project URL and update the URL
                 if (remoteProjectID) {
                     
-                    // Read the ByD system URL dynamically from BTP destination "s4hc-url"
+                    // Read the S4HC system URL dynamically from BTP destination "s4hc-url"
                     var S4HCRemoteSystem = await reuse.getDestinationURL(req , 's4hc-url'); 
                     
-                    // Set the URL of ByD project overview screen for UI navigation
+                    // Set the URL of S4HC project overview screen for UI navigation
                     var bydRemoteProjectExternalURL = "/ui#EnterpriseProject-planProject?EnterpriseProject=" +projectRecord.Project ;
                     var bydRemoteProjectExternalCompleteURL = S4HCRemoteSystem.concat( bydRemoteProjectExternalURL );
                     
@@ -590,6 +600,78 @@ srv.on("createS4HCProject", async (req) => {
     }
 });
 
+// Entity action: Create C4P Enterprise Project
+srv.on("createC4PProject", async (req) => {
+    try {
+        const authorReadingID = (req.params.pop()).ID;
+        const authorReadings = await SELECT.from("sap.samples.authorreadings.AuthorReadings").where({ ID: authorReadingID });
+        // Allow action for active entity instances only
+        if ( authorReadings.length === 1 ) {
+            let authorReadingIdentifier, authorReadingDescription, authorReadingTitle, authorReadingDate, authorReadingProjectSystem;
+            authorReadings.forEach((authorReading) => {
+                authorReadingIdentifier = authorReading.identifier;
+                authorReadingDescription = authorReading.description;
+                authorReadingTitle = authorReading.title;
+                authorReadingDate = authorReading.date;
+                authorReadingProjectSystem = authorReading.projectSystem;
+            });
+
+            if ( authorReadingProjectSystem == "C4P" || (!authorReadingProjectSystem) ) {
+                
+                var projectRecord = await connectorC4P.projectDataRecord(authorReadingIdentifier, authorReadingTitle, authorReadingDate);
+
+                // Check and create the project instance
+                // If the project already exist, then read and update the local project elements in entity AuthorReadings
+                
+                // Get the entity service (entity "C4PProject")
+                const { C4PProject } = srv.entities;
+                var remoteProjectID, remoteProjectObjectID;
+
+                // GET service call on remote project entity
+                const existingProject = await srv.run( SELECT.from(C4PProject).where({ displayId: projectRecord.displayId }) );
+
+                if (existingProject.length === 1) {
+                    remoteProjectID = existingProject[0].displayId;
+                    remoteProjectObjectID = existingProject[0].projectId;
+                } else {
+                    // POST request to create the project via remote service
+                    const remoteCreatedProject = await srv.run( INSERT.into(C4PProject).entries(projectRecord) );
+                    if (remoteCreatedProject) {
+                        remoteProjectID = remoteCreatedProject.displayId;
+                        remoteProjectObjectID = remoteCreatedProject.projectId;
+                    }
+                }
+
+                // Generate remote C4P Project URL and update the URL
+                if (remoteProjectID) {
+                    
+                    // Read the C4P system URL dynamically from BTP destination "c4p-url"
+                    var c4pRemoteSystem = await reuse.getDestinationURL(req , 'c4p-url'); 
+                    
+                    // Set the URL of C4P project overview screen for UI navigation
+                    var c4pRemoteProjectExternalURL = "/cp.portal/site#CollaborativeProject-manage?sap-ui-app-id-hint=com.sap.copin.project.ui&/Projects/" + projectRecord.id;
+                    var c4pRemoteProjectExternalCompleteURL = c4pRemoteSystem.concat( c4pRemoteProjectExternalURL );
+                    
+                    // Update project elements in entity AuthorReadings
+                    await UPDATE("sap.samples.authorreadings.AuthorReadings")
+                        .set({
+                            ProjectID: remoteProjectID,
+                            projectObjectID: remoteProjectObjectID,
+                            projectURL: c4pRemoteProjectExternalCompleteURL,
+                            projectSystem : "C4P"
+                        })
+                        .where({ ID: authorReadingID });
+                }
+            }                   
+        } else {
+            req.error(400, "ACTION_CREATE_PROJECT_DRAFT");
+        }
+    } catch (error) {
+        // App reacts error tolerant in case of calling the remote service, mostly if the remote service is not available or if the destination is missing
+        console.log("ACTION_CREATE_PROJECT_CONNECTION" + "; " + error);
+    }
+});
+
 // Expand author readings to remote projects
 srv.on("READ", "AuthorReadings", async (req, next) => {
 
@@ -606,6 +688,11 @@ srv.on("READ", "AuthorReadings", async (req, next) => {
         authorReadings =  await connectorS4HC.readProject(authorReadings);  
     };
 
+    // Check and Read C4P project related data 
+    if ( C4PIsConnectedIndicator ){
+        authorReadings =  await connectorC4P.readProject(authorReadings);  
+    };
+    
     // Return remote project data
     return authorReadings;
 });
@@ -669,6 +756,7 @@ srv.on("READ", "ByDProjectsTechUser", async (req) => {
 
 // ----------------------------------------------------------------------------
 // Implementation of remote OData services (back-channel integration with S4HC)
+
 // Delegate OData requests to S4HC remote project entities
 srv.on("READ", "S4HCProjects", async (req) => {
     return await connectorS4HC.delegateODataRequests(req,"S4HC_API_ENTERPRISE_PROJECT_SRV_0002");
@@ -741,6 +829,35 @@ srv.on("DELETE", "S4HCProjectsProcessingStatus", async (req) => {
 });
 srv.on("DELETE", "S4HCProjectsProjectProfileCode", async (req) => {
     return await connectorS4HC.delegateODataRequests(req,"S4HC_ENTPROJECTPROFILECODE_0001");
+});
+
+// ----------------------------------------------------------------------------
+// Implementation of remote OData services (back-channel integration with C4P)
+
+// Delegate OData requests to C4P remote project entities
+srv.on("READ", "C4PProject", async (req) => {
+    return await connectorC4P.delegateODataRequests(req,"c4p_ProjectService");
+});
+srv.on("READ", "C4PTask", async (req) => {
+    return await connectorC4P.delegateODataRequests(req,"c4p_TaskService");
+});
+srv.on("CREATE", "C4PProject", async (req) => {
+    return await connectorC4P.delegateODataRequests(req,"c4p_ProjectService");
+});
+srv.on("CREATE", "C4PTask", async (req) => {
+    return await connectorC4P.delegateODataRequests(req,"c4p_TaskService");
+});
+srv.on("UPDATE", "C4PProject", async (req) => {
+    return await connectorC4P.delegateODataRequests(req,"c4p_ProjectService");
+});
+srv.on("UPDATE", "C4PTask", async (req) => {
+    return await connectorC4P.delegateODataRequests(req,"c4p_TaskService");
+});
+srv.on("DELETE", "C4PProject", async (req) => {
+    return await connectorC4P.delegateODataRequests(req,"c4p_ProjectService");
+});
+srv.on("DELETE", "C4PTask", async (req) => {
+    return await connectorC4P.delegateODataRequests(req,"c4p_TaskService");
 });
 
 

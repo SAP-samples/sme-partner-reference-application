@@ -1,0 +1,595 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
+    <edmx:Include Alias="Capabilities" Namespace="Org.OData.Capabilities.V1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+    <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml">
+    <edmx:Include Alias="Validation" Namespace="Org.OData.Validation.V1"/>
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="service.TaskServiceV1" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityContainer Name="EntityContainer">
+        <EntitySet Name="Tasks" EntityType="service.TaskServiceV1.Tasks">
+          <NavigationPropertyBinding Path="toAuthorizations" Target="Authorizations"/>
+        </EntitySet>
+        <EntitySet Name="Authorizations" EntityType="service.TaskServiceV1.Authorizations"/>
+      </EntityContainer>
+      <EntityType Name="Tasks">
+        <Key>
+          <PropertyRef Name="id"/>
+        </Key>
+        <Property Name="id" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="projectId" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="displayId" Type="Edm.String" MaxLength="255" Nullable="false"/>
+        <Property Name="taskType" Type="Edm.String" MaxLength="20" DefaultValue="TASK"/>
+        <Property Name="subject" Type="Edm.String" MaxLength="255" Nullable="false"/>
+        <Property Name="description" Type="Edm.String"/>
+        <Property Name="category" Type="Edm.String" MaxLength="20"/>
+        <Property Name="startDate" Type="Edm.Date"/>
+        <Property Name="dueDate" Type="Edm.Date"/>
+        <Property Name="priority" Type="Edm.Int32" DefaultValue="10"/>
+        <Property Name="location" Type="Edm.String" MaxLength="2000"/>
+        <Property Name="effortValue" Type="Edm.Double"/>
+        <Property Name="effortUnit" Type="Edm.String" MaxLength="80"/>
+        <Property Name="processorPersonId" Type="Edm.Guid"/>
+        <Property Name="assignedByPersonId" Type="Edm.Guid"/>
+        <Property Name="status" Type="Edm.Int32" DefaultValue="20"/>
+        <Property Name="completedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="completedBy" Type="Edm.Guid"/>
+        <Property Name="percentComplete" Type="Edm.Int32" DefaultValue="0"/>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.Guid"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.Guid"/>
+        <NavigationProperty Name="toAuthorizations" Type="Collection(service.TaskServiceV1.Authorizations)"/>
+      </EntityType>
+      <EntityType Name="Authorizations">
+        <Key>
+          <PropertyRef Name="taskId"/>
+          <PropertyRef Name="principalId"/>
+        </Key>
+        <Property Name="taskId" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="principalType" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="principalId" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="permission" Type="Edm.String" MaxLength="30" Nullable="false"/>
+      </EntityType>
+      <Action Name="Status" IsBound="true" EntitySetPath="in">
+        <Parameter Name="in" Type="service.TaskServiceV1.Tasks"/>
+        <Parameter Name="status" Type="Edm.Int32"/>
+        <Parameter Name="percentComplete" Type="Edm.Int32"/>
+        <ReturnType Type="service.TaskServiceV1.Tasks"/>
+      </Action>
+      <Action Name="Processor" IsBound="true" EntitySetPath="in">
+        <Parameter Name="in" Type="service.TaskServiceV1.Tasks"/>
+        <Parameter Name="processorPersonId" Type="Edm.Guid"/>
+        <ReturnType Type="service.TaskServiceV1.Tasks"/>
+      </Action>
+      <Annotation Term="Core.SchemaVersion" String="1.0"/>
+      <Annotations Target="service.TaskServiceV1.EntityContainer">
+        <Annotation Term="Core.Description" String="Task Service"/>
+        <Annotation Term="Core.LongDescription" String="This API allows you to work with tasks for collaboration projects in SAP S/4HANA Cloud for projects, collaborative project management. All operations require the _User_ role and are executed in the context of the logged-in user."/>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.Tasks">
+        <Annotation Term="Core.Description" String="Task"/>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.EntityContainer/Tasks">
+        <Annotation Term="Capabilities.SearchRestrictions">
+          <Record Type="Capabilities.SearchRestrictionsType">
+            <PropertyValue Property="Searchable" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.DeleteRestrictions">
+          <Record Type="Capabilities.DeleteRestrictionsType">
+            <PropertyValue Property="Deletable" Bool="false"/>
+            <PropertyValue Property="Description" String="Deletion of task is not allowed."/>
+            <PropertyValue Property="LongDescription" String="Manual deletion of task is not allowed. Up to now tasks are only deleted when a project itself is deleted."/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.ExpandRestrictions">
+          <Record Type="Capabilities.ExpandRestrictionsType">
+            <PropertyValue Property="Expandable" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.InsertRestrictions">
+          <Record Type="Capabilities.InsertRestrictionsType">
+            <PropertyValue Property="Description" String="Creates a new task for a project."/>
+            <PropertyValue Property="LongDescription" String="The task displayId will be calculated and set.&lt;br>&lt;br>The task type will be set to TASK, by default, if no other value is entered.&lt;br>The status will be set to 20 (Open), by default, if no other value is entered.&lt;br>The priority will be set to 10 (Low), by default, if no other value is entered.&lt;br>The task creator will be entered as the assigned by person.&lt;br>The task creator and the assigned by person will be registered as task watchers.&lt;br>&lt;br>Requires the &lt;i>User&lt;/i> role and the permission at the corresponding project to create tasks."/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.ReadRestrictions">
+          <Record Type="Capabilities.ReadRestrictionsType">
+            <PropertyValue Property="Description" String="Reads all tasks the logged-in user is authorized for."/>
+            <PropertyValue Property="LongDescription" String="Allows searching for tasks by providing corresponding request parameters."/>
+            <PropertyValue Property="ReadByKeyRestrictions">
+              <Record Type="Capabilities.ReadByKeyRestrictionsType">
+                <PropertyValue Property="Description" String="Reads a task by key."/>
+                <PropertyValue Property="LongDescription" String="Retrieves the details of a particular task by specifying the task ID that you may have received from a different API call."/>
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.UpdateRestrictions">
+          <Record Type="Capabilities.UpdateRestrictionsType">
+            <PropertyValue Property="Description" String="Updates the task header attributes."/>
+            <PropertyValue Property="LongDescription" String="Requires the _Full Control_ permission for the task. While updating the processorPersonID, the assigned by person ID is automatically updated with the current user ID."/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.NavigationRestrictions">
+          <Record Type="Capabilities.NavigationRestrictionsType">
+            <PropertyValue Property="RestrictedProperties">
+              <Collection>
+                <Record Type="Capabilities.NavigationPropertyRestriction">
+                  <PropertyValue Property="NavigationProperty" NavigationPropertyPath="toAuthorizations"/>
+                  <PropertyValue Property="TopSupported" Bool="false"/>
+                  <PropertyValue Property="SkipSupported" Bool="false"/>
+                  <PropertyValue Property="SortRestrictions">
+                    <Record Type="Capabilities.SortRestrictionsType">
+                      <PropertyValue Property="Sortable" Bool="false"/>
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="FilterRestrictions">
+                    <Record Type="Capabilities.FilterRestrictionsType">
+                      <PropertyValue Property="Filterable" Bool="false"/>
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="InsertRestrictions">
+                    <Record Type="Capabilities.InsertRestrictionsType">
+                      <PropertyValue Property="Insertable" Bool="false"/>
+                    </Record>
+                  </PropertyValue>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.Tasks/id">
+        <Annotation Term="Core.Description" String="Unique, technical identifier of the task"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.Tasks/projectId">
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Description" String="Unique, technical identifier of the project the task belongs to"/>
+        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.Tasks/displayId">
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Description" String="Unique, human-readable identifier of the task"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.Tasks/taskType">
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Description" String="Type of Task"/>
+        <Annotation Term="Validation.AllowedValues">
+          <Collection>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="ACTION"/>
+              <PropertyValue Property="Value" String="ACTION"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="CHECK"/>
+              <PropertyValue Property="Value" String="CHECK"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="TASK"/>
+              <PropertyValue Property="Value" String="TASK"/>
+            </Record>
+          </Collection>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.Tasks/subject">
+        <Annotation Term="Core.Description" String="Task subject"/>
+        <Annotation Term="Core.Example">
+          <Record Type="Core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="My First Task"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.Tasks/description">
+        <Annotation Term="Core.Description" String="Task description"/>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.Tasks/category">
+        <Annotation Term="Core.Description" String="Task Category"/>
+        <Annotation Term="Validation.AllowedValues">
+          <Collection>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="CONSTRUCTION"/>
+              <PropertyValue Property="Value" String="CONSTRUCTION"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="INSPECTION"/>
+              <PropertyValue Property="Value" String="INSPECTION"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="PLANNING_AND_DESIGN"/>
+              <PropertyValue Property="Value" String="PLANNING_AND_DESIGN"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="PROJECT_MANAGEMENT"/>
+              <PropertyValue Property="Value" String="PROJECT_MANAGEMENT"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="DOCUMENTATION"/>
+              <PropertyValue Property="Value" String="DOCUMENTATION"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="REWORK"/>
+              <PropertyValue Property="Value" String="REWORK"/>
+            </Record>
+          </Collection>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.Tasks/startDate">
+        <Annotation Term="Core.Description" String="Start date of the task"/>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.Tasks/dueDate">
+        <Annotation Term="Core.Description" String="Due date of the task"/>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.Tasks/priority">
+        <Annotation Term="Core.Description" String="Task priority (0-None, 10-Low, 20-Medium, 30-High)"/>
+        <Annotation Term="Validation.AllowedValues">
+          <Collection>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="EMPTY"/>
+              <PropertyValue Property="Value" Int="0"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="LOW"/>
+              <PropertyValue Property="Value" Int="10"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="MEDIUM"/>
+              <PropertyValue Property="Value" Int="20"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="HIGH"/>
+              <PropertyValue Property="Value" Int="30"/>
+            </Record>
+          </Collection>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.Tasks/location">
+        <Annotation Term="Core.Description" String="Location of the task"/>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.Tasks/effortValue">
+        <Annotation Term="Core.Description" String="Effort value of the task"/>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.Tasks/effortUnit">
+        <Annotation Term="Core.Description" String="Effort unit of the task"/>
+        <Annotation Term="Validation.AllowedValues">
+          <Collection>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="length-centimeter"/>
+              <PropertyValue Property="Value" String="length-centimeter"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="length-meter"/>
+              <PropertyValue Property="Value" String="length-meter"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="length-kilometer"/>
+              <PropertyValue Property="Value" String="length-kilometer"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="length-inch"/>
+              <PropertyValue Property="Value" String="length-inch"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="length-yard"/>
+              <PropertyValue Property="Value" String="length-yard"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="length-foot"/>
+              <PropertyValue Property="Value" String="length-foot"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="length-mile"/>
+              <PropertyValue Property="Value" String="length-mile"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="area-square-centimeter"/>
+              <PropertyValue Property="Value" String="area-square-centimeter"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="area-square-meter"/>
+              <PropertyValue Property="Value" String="area-square-meter"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="area-square-foot"/>
+              <PropertyValue Property="Value" String="area-square-foot"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="area-square-inch"/>
+              <PropertyValue Property="Value" String="area-square-inch"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="volume-cubic-centimeter"/>
+              <PropertyValue Property="Value" String="volume-cubic-centimeter"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="volume-cubic-meter"/>
+              <PropertyValue Property="Value" String="volume-cubic-meter"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="volume-cubic-yard"/>
+              <PropertyValue Property="Value" String="volume-cubic-yard"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="volume-cubic-foot"/>
+              <PropertyValue Property="Value" String="volume-cubic-foot"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="volume-cubic-inch"/>
+              <PropertyValue Property="Value" String="volume-cubic-inch"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="duration-hour"/>
+              <PropertyValue Property="Value" String="duration-hour"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="duration-day"/>
+              <PropertyValue Property="Value" String="duration-day"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="mass-metric-ton"/>
+              <PropertyValue Property="Value" String="mass-metric-ton"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="mass-kilogram"/>
+              <PropertyValue Property="Value" String="mass-kilogram"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="mass-gram"/>
+              <PropertyValue Property="Value" String="mass-gram"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="mass-ounce"/>
+              <PropertyValue Property="Value" String="mass-ounce"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="mass-pound"/>
+              <PropertyValue Property="Value" String="mass-pound"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="mass-ton"/>
+              <PropertyValue Property="Value" String="mass-ton"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="x-piece"/>
+              <PropertyValue Property="Value" String="x-piece"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="x-unit"/>
+              <PropertyValue Property="Value" String="x-unit"/>
+            </Record>
+          </Collection>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.Tasks/processorPersonId">
+        <Annotation Term="Core.Description" String="User ID of the user who processes the task"/>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.Tasks/assignedByPersonId">
+        <Annotation Term="Core.Description" String="User ID of the user who assigned the task to the processor"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.Tasks/status">
+        <Annotation Term="Core.Description" String="Task status (10-Blocked, 20-Open, 30-In Process, 40-Completed, 50-Ok, 60-Not Ok, 70-N/A)"/>
+        <Annotation Term="Core.LongDescription" String="The Task status depends the type of Task:&lt;br/>ACTION: 10-Blocked, 20-Open, 40-Completed, 70-N/A&lt;br/>CHECK: 20-Open, 50-Ok, 60-Not Ok, 70-N/A&lt;br/>TASK: 10-Blocked, 20-Open, 30-In Process, 40-Completed&lt;br/>If the status is set to one of the following final status values 40 (Completed), 50 (Ok), 60 (Not Ok) the task completeness will set to 100%. If the status is set to 20 (Open) the task completeness will be set to 0%."/>
+        <Annotation Term="Validation.AllowedValues">
+          <Collection>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="NONE"/>
+              <PropertyValue Property="Value" Int="0"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="BLOCKED"/>
+              <PropertyValue Property="Value" Int="10"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="OPEN"/>
+              <PropertyValue Property="Value" Int="20"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="IN_PROCESS"/>
+              <PropertyValue Property="Value" Int="30"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="COMPLETED"/>
+              <PropertyValue Property="Value" Int="40"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="OK"/>
+              <PropertyValue Property="Value" Int="50"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="NOT_OK"/>
+              <PropertyValue Property="Value" Int="60"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="NA"/>
+              <PropertyValue Property="Value" Int="70"/>
+            </Record>
+          </Collection>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.Tasks/completedAt">
+        <Annotation Term="Core.Description" String="Date when the task was completed"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.Tasks/completedBy">
+        <Annotation Term="Core.Description" String="User ID of the user who completed the task"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.Tasks/percentComplete">
+        <Annotation Term="Core.Description" String="Task completion in % (value between 0 and 100)"/>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.Tasks/createdAt">
+        <Annotation Term="Core.Description" String="Timestamp when the task was created"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.Tasks/createdBy">
+        <Annotation Term="Core.Description" String="User ID of the user who created the task"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.Tasks/modifiedAt">
+        <Annotation Term="Core.Description" String="Timestamp when the task was last updated"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.Tasks/modifiedBy">
+        <Annotation Term="Core.Description" String="User ID of the user who updated the task"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.Status(service.TaskServiceV1.Tasks)/status">
+        <Annotation Term="Validation.AllowedValues">
+          <Collection>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="NONE"/>
+              <PropertyValue Property="Value" Int="0"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="BLOCKED"/>
+              <PropertyValue Property="Value" Int="10"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="OPEN"/>
+              <PropertyValue Property="Value" Int="20"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="IN_PROCESS"/>
+              <PropertyValue Property="Value" Int="30"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="COMPLETED"/>
+              <PropertyValue Property="Value" Int="40"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="OK"/>
+              <PropertyValue Property="Value" Int="50"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="NOT_OK"/>
+              <PropertyValue Property="Value" Int="60"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="NA"/>
+              <PropertyValue Property="Value" Int="70"/>
+            </Record>
+          </Collection>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.EntityContainer/Authorizations">
+        <Annotation Term="Capabilities.FilterRestrictions">
+          <Record Type="Capabilities.FilterRestrictionsType">
+            <PropertyValue Property="Filterable" Bool="false"/>
+            <PropertyValue Property="NonFilterableProperties">
+              <Collection>
+                <PropertyPath>permission</PropertyPath>
+                <PropertyPath>principalType</PropertyPath>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.SortRestrictions">
+          <Record Type="Capabilities.SortRestrictionsType">
+            <PropertyValue Property="Sortable" Bool="false"/>
+            <PropertyValue Property="NonSortableProperties">
+              <Collection>
+                <PropertyPath>permission</PropertyPath>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.TopSupported" Bool="false"/>
+        <Annotation Term="Capabilities.SkipSupported" Bool="false"/>
+        <Annotation Term="Capabilities.CountRestrictions">
+          <Record Type="Capabilities.CountRestrictionsType">
+            <PropertyValue Property="Countable" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.SearchRestrictions">
+          <Record Type="Capabilities.SearchRestrictionsType">
+            <PropertyValue Property="Searchable" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.SelectSupport">
+          <Record Type="Capabilities.SelectSupportType">
+            <PropertyValue Property="Supported" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.InsertRestrictions">
+          <Record Type="Capabilities.InsertRestrictionsType">
+            <PropertyValue Property="Description" String="Creates a single task authorization by specifying taskId, user/group ID (principalId), type (principalType), and the permission ID (permission)."/>
+            <PropertyValue Property="LongDescription" String="Requires _FULL CONTROL_ permission for the task."/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.ReadRestrictions">
+          <Record Type="Capabilities.ReadRestrictionsType">
+            <PropertyValue Property="Description" String="Reads all task authorizations for the defined task."/>
+            <PropertyValue Property="LongDescription" String="Requires _VIEW ONLY_ permission for the task."/>
+            <PropertyValue Property="ReadByKeyRestrictions">
+              <Record Type="Capabilities.ReadByKeyRestrictionsType">
+                <PropertyValue Property="Description" String="Reads a single task authorization for a defined task, selected by user/group ID (principalId), type (principalType), and the permission ID (permission)."/>
+                <PropertyValue Property="LongDescription" String="Requires _VIEW ONLY_ permission for the task."/>
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.UpdateRestrictions">
+          <Record Type="Capabilities.UpdateRestrictionsType">
+            <PropertyValue Property="Description" String="Updates a task authorization for the defined task."/>
+            <PropertyValue Property="LongDescription" String="Requires _FULL CONTROL_ permission for the task."/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.DeleteRestrictions">
+          <Record Type="Capabilities.DeleteRestrictionsType">
+            <PropertyValue Property="Description" String="Deletes a task authorization from the defined task."/>
+            <PropertyValue Property="LongDescription" String="Requires _FULL CONTROL_ permission for the task."/>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.Authorizations/principalType">
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Description" String="The type of the principalId"/>
+        <Annotation Term="Validation.AllowedValues">
+          <Collection>
+            <Record Type="Validation.AllowedValue">
+              <PropertyValue Property="Value" String="PERSON"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <PropertyValue Property="Value" String="GROUP"/>
+            </Record>
+          </Collection>
+        </Annotation>
+        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.Authorizations/principalId">
+        <Annotation Term="Core.Description" String="The principalId specifies the owner of the permissions"/>
+        <Annotation Term="Core.LongDescription" String="If the principalType is &quot;GROUP&quot; then the principalId is a groupMembershipId. In case of &quot;PERSON&quot; the principalId is a personMembershipId"/>
+      </Annotations>
+      <Annotations Target="service.TaskServiceV1.Authorizations/permission">
+        <Annotation Term="Core.Description" String="The permission granted to the principal"/>
+        <Annotation Term="Validation.AllowedValues">
+          <Collection>
+            <Record Type="Validation.AllowedValue">
+              <PropertyValue Property="Value" String="VIEW_ONLY"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <PropertyValue Property="Value" String="PROCESS"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <PropertyValue Property="Value" String="FULL_CONTROL"/>
+            </Record>
+          </Collection>
+        </Annotation>
+        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

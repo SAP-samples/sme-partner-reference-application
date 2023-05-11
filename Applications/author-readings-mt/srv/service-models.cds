@@ -23,7 +23,10 @@ service AuthorReadingManager @(
             toByDProject: Association to RemoteByDProject.ProjectCollection on toByDProject.ProjectID = $projection.projectID;
 
             // S4HC projects: Mix-in of S4HC project data
-            toS4HCProject: Association to RemoteS4HCProject.A_EnterpriseProject on toS4HCProject.Project = $projection.projectID
+            toS4HCProject: Association to RemoteS4HCProject.A_EnterpriseProject on toS4HCProject.Project = $projection.projectID;
+
+            // C4P projects: Mix-in of C4P project data
+            toC4PProject: Association to RemoteC4PProject.Projects on toC4PProject.displayId = $projection.projectID;
         } 
         into  {
             *,
@@ -39,6 +42,10 @@ service AuthorReadingManager @(
             toS4HCProject,
             virtual null as projectProfileCodeText : String @title : '{i18n>projectProfile}' @odata.Type : 'Edm.String',
             virtual null as processingStatusText   : String @title : '{i18n>processingStatus}' @odata.Type : 'Edm.String',
+
+            // C4P projects: visibility of button "Create project in C4P"
+            virtual null as createC4PProjectEnabled : Boolean  @title : '{i18n>createC4PProjectEnabled}'  @odata.Type : 'Edm.Boolean',
+            toC4PProject,
         }
         actions {
 
@@ -69,6 +76,13 @@ service AuthorReadingManager @(
                 cds.odata.bindingparameter.name : '_authorreading'
             )
             action createS4HCProject() returns AuthorReadings;
+
+            // C4P projects: action to create a project in C4P
+            @(
+                Common.SideEffects              : {TargetEntities: ['_authorreading','_authorreading/toC4PProject']},
+                cds.odata.bindingparameter.name : '_authorreading'
+            )
+            action createC4PProject() returns AuthorReadings;
         };
 
     // Participants
@@ -296,6 +310,46 @@ extend service AuthorReadingManager with {
     entity S4HCProjectsProjectProfileCode as projection on RemoteS4HCProjectProjectProfileCode.ProjectProfileCode {
         key ProjectProfileCode as ProjectProfileCode,
         ProjectProfileCodeText as ProjectProfileCodeText    
+    }    
+};
+
+// -------------------------------------------------------------------------------
+// Extend service AuthorReadingManager by C4P Projects
+
+using { c4p_ProjectService as RemoteC4PProject } from './external/c4p_ProjectService';
+
+extend service AuthorReadingManager with {
+    entity C4PProject as projection on RemoteC4PProject.Projects {
+        key id as projectId,
+        displayId as displayId,
+        name as projectName,
+        status as status,
+        startDate as startDate,
+        endDate as endDate,
+        location as locationAdress,
+        description as description
+    }    
+};
+
+// -------------------------------------------------------------------------------
+// Extend service AuthorReadingManager by C4P Tasks
+
+using { c4p_TaskService as RemoteC4PTask } from './external/c4p_TaskService';
+
+extend service AuthorReadingManager with {
+    entity C4PTask as projection on RemoteC4PTask.Tasks {
+        key id as taskId,
+        projectId as projectId,
+        displayId as displayId,
+        taskType as taskType,
+        subject as subject,
+        description as description,
+        category as category,
+        startDate as startDate,
+        dueDate as dueDate,
+        priority as priority,
+        effortValue as effortValue,
+        effortUnit as effortUnit
     }    
 };
 

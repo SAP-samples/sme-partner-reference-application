@@ -32,7 +32,7 @@ Business Application Studio (BAS): Import the S/4 odata service into the CAP pro
 
 3. Open the context menu on folder "./external_resources" and upload the edmx-files with the OData services as remote services.
 
-4. Open a terminal, navigate to folder "./application/author-readings", and import the remote service using the command:  
+4. Open a terminal, navigate to folder "./application/author-readings-mt", and import the remote service using the command:  
 `cds import ./external_resources/S4HC_API_ENTERPRISE_PROJECT_SRV_0002.edmx --as cds`. 
 
     Repeat the `cds import` command for other two services.
@@ -532,7 +532,7 @@ BAS: Edit the Fiori Elements annotations of the web app in file [annotations.cds
     {
         $Type  : 'UI.DataFieldForAction',
         Label  : '{i18n>createS4HCProject}',
-        Action : 'AuthorReadingManager.createS4HcProject',            
+        Action : 'AuthorReadingManager.createS4HCProject',            
         @UI.Hidden : { $edmJson : 
             { $If : 
                 [
