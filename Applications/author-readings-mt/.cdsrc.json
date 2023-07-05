@@ -1,41 +1,35 @@
 {
-    "auth": {
-        "passport": {
-            "strategy": "mock",
-            "users": {
-                "Kate Jacob": {
-                    "password": "welcome",
-                    "ID": "kjacob",
-                    "roles": [
-                        "AuthorReadingManagerRole",
-                        "authenticated-user"
-                    ]
-                },
-                "Peter Sellers": {
-                    "password": "welcome",
-                    "ID": "pseller",
-                    "roles": [
-                        "AuthorReadingAdminRole",
-                        "authenticated-user"
-                    ]
-                },
-                "B Menson": {
-                    "password": "welcome",
-                    "ID": "bmenson",
-                    "roles": [
-                        "AuthorReadingParticipantRole",
-                        "authenticated-user"
-                    ]
-                },
-                "Julia Brunner": {
-                    "password": "welcome",
-                    "ID": "jbrunner",
-                    "roles": [
-                        "authenticated-user"
-                    ]
-                },
-                "*": true
+    "requires": {
+        "[development]": {
+            "auth": {
+                "kind": "mocked",
+                "users": {
+                    "Kate Jacob": {
+                        "password": "welcome",
+                        "ID": "kjacob",
+                        "roles": [
+                            "AuthorReadingManagerRole",
+                            "authenticated-user"
+                        ]
+                    },
+                    "Peter Sellers": {
+                        "password": "welcome",
+                        "ID": "pseller",
+                        "roles": [
+                            "AuthorReadingAdminRole",
+                            "authenticated-user"
+                        ]
+                    },
+                    "Julia Brunner": {
+                        "password": "welcome",
+                        "ID": "jbrunner",
+                        "roles": [
+                            "authenticated-user"
+                        ]
+                    },
+                    "*": true
+                }
             }
         }
-    }
+    }    
 }

@@ -130,57 +130,6 @@ service AuthorReadingManager @(
 };
 
 
-
-// ----------------------------------------------------------------------------
-// Service for "author reading participant"
-
-service AuthorReadingParticipant @(
-    path : 'authorreadingparticipant',
-    impl : './service-implementation-authorreadingparticipant.js'
-) {
-
-    // ----------------------------------------------------------------------------
-    // Entity inclusions
-
-    // Currencies
-    entity Currencies     as projection on sap.common.Currencies;
-
-    // Author readings (combined with remote project using mixin)
-    @odata.draft.enabled
-    entity AuthorReadings as select from armodels.AuthorReadings
-        {
-            *,
-            virtual null as statusCriticality    : Integer @title : '{i18n>statusCriticality}'
-        };
-
-    // Participants
-    entity Participants as projection on armodels.Participants {
-        *,
-        virtual null as statusCriticality : Integer @title : '{i18n>statusCriticality}',
-    } actions {
-
-        // Action: Cancel Participation
-        @(
-            Common.SideEffects              : {TargetEntities : [
-                '_participant',
-                '_participant/parent'
-            ]},
-            cds.odata.bindingparameter.name : '_participant'
-        )
-        action cancelParticipation()  returns Participants;
-
-        // Action: Confirm Participation
-        @(
-            Common.SideEffects              : {TargetEntities : [
-                '_participant',
-                '_participant/parent'
-            ]},
-            cds.odata.bindingparameter.name : '_participant'
-        )
-        action confirmParticipation() returns Participants;
-    };  
-};
-
 // -------------------------------------------------------------------------------
 // Extend service AuthorReadingManager by ByD projects (principal propagation)
 

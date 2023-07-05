@@ -574,18 +574,18 @@ srv.on("createS4HCProject", async (req) => {
                 if (remoteProjectID) {
                     
                     // Read the S4HC system URL dynamically from BTP destination "s4hc-url"
-                    var S4HCRemoteSystem = await reuse.getDestinationURL(req , 's4hc-url'); 
+                    var s4hcRemoteSystem = await reuse.getDestinationURL(req , 's4hc-url'); 
                     
                     // Set the URL of S4HC project overview screen for UI navigation
-                    var bydRemoteProjectExternalURL = "/ui#EnterpriseProject-planProject?EnterpriseProject=" +projectRecord.Project ;
-                    var bydRemoteProjectExternalCompleteURL = S4HCRemoteSystem.concat( bydRemoteProjectExternalURL );
+                    var s4hcRemoteProjectExternalURL = "/ui#EnterpriseProject-planProject?EnterpriseProject=" +projectRecord.Project ;
+                    var s4hcRemoteProjectExternalCompleteURL = s4hcRemoteSystem.concat( s4hcRemoteProjectExternalURL );
                     
                     // Update project elements in entity AuthorReadings
                     await UPDATE("sap.samples.authorreadings.AuthorReadings")
                         .set({
                             ProjectID: remoteProjectID,
                             projectObjectID: remoteProjectObjectID,
-                            projectURL: bydRemoteProjectExternalCompleteURL,
+                            projectURL: s4hcRemoteProjectExternalCompleteURL,
                             projectSystem : "S4HC"
                         })
                         .where({ ID: authorReadingID });

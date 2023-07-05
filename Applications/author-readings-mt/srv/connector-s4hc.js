@@ -27,9 +27,10 @@ async function projectDataRecord(authorReadingIdentifier, authorReadingTitle, au
 
         // Set project start date 30 days before author reading date
         var moment = require("moment");
-        var generatedStartDate = moment(authorReadingDate).subtract(30, "days").toISOString().substr(0, 10) + "T00:00:00.0000000Z";
-        var generatedEndDate   = moment(generatedStartDate).add(30, "days").toISOString().substr(0, 10) + "T00:00:00.0000000Z";
-        var generatedTaskEndDate   = moment(generatedEndDate).add(30, "days").toISOString().substr(0, 10) + "T00:00:00.0000000Z";
+        var generatedStartDate      = moment(authorReadingDate).subtract(30, "days").toISOString().substring(0, 10) + "T00:00:00.0000000Z";
+        var generatedEndDate        = moment(authorReadingDate).toISOString().substring(0, 10) + "T00:00:00.0000000Z";
+        var generatedTask1EndDate   = moment(authorReadingDate).subtract(4, "days").toISOString().substring(0, 10) + "T00:00:00.0000000Z";
+        var generatedTask2StartDate = moment(authorReadingDate).subtract(1, "days").toISOString().substring(0, 10) + "T00:00:00.0000000Z";
         
         // Assemble project payload
         const projectRecord = {
@@ -47,13 +48,13 @@ async function projectDataRecord(authorReadingIdentifier, authorReadingTitle, au
                     "ProjectElement": generatedPLANID,
                     "ProjectElementDescription": "Event planning and preparations",
                     "PlannedStartDate": generatedStartDate,
-                    "PlannedEndDate": generatedEndDate
+                    "PlannedEndDate": generatedTask1EndDate
                 },
                 {
                     "ProjectElement": generatedEXEID,
                     "ProjectElementDescription": "Event administration and execution",
-                    "PlannedStartDate": generatedEndDate,
-                    "PlannedEndDate": generatedTaskEndDate
+                    "PlannedStartDate": generatedTask2StartDate,
+                    "PlannedEndDate": generatedEndDate
                 }
             ]
         };

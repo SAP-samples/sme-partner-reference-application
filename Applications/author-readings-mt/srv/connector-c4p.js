@@ -25,8 +25,8 @@ async function projectDataRecord(authorReadingIdentifier, authorReadingTitle, au
 
         // Set project start date 30 days before author reading date
         var moment = require("moment");
-        var generatedStartDate = moment(authorReadingDate).subtract(30, "days").toISOString().substr(0, 10);
-        var generatedEndDate   = moment(generatedStartDate).add(30, "days").toISOString().substr(0, 10);
+        var generatedStartDate = moment(authorReadingDate).subtract(30, "days").toISOString().substring(0, 10);
+        var generatedEndDate   = moment(generatedStartDate).add(30, "days").toISOString().substring(0, 10);
         
         // Assemble project payload
         const projectRecord = {
