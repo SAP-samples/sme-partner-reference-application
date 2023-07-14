@@ -72,7 +72,8 @@ You can start your journey following two paths:
 
 I would recommend to take the first approach and deploy the multi-tenant version of the sample application ([../Applications/author-readings-mt](Applications/author-readings-mt)) as is, and then use the tutorials as retrospect to understand the steps taken to reach this state. 
 
-> **Note: We plan to publish a new version 1.1 of the partner reference application based on latest BTP component versions and with some major enhancements incl. the service broker to enable 3rd-party integration and _SAP Build_ extensions, and an integration with _SAP S/4HANA Cloud for projects, collaborative project management_.** You find the current state in branch "[development](https://github.com/SAP-samples/sme-partner-reference-application/tree/development)"; we plan to merge back the development branch into the main branch once we completed the version upgrades and tutorials.
+> **Note: We plan to publish a new version 1.1 of the partner reference application based on latest BTP component versions and with some major enhancements incl. the service broker to enable 3rd-party integration and _SAP Build_ extensions, and an integration with _SAP S/4HANA Cloud for projects, collaborative project management_.** 
+You find the current state in branch "[development](https://github.com/SAP-samples/sme-partner-reference-application/tree/development)"; we plan to merge back the development branch into the main branch once we completed the version upgrades and tutorials.
 
 ## Tutorials
 
