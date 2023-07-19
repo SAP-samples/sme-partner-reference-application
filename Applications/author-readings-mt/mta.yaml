@@ -1,10 +1,10 @@
 _schema-version: "3.1"
 ID: author-readings
-description: "SME Partner Reference Sample Application"
-version: 1.0.0
+description: "SAP Partner Reference Application v1.1"
+version: 1.1.0
 
 parameters:
-  displayname: SME Partner Reference Sample Application
+  displayname: SME Partner Reference Sample Application v1.1
   xsappname: author-reading-${org}-${space}
   app-url: ${org}-${space}
   approuter-url: ${app-url}-approuter
@@ -41,7 +41,7 @@ modules:
   - name: approuter-binding
     properties:
       app-fqdn: ${approuter-url}.${domain}
-      app-url: ${protocol}://~{approuter-binding/app-fqdn}  
+      app-url: ${protocol}://~{approuter-binding/app-fqdn}
   requires:
     - name: srv-api
       group: destinations
@@ -77,6 +77,7 @@ modules:
   - name: srv-api
     properties:
       srv-url: ${protocol}://${srv-url}.${domain} # ${default-url}
+      redirect-uris: ${protocol}://*.${app-url}.${domain}/** # https://<Subscription Details>.<Provider subaccount>-<Provider Cloud Foundry Space>-srv.cfapps.eu10-004.hana.ondemand.com , sample URL: https://xyz-runtime.abcd-runtime-srv.cfapps.eu10-004.hana.ondemand.com 
   - name: srv-multi-tenancy
     properties:
       tenant-delimiter: "."
@@ -166,7 +167,7 @@ modules:
   properties:
     SBF_CATALOG_SUFFIX: ${space}  # Make the service broker unique in the deployed space
     SBF_ENABLE_AUDITLOG: false
-    # TO-DO: Enter service broker user and password         
+    # TO-DO: Enter service broker user and password 
     #SBF_BROKER_CREDENTIALS: '{ "<BrokerUser>": "<BrokerPassword>" }'           # use command  "npx hash-broker-password -b" and generate a random password and hashes it ( use the plain password in mta.yaml )  
     #SBF_BROKER_CREDENTIALS: '{ "${generated-user}": "${generated-password}" }' # user could opt to use random generated user and password everytime the mta.yaml is deployed ( but this option will generate the password with every deployment)
     SBF_SERVICE_CONFIG: 
@@ -209,10 +210,16 @@ resources:
 # UAA service (Authorization and Trust Management Service)
 - name: author-readings-uaa
   type: org.cloudfoundry.managed-service
+  requires:
+    - name: srv-api
   parameters:
     config:
       tenant-mode: shared
-      xsappname: ${xsappname}  
+      xsappname: ${xsappname}
+      oauth2-configuration:
+        redirect-uris: 
+          - ~{srv-api/redirect-uris}   # https://<Subscription Details>.<Provider subaccount>-<Provider Cloud Foundry Space>-srv.cfapps.eu10-004.hana.ondemand.com , sample URL: https://xyz-runtime.abcd-runtime-srv.cfapps.eu10-004.hana.ondemand.com   
+          #- https://*.pratest-runtime.cfapps.eu10-004.hana.ondemand.com/**
     path: ./xs-security.json
     service: xsuaa
     service-name: author-readings-uaa
@@ -241,8 +248,8 @@ resources:
       description: ${displayname}
       category: 'Category'
       appUrls:
-        getDependencies: ~{approuter-binding/app-url}/callback/v1.0/dependencies  
-        onSubscription: ~{mtx-binding/app-url}/mtx/v1/provisioning/tenant/{tenantId}
+        getDependencies: ~{approuter-binding/app-url}/callback/v1.0/dependencies
+        onSubscription: ~{mtx-binding/app-url}/-/cds/saas-provisioning/tenant/{tenantId}
         callbackTimeoutMillis: 300000
 
 # HTML5 Runtime (HTML5 Application Repository Service)
