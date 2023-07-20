@@ -70,7 +70,7 @@ You can start your journey following two paths:
 
 2. Re-build the application from scratch following the guidelines step-by-step starting with tutorial "*Build a full-stack BTP Application with One-off Deployment in a Customer BTP Account*".
 
-After deployment of the application you may follow the tutorial "*A Guided Tour to explore the Capabilities of the Sample Application*" to visit the sample scenario end-to-end.
+I would recommend to take the first approach and deploy the multi-tenant version of the sample application ([./Applications/author-readings-mt](./Applications/author-readings-mt)) as is, and then use the tutorials as retrospect to understand the steps taken to reach this state.
 
 ## Tutorials
 

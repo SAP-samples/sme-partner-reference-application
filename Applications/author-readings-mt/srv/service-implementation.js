@@ -424,17 +424,17 @@ srv.on("confirmParticipation", async (req) => {
                             req.error(400, "PARTICIPANT_AUTHOR_READING_IN_PREPARATION");
                             break;                    
                         case reuse.authorReadingStatusCode.booked:
-                            req.error(400, "ACTION_CONFIRM_PARTICIPATION_FULLY_BOOKED");
+                            req.error(400, "ACTION_CONFIRM_PARTICIPATION_FULLY_BOOKED", [participants[0].identifier]);
                             break;                
                         case reuse.authorReadingStatusCode.blocked:
                             req.error(400, "ACTION_CONFIRM_PARTICIPATION_BLOCKED");
                             break;
                     }
                 } else {
-                    req.error(400, "ACTION_CONFIRM_PARTICIPATION_FULLY_BOOKED");
+                    req.error(400, "ACTION_CONFIRM_PARTICIPATION_FULLY_BOOKED", [participants[0].identifier]);
                 }
             } else {
-                req.error(400, "ACTION_CONFIRM_PARTICIPATION_ALREADY_DONE");
+                req.error(400, "ACTION_CONFIRM_PARTICIPATION_ALREADY_DONE", [participants[0].identifier]);
             }
             if (updateStatus !== 1) {
                 req.error(400, "ACTION_CONFIRM_PARTICIPATION_NOT_POSSIBLE", [participants[0].identifier]);

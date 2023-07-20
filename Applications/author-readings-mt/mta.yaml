@@ -77,7 +77,7 @@ modules:
   - name: srv-api
     properties:
       srv-url: ${protocol}://${srv-url}.${domain} # ${default-url}
-      redirect-uris: ${protocol}://*.${app-url}.${domain}/** # https://<Subscription Details>.<Provider subaccount>-<Provider Cloud Foundry Space>-srv.cfapps.eu10-004.hana.ondemand.com , sample URL: https://xyz-runtime.abcd-runtime-srv.cfapps.eu10-004.hana.ondemand.com 
+      redirect-uris: ${protocol}://*.${app-url}.${domain}/** # Redirect URI to connect modules running on different CF landscapes 
   - name: srv-multi-tenancy
     properties:
       tenant-delimiter: "."
@@ -181,7 +181,7 @@ modules:
           per_plan:
             authorreadingsintegration:
               endpoints:
-                authorreadings: "~{srv-api/srv-url}"       # https://<Provider subaccount>-<Provider Cloud Foundry Space>-srv.cfapps.eu10.hana.ondemand.com , sample URL: https://abcd-runtime-srv.cfapps.eu10.hana.ondemand.com   
+                authorreadings: "~{srv-api/srv-url}" # Tenant-specific OData endpoint for remote integrations   
 
 # -------------------------------------------------------------------------
 #  Resources
@@ -218,8 +218,7 @@ resources:
       xsappname: ${xsappname}
       oauth2-configuration:
         redirect-uris: 
-          - ~{srv-api/redirect-uris}   # https://<Subscription Details>.<Provider subaccount>-<Provider Cloud Foundry Space>-srv.cfapps.eu10-004.hana.ondemand.com , sample URL: https://xyz-runtime.abcd-runtime-srv.cfapps.eu10-004.hana.ondemand.com   
-          #- https://*.pratest-runtime.cfapps.eu10-004.hana.ondemand.com/**
+          - ~{srv-api/redirect-uris} # Redirect to connect modules running on different CF landscapes
     path: ./xs-security.json
     service: xsuaa
     service-name: author-readings-uaa
