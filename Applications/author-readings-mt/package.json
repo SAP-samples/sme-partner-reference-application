@@ -16,7 +16,9 @@
     "express": "^4.17.1",
     "hdb": "^0.19.1",
     "npx": "^10.2.2",
-    "passport": "^0.6.0"
+    "passport": "^0.6.0",
+    "moment": "^2.29.4",
+    "@sap-cloud-sdk/http-client": "3.3.0"
   },
   "devDependencies": {
     "@sap/ux-specification": "^1.108.9",
