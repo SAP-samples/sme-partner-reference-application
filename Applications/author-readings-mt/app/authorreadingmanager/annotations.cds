@@ -103,9 +103,9 @@ annotate service.AuthorReadings with @(UI : {
             @UI.Hidden : { $edmJson : 
                 { $If : 
                     [
-                        { $Eq : [ {$Path : 'createByDProjectEnabled'}, false ] },
-                        true,
-                        false
+                        { $Eq : [ {$Path : 'createByDProjectEnabled'}, true ] },
+                        false,
+                        true
                     ]
                 }   
             }
@@ -117,9 +117,9 @@ annotate service.AuthorReadings with @(UI : {
             @UI.Hidden : { $edmJson : 
                 { $If : 
                     [
-                        { $Eq : [ {$Path : 'createS4HCProjectEnabled'}, false ] },
-                        true,
-                        false
+                        { $Eq : [ {$Path : 'createS4HCProjectEnabled'}, true ] },
+                        false,
+                        true
                     ]
                 }   
             }
@@ -131,9 +131,9 @@ annotate service.AuthorReadings with @(UI : {
             @UI.Hidden : { $edmJson : 
                 { $If : 
                     [
-                        { $Eq : [ {$Path : 'createC4PProjectEnabled'}, false ] },
-                        true,
-                        false
+                        { $Eq : [ {$Path : 'createC4PProjectEnabled'}, true ] },
+                        false,
+                        true
                     ]
                 }   
             }
