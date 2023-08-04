@@ -247,7 +247,7 @@ resources:
       description: ${displayname}
       category: 'Category'
       appUrls:
-        getDependencies: ~{approuter-binding/app-url}/callback/v1.0/dependencies
+        getDependencies: ~{approuter-binding/app-url}/-/cds/saas-provisioning/dependencies
         onSubscription: ~{mtx-binding/app-url}/-/cds/saas-provisioning/tenant/{tenantId}
         callbackTimeoutMillis: 300000
 
