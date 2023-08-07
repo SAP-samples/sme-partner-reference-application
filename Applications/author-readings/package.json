@@ -16,7 +16,7 @@
         "@sap/xb-msg-amqp-v100": "^0.9.51",
         "@sap/audit-logging": "^5.1.0",
         "moment": "^2.29.4",
-        "@sap-cloud-sdk/http-client": "3.3.0"
+        "@sap-cloud-sdk/http-client": "^3.3.0"
     },
     "devDependencies": {
         "@sap/ux-specification": "^1.108.9",
