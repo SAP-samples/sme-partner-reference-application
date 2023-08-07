@@ -98,14 +98,14 @@ annotate service.AuthorReadings with @(UI : {
         },
         {
             $Type  : 'UI.DataFieldForAction',
-            Label  : '{i18n>createByDProject}',
+            Label  : '{i18n>createProject}',
             Action : 'AuthorReadingManager.createByDProject',            
             @UI.Hidden : { $edmJson : 
                 { $If : 
                     [
-                        { $Eq : [ {$Path : 'createByDProjectEnabled'}, false ] },
-                        true,
-                        false
+                        { $Eq : [ {$Path : 'createByDProjectEnabled'}, true ] },
+                        false,
+                        true
                     ]
                 }   
             }
