@@ -105,6 +105,22 @@ Enhance your market reach and add *S/4HANA Cloud, public edition* as ERP-backend
 
 9. [Connect a Tenant to *S/4HANA Cloud, public edition*](Tutorials/52-Multi-Tenancy-Provisioning-Connect-S4HC.md)
 
+Enhance your market reach and add *S/4HANA Cloud for Projects, collaborative project management* as backend project management solution:
+
+10. [Integrate the BTP Application with *S/4HANA Cloud for Projects, collaborative project management*](Tutorials/61-C4P-Integration.md)
+
+11. [Connect a Tenant to *S/4HANA Cloud, public edition*](Tutorials/62-Multi-Tenancy-Provisioning-Connect-C4P.md)
+
+Open the APIs of the BTP application for 3rd-party integrations:
+
+12. [Enhance the BTP Application by a Service Broker](Tutorials/71-Multi-Tenancy-Service-Broker.md)
+
+13. [Configure and Consume the APIs of the BTP Application](Tutorials/72-Multi-Tenancy-Provisioning-Service-Broker.md)
+
+Add the BTP application to *SAP Work Zone*:
+
+14. [Configure SAP Work Zone to launch the BTP Application](Tutorials/80-Multi-Tenancy-Provisioning-Work-Zone.md)
+
 Related resources:
 - [SAP Cloud Application Programming Model](https://cap.cloud.sap/docs/)
 - [SAP Cloud SDK](https://sap.github.io/cloud-sdk/)

@@ -1,0 +1,1 @@
+subscribe, creation of instance on subscriber side, Postman collection with some explanations
