@@ -74,7 +74,7 @@ Configure web app to connect to the app services. Define a route in the web app:
   {
     "authenticationType": "none",
     "csrfProtection": false,
-    "source": "^/authorreadingmanager/",
+    "source": "^/odata/v4/authorreadingmanager/",
     "destination": "launchpad"
   }
 ]
@@ -93,7 +93,7 @@ Check and adjust/add the service name in webapp configuration file at the end: O
 Add to `package.json`
 ```json
 "engines": {
-   "node": "^14"
+   "node": ">=16.17.1 <19.0.0"
 }
 ```
 

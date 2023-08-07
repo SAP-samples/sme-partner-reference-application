@@ -456,7 +456,8 @@ BAS: Enhance the implementation of the CAP services in file `./application/autho
 6. Since we are using the npm module *@sap-cloud-sdk/connectivity* in file *reuse.js*, we need to add the corresponding npm module to the dependencies in the `package.json` file:
     ```json
     "dependencies": {
-        "@sap-cloud-sdk/connectivity": "^2.8.0"
+        "@sap-cloud-sdk/connectivity": "^2.8.0",
+        "@sap-cloud-sdk/http-client": "3.3.0"
     },
     ```
 
@@ -619,9 +620,9 @@ BAS: Edit the Fiori Element annotations of the web app in file `./app/authorread
         @UI.Hidden : { $edmJson : 
             { $If : 
                 [
-                    { $Eq : [ {$Path : 'createByDProjectEnabled'}, false ] },
-                    true,
-                    false
+                    { $Eq : [ {$Path : 'createByDProjectEnabled'}, true ] },
+                    false,
+                    true
                 ]
             }   
         }
