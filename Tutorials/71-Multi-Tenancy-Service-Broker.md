@@ -1,17 +1,13 @@
 # Enabling API access of BTP applications using Service Broker
-Service Broker is used to enable remote access to application OData services using tenant specific credentails and authorizations taking into account the tenant isolation in an multi-tenant application.
+Service Broker is used to enable access to application OData services using tenant specific credentials and authorizations taking into account the tenant isolation in an multi-tenant application.
 
-Service brokers are used to facilitate access to services on runtimes on the SAP Business Technology Platform.
+>Note: OData services of application by default would not be accessible, service broker will enable access of OData services. 
 
-The advent of the SAP Service Manager (SM) brought about the ability to connect multiple platforms and multiple service brokers together on the SAP Business Technology Platform (SAP BTP). Services exposed by brokers on different platforms can be instantiated wherever you need them.
-
-For inbound API calls to BTP application like AuthorReading, it is required to use OAUTH Client credentials to access the the APIs. In addition it is required to determine for which tenant a API is called during the runtime.
-
-The service broker gives the OAuth credentials specifically for a dedicated application and must be deployed for each application. The Application will need to provide the specific configuration for the Broker
+Configure the service broker as part of AuthorReadings application, The service broker gives tenant specific OAuth credentials for the deployed application. use the OAUTH Client credentials to access the tenant specific APIs.
 
 ## Enabling Service Broker in Provider sub-account of BTP applications
 
-Service Broker in an application involves following steps:
+Service Broker configuration in an application involves following steps:
 
 1. Create a Service Broker Node.js application
     - Create a new directory in the project root folder [author-readings-mt](../Applications/author-readings-mt)
@@ -23,7 +19,7 @@ Service Broker in an application involves following steps:
     - Download the @sap/sbf package and add it to your service broker by executing the command:
     `npm install @sap/sbf`
 
-    > Note: Make sure you execute the aboce commands in the project root folder [author-readings-mt](../Applications/author-readings-mt)
+    > Note: Make sure you execute the above command in the project root folder [author-readings-mt](../Applications/author-readings-mt)
 
 3. Add the service broker start command
     - Edit the [package.json](../Applications/author-readings-mt/broker/package.json) file and add the start command in section scripts:
