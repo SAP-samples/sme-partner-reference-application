@@ -117,7 +117,7 @@ Service Broker configuration in an application involves following steps:
 9.  Generate a secure broker password
     - Execute the command `npx hash-broker-password -b` 
     - The command will generates a random password and hashes it
-    - As shown in the next step *"Create an application manifest"*, add the above generated *<BrokerPassword>* with relevant *<BrokerUser>* into the service broker configuration *author-readings-servicebroker* in [mta.yaml](../Applications/author-readings-mt/mta.yaml) 
+    - As shown in the next step *"Create an application manifest"*, add the above generated *<plain-broker-password>* with relevant *<BrokerUser>* into the service broker configuration *author-readings-servicebroker* in [mta.yaml](../Applications/author-readings-mt/mta.yaml) 
 10. Create an service broker application manifest
     - Add a module in *author-readings-servicebroker* in deployment descriptor [mta.yaml](../Applications/author-readings-mt/mta.yaml) file.
     - Sample configuration :
@@ -138,7 +138,7 @@ Service Broker configuration in an application involves following steps:
             SBF_CATALOG_SUFFIX: ${space}  # Make the service broker unique in the deployed space
             SBF_ENABLE_AUDITLOG: false
             # TO-DO: Enter service broker user and password 
-            #SBF_BROKER_CREDENTIALS: '{ "<BrokerUser>": "<BrokerPassword>" }'           # use command  "npx hash-broker-password -b" and generate a random password and hashes it ( use the plain password in mta.yaml ) 
+            #SBF_BROKER_CREDENTIALS: '{ "<BrokerUser>": "<plain-broker-password>" }'           # use command  "npx hash-broker-password -b" and generate a random password and hashes it ( use the plain password in mta.yaml ) 
             SBF_SERVICE_CONFIG: 
                 authorreadings:             
                     extend_xssecurity: 
@@ -163,7 +163,7 @@ Service Broker configuration in an application involves following steps:
 
 11. Build and Deploy the multi-tenant application to provider BTP sub-account
 
-> Note: In the Next step user will create instance of service broker in subscriber BTP sub-account, as described in [Multi-Tenancy-Provisioning-Service-Broker](../Tutorials/72-Multi-Tenancy-Provisioning-Service-Broker.md)
+> Note: In the Next step user will create instance of service broker in subscriber BTP sub-account, as described in [Configure and Consume the APIs of the BTP Application](../Tutorials/72-Multi-Tenancy-Provisioning-Service-Broker.md)
     
 
 
