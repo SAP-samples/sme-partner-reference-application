@@ -1,16 +1,12 @@
-# Enabling API access of BTP applications using Service Broker
+# Enhance the BTP Application by a Service Broker
 Service Broker is used to enable access to application OData services using tenant specific credentials and authorizations taking into account the tenant isolation in an multi-tenant application.
 
->Note: OData services of application by default would not be accessible, service broker will enable access of OData services. 
+>Note: Remote access to the OData services of the application is not possible by default, service broker will enable remote access of OData services. 
 
-The Service Broker is used to issue Application Tenant and API specific OAuth2 client credentials required for inbound API integration scenarios, which will enable BTP application integration ready with 3rd party applications and SAP Build Apps.
+The Service Broker is used to issue Application Tenant and API specific OAuth2 client credentials required for inbound API integration scenarios, which will enable BTP application integration ready with 3rd party applications and SAP Build.
 
 Configure the service broker as part of AuthorReadings BTP application, The service broker gives tenant specific OAuth credentials for the deployed application. use the OAUTH Client credentials to access the tenant specific APIs.
 > Note: Service Broker is an implimentation of the [Open Service Broker API](https://www.openservicebrokerapi.org/).
-
-<img src="./images/mt_service_broker_integration.jpg" width="100%">  
-
-## Enabling Service Broker in Provider sub-account of BTP applications
 
 Service Broker configuration in an application involves following steps:
 

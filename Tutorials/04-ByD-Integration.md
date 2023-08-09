@@ -318,7 +318,7 @@ BAS: Extend the authorization annotation of the CAP service model by restriction
             to    : 'AuthorReadingManagerRole',
         },
         {
-            grand : ['*'],
+            grant : ['*'],
             to    : 'AuthorReadingAdminRole'
         }
     ]);
@@ -328,7 +328,7 @@ BAS: Extend the authorization annotation of the CAP service model by restriction
             to    : 'AuthorReadingManagerRole',
         },
         {
-            grand : ['*'],
+            grant : ['*'],
             to    : 'AuthorReadingAdminRole'
         }
     ]);
@@ -338,7 +338,7 @@ BAS: Extend the authorization annotation of the CAP service model by restriction
             to    : 'AuthorReadingManagerRole',
         },
         {
-            grand : ['*'],
+            grant : ['*'],
             to    : 'AuthorReadingAdminRole'
         }
     ]);
@@ -348,7 +348,7 @@ BAS: Extend the authorization annotation of the CAP service model by restriction
             to    : 'AuthorReadingManagerRole',
         },
         {
-            grand : ['*'],
+            grant : ['*'],
             to    : 'AuthorReadingAdminRole'
         }
     ]);
