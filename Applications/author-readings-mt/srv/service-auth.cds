@@ -26,7 +26,7 @@ annotate AuthorReadingManager.AuthorReadings with @(restrict : [
         where : 'createdBy = $user'
     },
     {
-        grand : ['*'],
+        grant : ['*'],
         to    : 'AuthorReadingAdminRole'
     }
 ]);
@@ -47,7 +47,7 @@ annotate AuthorReadingManager.Participants with @(restrict : [
         where : 'createdBy = $user'
     },
     {
-        grand : ['*'],
+        grant : ['*'],
         to    : 'AuthorReadingAdminRole'
     }
 ]);
@@ -59,7 +59,7 @@ annotate AuthorReadingManager.ByDProjects with @(restrict : [
         to    : 'AuthorReadingManagerRole',
     },
     {
-        grand : ['*'],
+        grant : ['*'],
         to    : 'AuthorReadingAdminRole'
     }
 ]);
@@ -69,7 +69,7 @@ annotate AuthorReadingManager.ByDProjectSummaryTasks with @(restrict : [
         to    : 'AuthorReadingManagerRole',
     },
     {
-        grand : ['*'],
+        grant : ['*'],
         to    : 'AuthorReadingAdminRole'
     }
 ]);
@@ -79,7 +79,7 @@ annotate AuthorReadingManager.ByDProjectTasks with @(restrict : [
         to    : 'AuthorReadingManagerRole',
     },
     {
-        grand : ['*'],
+        grant : ['*'],
         to    : 'AuthorReadingAdminRole'
     }
 ]);
@@ -89,7 +89,7 @@ annotate AuthorReadingManager.ByDProjectsTechUser with @(restrict : [
         to    : 'AuthorReadingManagerRole',
     },
     {
-        grand : ['*'],
+        grant : ['*'],
         to    : 'AuthorReadingAdminRole'
     }
 ]);
@@ -101,7 +101,7 @@ annotate AuthorReadingManager.S4HCProjects with @(restrict : [
         to    : 'AuthorReadingManagerRole',
     },
     {
-        grand : ['*'],
+        grant : ['*'],
         to    : 'AuthorReadingAdminRole'
     }
 ]);
@@ -111,7 +111,7 @@ annotate AuthorReadingManager.S4HCEnterpriseProjectElement with @(restrict : [
         to    : 'AuthorReadingManagerRole',
     },
     {
-        grand : ['*'],
+        grant : ['*'],
         to    : 'AuthorReadingAdminRole'
     }
 ]);
@@ -121,7 +121,7 @@ annotate AuthorReadingManager.S4HCEntProjTeamMember with @(restrict : [
         to    : 'AuthorReadingManagerRole',
     },
     {
-        grand : ['*'],
+        grant : ['*'],
         to    : 'AuthorReadingAdminRole'
     }
 ]);
@@ -131,7 +131,7 @@ annotate AuthorReadingManager.S4HCEntProjEntitlement with @(restrict : [
         to    : 'AuthorReadingManagerRole',
     },
     {
-        grand : ['*'],
+        grant : ['*'],
         to    : 'AuthorReadingAdminRole'
     }
 ]);
@@ -141,7 +141,7 @@ annotate AuthorReadingManager.S4HCProjectsProjectProfileCode with @(restrict : [
         to    : 'AuthorReadingManagerRole',
     },
     {
-        grand : ['*'],
+        grant : ['*'],
         to    : 'AuthorReadingAdminRole'
     }
 ]);
@@ -151,7 +151,7 @@ annotate AuthorReadingManager.S4HCProjectsProcessingStatus with @(restrict : [
         to    : 'AuthorReadingManagerRole',
     },
     {
-        grand : ['*'],
+        grant : ['*'],
         to    : 'AuthorReadingAdminRole'
     }
 ]);

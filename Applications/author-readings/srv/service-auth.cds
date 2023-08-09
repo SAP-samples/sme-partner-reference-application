@@ -26,7 +26,7 @@ annotate AuthorReadingManager.AuthorReadings with @(restrict : [
         where : 'createdBy = $user'
     },
     {
-        grand : ['*'],
+        grant : ['*'],
         to    : 'AuthorReadingAdminRole'
     }
 ]);
@@ -47,7 +47,7 @@ annotate AuthorReadingManager.Participants with @(restrict : [
         where : 'createdBy = $user'
     },
     {
-        grand : ['*'],
+        grant : ['*'],
         to    : 'AuthorReadingAdminRole'
     }
 ]);
@@ -59,7 +59,7 @@ annotate AuthorReadingManager.ByDProjects with @(restrict : [
         to    : 'AuthorReadingManagerRole',
     },
     {
-        grand : ['*'],
+        grant : ['*'],
         to    : 'AuthorReadingAdminRole'
     }
 ]);
@@ -69,7 +69,7 @@ annotate AuthorReadingManager.ByDProjectSummaryTasks with @(restrict : [
         to    : 'AuthorReadingManagerRole',
     },
     {
-        grand : ['*'],
+        grant : ['*'],
         to    : 'AuthorReadingAdminRole'
     }
 ]);
@@ -79,7 +79,7 @@ annotate AuthorReadingManager.ByDProjectTasks with @(restrict : [
         to    : 'AuthorReadingManagerRole',
     },
     {
-        grand : ['*'],
+        grant : ['*'],
         to    : 'AuthorReadingAdminRole'
     }
 ]);
@@ -89,7 +89,7 @@ annotate AuthorReadingManager.ByDProjectsTechUser with @(restrict : [
         to    : 'AuthorReadingManagerRole',
     },
     {
-        grand : ['*'],
+        grant : ['*'],
         to    : 'AuthorReadingAdminRole'
     }
 ]);
