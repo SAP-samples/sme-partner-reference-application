@@ -63,14 +63,6 @@ Business Application Studio (BAS): Import the S/4 odata service into the CAP pro
                 }
                 }
             },
-            "audit-log": {
-                "[sandbox]": {
-                "kind": "audit-log-to-console"
-                },
-                "[production]": {
-                "kind": "audit-log-service"
-                }
-            },
             "S4HC_ENTPROJECTPROCESSINGSTATUS_0001": {
                 "kind": "odata",
                 "model": "srv/external/S4HC_ENTPROJECTPROCESSINGSTATUS_0001",

@@ -97,19 +97,19 @@ Enhance the application to support multiple customers using shared BTP resources
 
 6. [Provision Tenants of the Multi-Tenant Application to Customers](Tutorials/45-Multi-Tenancy-Provisioning.md)
 
-7. [Connect a Tenant to *SAP Business ByDesign*](Tutorials/46-Multi-Tenancy-Provisioning-Connect-ByD.md)
+7. [Connect a Tenant with *SAP Business ByDesign*](Tutorials/46-Multi-Tenancy-Provisioning-Connect-ByD.md)
 
 Enhance your market reach and add *S/4HANA Cloud, public edition* as ERP-backend:
 
 8. [Integrate the BTP Application with *S/4HANA Cloud, public edition*](Tutorials/51-S4HC-Integration.md)
 
-9. [Connect a Tenant to *S/4HANA Cloud, public edition*](Tutorials/52-Multi-Tenancy-Provisioning-Connect-S4HC.md)
+9. [Connect a Tenant with *S/4HANA Cloud, public edition*](Tutorials/52-Multi-Tenancy-Provisioning-Connect-S4HC.md)
 
 Enhance your market reach and add *S/4HANA Cloud for Projects, collaborative project management* as backend project management solution:
 
 10. [Integrate the BTP Application with *S/4HANA Cloud for Projects, collaborative project management*](Tutorials/61-C4P-Integration.md)
 
-11. [Connect a Tenant to *S/4HANA Cloud, public edition*](Tutorials/62-Multi-Tenancy-Provisioning-Connect-C4P.md)
+11. [Connect a Tenant with *S/4HANA Cloud for Projects, collaborative project management*](Tutorials/62-Multi-Tenancy-Provisioning-Connect-C4P.md)
 
 Open the APIs of the BTP application for 3rd-party integrations:
 
