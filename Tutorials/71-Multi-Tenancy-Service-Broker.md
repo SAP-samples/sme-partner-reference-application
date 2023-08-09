@@ -3,7 +3,12 @@ Service Broker is used to enable access to application OData services using tena
 
 >Note: OData services of application by default would not be accessible, service broker will enable access of OData services. 
 
+The Service Broker is used to issue Application Tenant and API specific OAuth2 client credentials required for inbound API integration scenarios.
+
 Configure the service broker as part of AuthorReadings application, The service broker gives tenant specific OAuth credentials for the deployed application. use the OAUTH Client credentials to access the tenant specific APIs.
+> Note: Service Broker is an implimentation of the [Open Service Broker API](https://www.openservicebrokerapi.org/).
+
+<img src="./Tutorials/images/mt_service_broker_integration.jpg" width="100%">  
 
 ## Enabling Service Broker in Provider sub-account of BTP applications
 
