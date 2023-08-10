@@ -63,13 +63,13 @@ Service Broker configuration in an application involves following steps:
                 {
                     "name": "authorreadings",
                     "id": "1aac0de3-bc10-42bc-a950-00a9fbec536e",
-                    "description": "Author Readings Integration Credentials",
+                    "description": "Author Readings API",
                     "bindable": true,
                     "plans": [
                         {
                         "name": "authorreadingsintegration",
                         "id": "358813f4-6ed2-47e1-90b1-dd9fefda4b1f",
-                        "description": "Author Readings Integration Credentials"          
+                        "description": "standard"          
                         }
                     ]                
                 }
@@ -78,15 +78,17 @@ Service Broker configuration in an application involves following steps:
     ```
     > Note: Unique *Service ID* and *Service Plan ID* both are generated
 
-6. Create XSUAA service instance
+6. Reuse XSUAA service instance created before (nothing to do here)
     - The service broker can use different services to generate and store credentials needed later on by applications to access your reusable service. In this example we use the *XSUAA service* as a credentials provider.
-    - An *XSUAA service* instance with *service-plan: broker* is configured to be created via configuration in project deployment descriptor file [mta.yaml](../Applications/author-readings-mt/mta.yaml) 
-    > Note: Its *"prefferred"* to create XSUAA instance via [mta.yaml](../Applications/author-readings-mt/mta.yaml) deployment descriptor, but XSUAA instance can also be created manually using command `cf create-service xsuaa broker author-readings-uaa`
+    - An *XSUAA service* instance with *service-plan: broker* is configured to be created via configuration in project deployment descriptor file [mta.yaml](../Applications/author-readings-mt/mta.yaml). 
 
-7. Create an instance of the Audit Log service (Optional Step)
+    > Note: Its *"preferred"* to create XSUAA instance via [mta.yaml](../Applications/author-readings-mt/mta.yaml) deployment descriptor, but XSUAA instance can also be created manually using command `cf create-service xsuaa broker author-readings-uaa`.
+
+7. Reuse the instance of the Audit Log service created before (nothing to do here)
     - The service broker is configured by default to audit log every operation. It needs information to connect to the Audit log service.
-    - An *service: auditlog* instance with *service-plan: oauth2* is configured to be created via configuration in project deployment descriptor file [mta.yaml](../Applications/author-readings-mt/mta.yaml) 
-    > Note:  Its *"prefferred"* to create AuditLog service instance via [mta.yaml](../Applications/author-readings-mt/mta.yaml) deployment descriptor, but AuditLog service instance can also be created manually using command `cf create-service auditlog oauth2 author-readings-auditlog`
+    - An *service: auditlog* instance with *service-plan: oauth2* is configured to be created via configuration in project deployment descriptor file [mta.yaml](../Applications/author-readings-mt/mta.yaml). 
+
+    > Note:  Its *"preferred"* to create AuditLog service instance via [mta.yaml](../Applications/author-readings-mt/mta.yaml) deployment descriptor, but AuditLog service instance can also be created manually using command `cf create-service auditlog oauth2 author-readings-auditlog`.
 
 8. Add a authorreadings service API specific role in the xs-security
     - Add the new role *authorreadingsapi* in the [xs-security.json](../Applications/author-readings-mt/xs-security.json) and also add the new role *authorreadingsapi*  to role-templates *AuthorReadingManagerRole* and *AuthorReadingAdminRole*
@@ -117,7 +119,8 @@ Service Broker configuration in an application involves following steps:
 9.  Generate a secure broker password
     - Execute the command `npx hash-broker-password -b` 
     - The command will generates a random password and hashes it
-    - As shown in the next step *"Create an application manifest"*, add the above generated *<plain-broker-password>* with relevant *<BrokerUser>* into the service broker configuration *author-readings-servicebroker* in [mta.yaml](../Applications/author-readings-mt/mta.yaml) 
+    - As shown in the next step *"Create an application manifest"*, add the above generated *<plain-broker-password>* with relevant *<BrokerUser>* into the service broker configuration *author-readings-servicebroker* in [mta.yaml](../Applications/author-readings-mt/mta.yaml). 
+
 10. Create an service broker application manifest
     - Add a module in *author-readings-servicebroker* in deployment descriptor [mta.yaml](../Applications/author-readings-mt/mta.yaml) file.
     - Sample configuration :
@@ -163,7 +166,7 @@ Service Broker configuration in an application involves following steps:
 
 11. Build and Deploy the multi-tenant application to provider BTP sub-account
 
-> Note: In the Next step user will create instance of service broker in subscriber BTP sub-account, as described in [Configure and Consume the APIs of the BTP Application](../Tutorials/72-Multi-Tenancy-Provisioning-Service-Broker.md)
+> Note: In the Next step user will create instance of service broker in subscriber BTP sub-account, as described in [Configure and Consume the APIs of the BTP Application](../Tutorials/72-Multi-Tenancy-Provisioning-Service-Broker.md).
     
 
 
