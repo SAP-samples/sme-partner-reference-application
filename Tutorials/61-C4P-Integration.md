@@ -4,20 +4,20 @@ In this chapter we enhance the BTP application to support *S/4HANA Cloud for Pro
 
 Frontend integration:
 
-1. Navigate from the BTP app to related C4P collaborative projects.
-2. Navigate from C4P collaborative projects to related author reading instances of the BTP app.
+1. Navigate from the BTP app to related C4P collaboration projects.
+2. Navigate from C4P collaboration projects to related author reading instances of the BTP app.
 
 Back-channel integration:
 
-3. Create collaborative projects from the BTP app and display C4P project information on the web application of the BTP app using OData APIs with principal propagation.
+3. Create collaboration projects from the BTP app and display C4P project information on the web application of the BTP app using OData APIs with principal propagation.
 
 ## Enhance the BTP App to Consume C4P OData APIs
 
-In this chapter we import the C4P OData services as "remote services" into our CAP project and use the OData service to create collaborative projects in C4P to plan and run author reading events.
+In this chapter we import the C4P OData services as "remote services" into our CAP project and use the OData service to create collaboration projects in C4P to plan and run author reading events.
 
 ### Import C4P OData Services
 
-We use the C4P OData services for collaborative projects to create and read collaborative projects in context of user interactions. 
+We use the C4P OData services for collaboration projects to create and read collaboration projects in context of user interactions. 
 
 C4P: Create EDMX-file from C4P Odata services:
 
@@ -201,7 +201,7 @@ Copy the C4P reuse functions in file [connector-c4p.js](../Applications/author-r
 
 ### Enhance the Business Logic to operate on C4P Data
 
-BAS: Enhance the implementation of the CAP services in file [service-implementation.js](../Applications/author-readings-mt/srv/service-implementation.js) to create and read C4P collaborative project data using the remote C4P OData service. 
+BAS: Enhance the implementation of the CAP services in file [service-implementation.js](../Applications/author-readings-mt/srv/service-implementation.js) to create and read C4P project data using the remote C4P OData services. 
 
 1. Delegate requests to the remote OData service: 
     ```javascript
