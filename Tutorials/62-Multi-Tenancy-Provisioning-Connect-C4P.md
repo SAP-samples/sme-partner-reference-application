@@ -26,7 +26,7 @@ Open the *Instances and Subscriptions* in the BTP cockpit of the C4P consumer su
     - *apiUrl* (in the first line of the json) as **C4P API-URL**
     - *uaa.clientid* as **C4P UAA Client-ID**
     - *uaa.clientsecret* as **C4P UAA Client-Secret**
-    - *uaa.url* as **C4P UAA URL**
+    - *uaa.url* as **C4P UAA-URL**
 
 3. Open the *Trust Configuration* in the BTP cockpit of the C4P consumer subaccount. Download the SAML Metadata of the C4P consumer subaccount using button "SAML metadata"; open the SAML metadata xml-file and take note of the following xml element values: 
     - *EntityDescriptor.entityID* as **C4P Entity-ID** 
@@ -36,7 +36,7 @@ Open the *Instances and Subscriptions* in the BTP cockpit of the C4P consumer su
 In our scenario we reuse the *SAP Identity and Authentication Service* (IAS) tenant that is used by the *S/4HANA Cloud* tenant for authentication; but you can use some other IAS tenant as well.  
 You can configure the trust relationship between the C4P consumer subaccount and the IAS tenant as described in chapter [Configure Trust using SAML 2.0](45-Multi-Tenancy-Provisioning.md). As typically both, the IAS tenant and the C4P consumer subaccount, are assigned to the customer, OIDC is the prefered approach to configure trust. Nevertheless, both both trust configurations using OIDC and SAML 2.0 are possible and do the job.
 
-With these steps you are ready to launch C4P using single sign-on and you can explore and test the C4P OData services using Postman. In folder [api-samples](./api-samples/) you find a Postman collection and a Postman environment with some examples.
+With these steps you are ready to launch C4P using single sign-on and you can explore and test the C4P OData services using Postman. In folder [api-samples](./api-samples/) you find a Postman collection and a Postman environment with some examples. Check the documentation of the Postman collection for further details about how to run the examples.
 
 
 ## Configure Single Sign-on for the BTP Application
