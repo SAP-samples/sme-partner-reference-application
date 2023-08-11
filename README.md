@@ -7,9 +7,9 @@
 The *SME Partner Reference Application* provides a "golden path" to build, run and integrate full-stack cloud applications on the *SAP Business Technology Platform*.
 
 With this repository we want to provide guidance for SAP partners in the market for small and midsize enterprises (SME) to extend SAP ERP solutions by side-by-side cloud applications running on the *SAP Business Technology Platform* (BTP). This guidance comprises
-- an opinionated pre-selection of BTP components with architecture guidance tailored for the SME market, 
+- an opinionated selection of BTP components with architecture guidance tailored for the SME market, 
 - best practices ("golden paths") to build, deploy and provision full-stack BTP applications, and
-- we pay special attention to the interoperability and integration with cloud ERP solutions such as *SAP Business ByDesign* and *S/4HANA Cloud*.
+- we pay special attention to the interoperability and integration with SAP cloud solutions such as *SAP Business ByDesign*, *S/4HANA Cloud* and *Cloud for Projects*.
 
 The repository includes a sample application that is ready to deploy and run, and tutorials to re-build the sample application from scratch following an incremental development approach from one-off to multi-consumer solutions.
 
