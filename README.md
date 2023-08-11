@@ -48,6 +48,14 @@ Additionally, the sample showcases qualities relevant for enterprise-grade partn
 15.	Delivering “open solutions” by integration-ready OData APIs and business events following SAP technology alignments
 16. Deployment as one-off and multi-customer solution 
 
+**Which BTP resources do we use for the partner reference application?**
+
+The partner reference application is basically a NodeJS-application deployed on Cloud Foundry. 
+We are using the *SAP Business Application Studio* as development environment and Github as code repository.
+The *SAP Cloud Application Programming Model* (CAP) and *Fiori Elements* provide a model-driven development approach and empower us to focus on business objects, business logic and UI content. 
+The use of BTP services save development- and application management effort and provide a trusted runtime in line with SAP standards.
+<img src="./Tutorials/images/readme_bom.jpg" width="100%">
+
 **Join our community!**
 
 Do you like to share your own ideas and best practices? Please feel welcome to a vivid conversation about the *SME Partner Reference Application* in our [SAP Community](https://blogs.sap.com/2022/06/03/build-and-run-cloud-applications-on-the-sap-btp/).
@@ -116,6 +124,9 @@ Open the APIs of the BTP application for 3rd-party integrations:
 12. [Enhance the BTP Application by a Service Broker](Tutorials/71-Multi-Tenancy-Service-Broker.md)
 
 13. [Configure and Consume the APIs of the BTP Application](Tutorials/72-Multi-Tenancy-Provisioning-Service-Broker.md)
+
+After completing all steps you may have a scalable application with multiple customer subscriptions:
+<img src="./Tutorials/images/readme_sample-deployment.jpg" width="100%">
 
 Related resources:
 - [SAP Cloud Application Programming Model](https://cap.cloud.sap/docs/)
