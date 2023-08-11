@@ -117,10 +117,6 @@ Open the APIs of the BTP application for 3rd-party integrations:
 
 13. [Configure and Consume the APIs of the BTP Application](Tutorials/72-Multi-Tenancy-Provisioning-Service-Broker.md)
 
-Add the BTP application to *SAP Work Zone*:
-
-14. [Configure SAP Work Zone to launch the BTP Application](Tutorials/80-Multi-Tenancy-Provisioning-Work-Zone.md)
-
 Related resources:
 - [SAP Cloud Application Programming Model](https://cap.cloud.sap/docs/)
 - [SAP Cloud SDK](https://sap.github.io/cloud-sdk/)
