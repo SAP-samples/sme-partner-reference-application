@@ -11,7 +11,7 @@
         "description": "{{appDescription}}",
         "dataSources": {
             "mainService": {
-                "uri": "/authorreadingmanager/",
+                "uri": "/odata/v4/authorreadingmanager/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "4.0"

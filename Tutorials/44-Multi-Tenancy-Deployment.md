@@ -94,7 +94,7 @@ With the SAP Custom Domain Service you can configure subdomains for your applica
     - Create entitlement for Custom Domain Manager in the SAP BTP Control Center ( Custom Domain Service  |   custom-domain-manager )
     - select the Custom Domain Service as applications, select standard as the plan.
     
-2. Create an instance of Custom Domain Service in provier BTP subaccount
+2. Create an instance of Custom Domain Service in provider BTP subaccount
     - In the Provider BTP subaccount navigate to  *Entitlements* -> *Entity Assignments* ->  select standard ( Application ) -> *Save* the changes 
     - Goto to *Service* -> *Service Market Place* -> select Custom Domain Services -> click on *Create* -> select service *Custom Domain service* and plan *standard*
     - Goto to *Security* -> *Role collection* -> create new role collection "custom domain manager" -> *Edit* the new role collection -> chose the new role name "customDomainAdmin" -> *Save* 
@@ -102,6 +102,14 @@ With the SAP Custom Domain Service you can configure subdomains for your applica
 
 3. Create an Custom Domain
     - Goto *Service* -> *Instances and Subscriptions* -> click on *Subscriptions* -> select application "Custom Domain service" to launch the domain service to create new custom domain along with server certificate
+    - Launch the “Domains” application and create a custom domain by the following steps
+        - Navigate to “Custom Domains” 
+        - Select the option “Create Custom Domain” -> “for your Subaccount’s CF Organization”
+            - Select the default landscape in “Landscape Info” step and click on “next step”
+            - Select the default reserved domain proposed by the system and click on “next step”
+            - Enter the subdomain name as {provider cloud foundry sub account name}-{cloud foundry space name} and click on “Finish”
+            - Note: the system will create a custom domain with name {provider cloud foundry sub account name}-{cloud foundry space name}.{Reserved Domain Name}
+    - Note: TLS Configuration is an optional step, in case user doesnot create an TLS configuration, then *Default_without_Client_Authentication* will be used in the next steps.
     - Launch the *Server Certificates* application (manage server certificate) and create a server certificate for multi-tenant application by the following steps:
         - In the General Information section enter the *Alias* and select the *Key Size* and click on *Next Step*
         - In the Select Landscape section,  please select the desired landscape to continue and click on *Next Step*  . Note: the landscape refers to the cloud foundry instance.

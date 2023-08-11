@@ -24,7 +24,7 @@ async function projectDataRecord(authorReadingIdentifier, authorReadingTitle, au
         var generatedID = "AR-" + authorReadingIdentifier;
         // Set project start date 40 days before author reading date
         var moment = require("moment");
-        var generatedStartDate = moment(authorReadingDate).subtract(40, "days").toISOString().substr(0, 10) + "T00:00:00.0000000Z";
+        var generatedStartDate = moment(authorReadingDate).subtract(40, "days").toISOString().substring(0, 10) + "T00:00:00.0000000Z";
         
         // Assemble project payload based the sample data provided by *SAP Business ByDesign Partner Demo Tenants* (reference systems)
         const projectRecord = {

@@ -1,34 +1,37 @@
 {
   "name": "author-readings",
-  "version": "1.0.0",
-  "description": "SAP-SME Partner Reference Application",
+  "version": "1.1.0",
+  "description": "SAP Partner Reference Application v1.1",
   "repository": "https://github.com/SAP-samples/sme-partner-reference-application",
   "author": "SAP",
   "license": "SAP SAMPLE CODE LICENSE",
   "dependencies": {
-    "@sap-cloud-sdk/connectivity": "^2.8.0",
+    "@sap-cloud-sdk/connectivity": "^3.2.0",
     "@sap/audit-logging": "^5.1.0",
-    "@sap/cds": "^5.9.4",
-    "@sap/cds-mtx": "^2",
+    "@sap/cds": "^7.0.2",
+    "@sap/cds-dk": "^7.0.2",
+    "@sap/cds-mtxs": "^1.10.0",
+    "@sap/xssec": "^3.2.17",
     "cors": "^2.8.5",
-    "express": "4.17.1",
-    "hdb": "0.19.1",
-    "moment": "^2.29.4",
+    "express": "^4.17.1",
+    "hdb": "^0.19.1",
+    "npx": "^10.2.2",
     "passport": "^0.6.0",
-    "request": "^2.88.2"
+    "moment": "^2.29.4",
+    "@sap-cloud-sdk/http-client": "3.3.0"
   },
   "devDependencies": {
-    "@sap/ux-specification": "^1.96.9",
-    "chai": "^4.3.4",
-    "chai-http": "^4.3.0",
-    "mocha": "^9.2.2",
-    "sqlite3": "^5.0.2"
+    "@sap/ux-specification": "^1.108.9",
+    "chai": "^4.3.7",
+    "chai-http": "^4.4.0",
+    "mocha": "^10.2.0",
+    "sqlite3": "^5.1.6"
   },
   "engines": {
-    "node": "^16.17.1"
+    "node": ">=16.17.1 <19.0.0"
   },
   "scripts": {
-    "start": "cds run",
+    "start": "cds-serve",
     "test": "mocha 'test/*.test.js' --recursive --timeout 10000 --exit",
     "undeploy": "cf undeploy author-readings --delete-services --delete-service-keys"
   },
@@ -44,12 +47,21 @@
       "uaa": {
         "kind": "xsuaa"
       },
+      "audit-log": {
+        "[sandbox]": {
+          "kind": "audit-log-to-console"
+        },
+        "[production]": {
+          "kind": "audit-log-service"
+        }
+      },
       "[production]": {
         "db": {
           "kind": "hana-mt"
         },
         "auth": {
-          "kind": "xsuaa"
+          "kind": "xsuaa",
+          "strategy": "JWT"
         },
         "multitenancy": true
       },
@@ -107,14 +119,6 @@
           }
         }
       },
-      "audit-log": {
-        "[sandbox]": {
-          "kind": "audit-log-to-console"
-        },
-        "[production]": {
-          "kind": "audit-log-service"
-        }
-      },
       "S4HC_ENTPROJECTPROCESSINGSTATUS_0001": {
         "kind": "odata",
         "model": "srv/external/S4HC_ENTPROJECTPROCESSINGSTATUS_0001",
@@ -148,6 +152,26 @@
           "credentials": {
             "destination": "s4hc-tech-user",
             "path": "/sap/opu/odata4/sap/api_entprojectprofilecode/srvd_a2x/sap/entprojectprofilecode/0001"
+          }
+        }
+      },
+      "c4p_ProjectService": {
+        "kind": "odata",
+        "model": "srv/external/c4p_ProjectService",
+        "[production]": {
+          "credentials": {
+            "destination": "c4p",
+            "path": "/ProjectService/v1"
+          }
+        }
+      },
+      "c4p_TaskService": {
+        "kind": "odata",
+        "model": "srv/external/c4p_TaskService",
+        "[production]": {
+          "credentials": {
+            "destination": "c4p",
+            "path": "/TaskService/v1"
           }
         }
       }

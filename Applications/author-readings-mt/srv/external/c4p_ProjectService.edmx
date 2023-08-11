@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
+    <edmx:Include Alias="Capabilities" Namespace="Org.OData.Capabilities.V1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+    <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml">
+    <edmx:Include Alias="Validation" Namespace="Org.OData.Validation.V1"/>
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="service.ProjectServiceV1" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityContainer Name="EntityContainer">
+        <EntitySet Name="Projects" EntityType="service.ProjectServiceV1.Projects">
+          <NavigationPropertyBinding Path="toAuthorizations" Target="Authorizations"/>
+        </EntitySet>
+        <EntitySet Name="Authorizations" EntityType="service.ProjectServiceV1.Authorizations"/>
+        <ActionImport Name="copyProject" Action="service.ProjectServiceV1.copyProject"/>
+      </EntityContainer>
+      <EntityType Name="Projects">
+        <Key>
+          <PropertyRef Name="id"/>
+        </Key>
+        <Property Name="id" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="displayId" Type="Edm.String" MaxLength="40" Nullable="false"/>
+        <Property Name="name" Type="Edm.String" MaxLength="255" Nullable="false"/>
+        <Property Name="status" Type="Edm.String" MaxLength="16" Nullable="false" DefaultValue="NEW"/>
+        <Property Name="startDate" Type="Edm.Date"/>
+        <Property Name="endDate" Type="Edm.Date"/>
+        <Property Name="location" Type="Edm.String" MaxLength="255"/>
+        <Property Name="description" Type="Edm.String" MaxLength="500"/>
+        <Property Name="geoCoordinates" Type="Edm.String" MaxLength="2000"/>
+        <Property Name="collaborationOwnerId" Type="Edm.Guid"/>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.Guid"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.Guid"/>
+        <NavigationProperty Name="toAuthorizations" Type="Collection(service.ProjectServiceV1.Authorizations)"/>
+      </EntityType>
+      <EntityType Name="Authorizations">
+        <Key>
+          <PropertyRef Name="projectId"/>
+          <PropertyRef Name="principalId"/>
+          <PropertyRef Name="principalType"/>
+          <PropertyRef Name="permission"/>
+        </Key>
+        <Property Name="projectId" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="principalId" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="principalType" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="permission" Type="Edm.String" MaxLength="50" Nullable="false"/>
+      </EntityType>
+      <Action Name="copyProject" IsBound="false">
+        <Parameter Name="sourceProjectId" Type="Edm.Guid" Nullable="false"/>
+        <Parameter Name="newDisplayId" Type="Edm.String" MaxLength="40" Nullable="false"/>
+        <Parameter Name="newName" Type="Edm.String" MaxLength="255" Nullable="false"/>
+        <Parameter Name="sendNotification" Type="Edm.Boolean" Nullable="false"/>
+      </Action>
+      <Annotation Term="Core.SchemaVersion" String="1.0"/>
+      <Annotations Target="service.ProjectServiceV1.EntityContainer">
+        <Annotation Term="Core.Description" String="Project Service"/>
+        <Annotation Term="Core.LongDescription" String="This API allows you to work with collaboration projects in SAP S/4HANA Cloud for projects, collaborative project management. All operations require the _User_ role and are executed in the context of the logged in user."/>
+      </Annotations>
+      <Annotations Target="service.ProjectServiceV1.Projects">
+        <Annotation Term="Core.Description" String="Project"/>
+      </Annotations>
+      <Annotations Target="service.ProjectServiceV1.EntityContainer/Projects">
+        <Annotation Term="Capabilities.SearchRestrictions">
+          <Record Type="Capabilities.SearchRestrictionsType">
+            <PropertyValue Property="Searchable" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.ExpandRestrictions">
+          <Record Type="Capabilities.ExpandRestrictionsType">
+            <PropertyValue Property="Expandable" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.InsertRestrictions">
+          <Record Type="Capabilities.InsertRestrictionsType">
+            <PropertyValue Property="Description" String="Creates a new project."/>
+            <PropertyValue Property="LongDescription" String="The collaboration owner will be set to the company of the logged-in user.&lt;br>The project is created with default authorizations and the logged-on user as the only member.&lt;br>&lt;br>Requires the _BusinessAdmin_ role."/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.ReadRestrictions">
+          <Record Type="Capabilities.ReadRestrictionsType">
+            <PropertyValue Property="Description" String="Reads projects for the logged-in user."/>
+            <PropertyValue Property="LongDescription" String="Allows searching for projects by providing corresponding request parameters."/>
+            <PropertyValue Property="ReadByKeyRestrictions">
+              <Record Type="Capabilities.ReadByKeyRestrictionsType">
+                <PropertyValue Property="Description" String="Reads a project by key."/>
+                <PropertyValue Property="LongDescription" String="Retrieves the details of a specific project by specifying its project Id, that you may have received from a different API call. "/>
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.UpdateRestrictions">
+          <Record Type="Capabilities.UpdateRestrictionsType">
+            <PropertyValue Property="Description" String="Updates the project header attributes."/>
+            <PropertyValue Property="LongDescription" String="Requires the _Edit Project Header_ permission for the project."/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.DeleteRestrictions">
+          <Record Type="Capabilities.DeleteRestrictionsType">
+            <PropertyValue Property="Description" String="Deletes a project."/>
+            <PropertyValue Property="LongDescription" String="Requires the _Edit Project Header_ permission for the project. Only projects with status &quot;to be deleted&quot; can be deleted permanently. All objects related to the project will be deleted permanently as well."/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.NavigationRestrictions">
+          <Record Type="Capabilities.NavigationRestrictionsType">
+            <PropertyValue Property="RestrictedProperties">
+              <Collection>
+                <Record Type="Capabilities.NavigationPropertyRestriction">
+                  <PropertyValue Property="NavigationProperty" NavigationPropertyPath="toAuthorizations"/>
+                  <PropertyValue Property="TopSupported" Bool="false"/>
+                  <PropertyValue Property="SkipSupported" Bool="false"/>
+                  <PropertyValue Property="SortRestrictions">
+                    <Record Type="Capabilities.SortRestrictionsType">
+                      <PropertyValue Property="Sortable" Bool="false"/>
+                    </Record>
+                  </PropertyValue>
+                  <PropertyValue Property="InsertRestrictions">
+                    <Record Type="Capabilities.InsertRestrictionsType">
+                      <PropertyValue Property="Insertable" Bool="false"/>
+                    </Record>
+                  </PropertyValue>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="service.ProjectServiceV1.Projects/id">
+        <Annotation Term="Core.Description" String="Unique, technical identifier of the project"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+      </Annotations>
+      <Annotations Target="service.ProjectServiceV1.Projects/displayId">
+        <Annotation Term="Core.Description" String="For a specific company account, the unique and human-readable identifier of the project."/>
+        <Annotation Term="Core.Example">
+          <Record Type="Core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="PROJECT1"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+      </Annotations>
+      <Annotations Target="service.ProjectServiceV1.Projects/name">
+        <Annotation Term="Core.Description" String="Project name"/>
+        <Annotation Term="Core.Example">
+          <Record Type="Core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="My First Project"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+      </Annotations>
+      <Annotations Target="service.ProjectServiceV1.Projects/status">
+        <Annotation Term="Core.Description" String="Project status"/>
+        <Annotation Term="Validation.AllowedValues">
+          <Collection>
+            <Record Type="Validation.AllowedValue">
+              <PropertyValue Property="Value" String="NEW"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <PropertyValue Property="Value" String="IN_PROCESS"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <PropertyValue Property="Value" String="COMPLETED"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <PropertyValue Property="Value" String="ARCHIVED"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <PropertyValue Property="Value" String="TO_BE_DELETED"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <PropertyValue Property="Value" String="COPY_IN_PROCESS"/>
+            </Record>
+          </Collection>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="service.ProjectServiceV1.Projects/startDate">
+        <Annotation Term="Core.Description" String="Start date of the project"/>
+      </Annotations>
+      <Annotations Target="service.ProjectServiceV1.Projects/endDate">
+        <Annotation Term="Core.Description" String="End date of the project"/>
+      </Annotations>
+      <Annotations Target="service.ProjectServiceV1.Projects/location">
+        <Annotation Term="Core.Description" String="Address or coordinates where the project is taking place"/>
+        <Annotation Term="Core.Example">
+          <Record Type="Core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="Dietmar-Hopp-Allee 16, Walldorf, Germany"/>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="service.ProjectServiceV1.Projects/description">
+        <Annotation Term="Core.Description" String="Description of project"/>
+        <Annotation Term="Core.Example">
+          <Record Type="Core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="Some more information about the project"/>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="service.ProjectServiceV1.Projects/geoCoordinates">
+        <Annotation Term="Core.Description" String="Coordinates of the project location"/>
+      </Annotations>
+      <Annotations Target="service.ProjectServiceV1.Projects/collaborationOwnerId">
+        <Annotation Term="Core.Description" String="Company ID of the owner of the project"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+      </Annotations>
+      <Annotations Target="service.ProjectServiceV1.Projects/createdAt">
+        <Annotation Term="Core.Description" String="Timestamp of when the project was created"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="service.ProjectServiceV1.Projects/createdBy">
+        <Annotation Term="Core.Description" String="User ID of the user who created the project"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+      </Annotations>
+      <Annotations Target="service.ProjectServiceV1.Projects/modifiedAt">
+        <Annotation Term="Core.Description" String="Timestamp of when the project was last updated"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="service.ProjectServiceV1.Projects/modifiedBy">
+        <Annotation Term="Core.Description" String="User ID of the user who last updated the project"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+      </Annotations>
+      <Annotations Target="service.ProjectServiceV1.EntityContainer/Authorizations">
+        <Annotation Term="Capabilities.SelectSupport">
+          <Record Type="Capabilities.SelectSupportType">
+            <PropertyValue Property="Supported" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.InsertRestrictions">
+          <Record Type="Capabilities.InsertRestrictionsType">
+            <PropertyValue Property="Description" String="Creates a single project authorization by specifying projectId, user/group ID (principalId), type (principalType) and the permission ID (permission)."/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.DeleteRestrictions">
+          <Record Type="Capabilities.DeleteRestrictionsType">
+            <PropertyValue Property="Description" String="Delete a project authorization from the defined project."/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.ReadRestrictions">
+          <Record Type="Capabilities.ReadRestrictionsType">
+            <PropertyValue Property="ReadByKeyRestrictions">
+              <Record Type="Capabilities.ReadByKeyRestrictionsType">
+                <PropertyValue Property="Description" String="Read a single project authorization for a defined project, selected by user/group ID (principalId), type (principalType), and the permission ID (permission)."/>
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.UpdateRestrictions">
+          <Record Type="Capabilities.UpdateRestrictionsType">
+            <PropertyValue Property="Updatable" Bool="false"/>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="service.ProjectServiceV1.Authorizations/projectId">
+        <Annotation Term="Core.Description" String="Unique, technical identifier of the project"/>
+      </Annotations>
+      <Annotations Target="service.ProjectServiceV1.Authorizations/principalId">
+        <Annotation Term="Core.Description" String="Unique, technical identifier of the principal"/>
+      </Annotations>
+      <Annotations Target="service.ProjectServiceV1.Authorizations/principalType">
+        <Annotation Term="Core.Description" String="Type of the principal"/>
+        <Annotation Term="Core.Example">
+          <Record Type="Core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="PERSON"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Validation.AllowedValues">
+          <Collection>
+            <Record Type="Validation.AllowedValue">
+              <PropertyValue Property="Value" String="PERSON"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <PropertyValue Property="Value" String="GROUP"/>
+            </Record>
+          </Collection>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="service.ProjectServiceV1.Authorizations/permission">
+        <Annotation Term="Core.Description" String="Permission granted to the principal"/>
+        <Annotation Term="Core.Example">
+          <Record Type="Core.PrimitiveExampleValue">
+            <PropertyValue Property="Value" String="MAINTAIN_PROJECT_AUTHORIZATIONS"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Validation.AllowedValues">
+          <Collection>
+            <Record Type="Validation.AllowedValue">
+              <PropertyValue Property="Value" String="VIEW_PROJECT"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <PropertyValue Property="Value" String="EDIT_PROJECT_HEADER"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <PropertyValue Property="Value" String="MAINTAIN_PROJECT_AUTHORIZATIONS"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <PropertyValue Property="Value" String="DELETE_PROJECT"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <PropertyValue Property="Value" String="CREATE_GROUP"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <PropertyValue Property="Value" String="VIEW_DIGITAL_TWIN"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <PropertyValue Property="Value" String="CREATE_DIGITAL_TWIN"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <PropertyValue Property="Value" String="CREATE_FINANCE_VIEW"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <PropertyValue Property="Value" String="CREATE_ISSUE"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <PropertyValue Property="Value" String="INVITE_PROJECT_PARTNER"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <PropertyValue Property="Value" String="CREATE_PROJECT_PLAN"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <PropertyValue Property="Value" String="CREATE_TASK"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <PropertyValue Property="Value" String="DELETE_TASK"/>
+            </Record>
+          </Collection>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="service.ProjectServiceV1.copyProject()">
+        <Annotation Term="Core.Description" String="Copy a source project."/>
+        <Annotation Term="Core.LongDescription" String="This operation takes considerable time to complete as it is a heavy and asynchronous process.&lt;br>During the copy process, the project will have COPY_IN_PROCESS status. After the copy process is completed, the project status will be NEW.&lt;br>The following elements from the source project are copied:&lt;br>- Documents repository folder structure (folder name, folder description and folder authorizations)&lt;br>Please note that Project partner group and individual user authorizations are not copied.&lt;br>- Legal documents associated with the source project&lt;br>- User groups without the assigned users, defined for the source project&lt;br>- Project authorizations assigned to user groups, defined for the source project"/>
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

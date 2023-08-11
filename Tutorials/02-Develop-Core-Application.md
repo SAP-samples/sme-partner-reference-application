@@ -237,37 +237,39 @@ Last we need to define some users and their roles for local testing. This is don
 
 ```json
 {
-    "auth": {
-        "passport": {
-            "strategy": "mock",
-            "users": {
-                "Kate Jacob": {
-                    "password": "welcome",
-                    "ID": "kjacob",
-                    "roles": [
-                        "AuthorReadingManagerRole",
-                        "authenticated-user"
-                    ]
-                },
-                "Peter Sellers": {
-                    "password": "welcome",
-                    "ID": "pseller",
-                    "roles": [
-                        "AuthorReadingAdminRole",
-                        "authenticated-user"
-                    ]
-                },
-                "Julia Brunner": {
-                    "password": "welcome",
-                    "ID": "jbrunner",
-                    "roles": [
-                        "authenticated-user"
-                    ]
-                },
-                "*": true
+    "requires": {
+        "[development]": {
+            "auth": {
+                "kind": "mocked",
+                "users": {
+                    "Kate Jacob": {
+                        "password": "welcome",
+                        "ID": "kjacob",
+                        "roles": [
+                            "AuthorReadingManagerRole",
+                            "authenticated-user"
+                        ]
+                    },
+                    "Peter Sellers": {
+                        "password": "welcome",
+                        "ID": "pseller",
+                        "roles": [
+                            "AuthorReadingAdminRole",
+                            "authenticated-user"
+                        ]
+                    },
+                    "Julia Brunner": {
+                        "password": "welcome",
+                        "ID": "jbrunner",
+                        "roles": [
+                            "authenticated-user"
+                        ]
+                    },
+                    "*": true
+                }
             }
         }
-    }
+    }    
 }
 ```
 

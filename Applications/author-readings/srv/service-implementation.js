@@ -80,11 +80,6 @@ srv.after("UPDATE", "AuthorReadings", async (req) => {
     }
 });
 
-// Place holder for delete event implementation
-srv.on("DELETE", "AuthorReadings", async (req, next) => {
-    // nothing done here
-});
-
 // Check connected backend systems
 srv.before("READ", "AuthorReadings", async (req) => {
 
@@ -158,7 +153,7 @@ srv.on("block", async (req) => {
 srv.on("publish", async (req) => {
     try {
         const id = req.params.pop().ID;
-        const authorReadings = await SELECT.from("AuthorReadings").where({ ID: id });
+        const authorReadings = await SELECT.from("sap.samples.authorreadings.AuthorReadings").where({ ID: id });
         const authorReading = authorReadings[0];
 
         // Allow action for active entity instances only (draft events cannot be published)

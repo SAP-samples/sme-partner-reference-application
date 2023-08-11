@@ -1,0 +1,16 @@
+{
+    "name": "broker",
+    "version": "1.0.0",
+    "description": "",
+    "scripts": {
+        "start": "start-broker"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@sap/sbf": "^6.5.8"
+    },
+    "engines": {
+        "node": ">=16.17.1 <19.0.0"
+    }
+}

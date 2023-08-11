@@ -134,7 +134,7 @@ BTP consumer subaccount: Create destination "s4hc" to consume S/4HANA Cloud ODat
     | *scope*:        | Enter the **S/4 OAuth Scope** (API_ENTERPRISE_PROJECT_SRV_0002) |
     | *userIdSource*: | *email*                                                         |
 
-    > Note: For testing you may configure a basic authentication using the **S/4 Communication User** and **S/4 Communication User Password** for destination "s4hc".
+    > Note: The OAuth SAML bearer authentication requires some steps in S/4 to assign the authorizations for the OData API to a business user: You need to assign the scope *API_ENTERPRISE_PROJECT_SRV_0002* to a *Business Catalog* and finally to your business user. For testing you may configure a basic authentication using the **S/4 Communication User** and **S/4 Communication User Password** for destination "s4hc" (same as for destination "s4hc-tech-user" below).
 
     > Note: You may need to upload the **S/4 Server Certificate** into the destination service for SSL authentication using the link *Upload and Delete Certificates* on the destinations screen. You can download the S/4 server certificate from the browser (Open the ByD UI and view the site information; then display and export the certificate details into a ".cer"-file).
 

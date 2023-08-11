@@ -453,10 +453,11 @@ BAS: Enhance the implementation of the CAP services in file `./application/autho
 
     > Note: The reuse functions *getDestinationURL*, *checkDestination* and *getDestinationDescription* are designed to work for single-tenant as well as for multi-tenant deployments. For single-tenant deployments it reads the destination from the BTP subaccount that hosts the app, for multi-tenant deployments it reads the destination from the subscriber subaccount. We achieve this system behavior by pasing the JWT-token of the logged-in user to the function to get the destination. The JWT-token contains the tenant information.
 
-6. Since we are using the npm module *@sap-cloud-sdk/connectivity* in file *reuse.js*, we need to add the corresponding npm module to the dependencies in the `package.json` file:
+6. Since we are using the npm module *@sap-cloud-sdk/connectivity* in file *reuse.js*, we need to add the corresponding npm modules to the dependencies in the `package.json` file:
     ```json
     "dependencies": {
-        "@sap-cloud-sdk/connectivity": "^2.8.0"
+        "@sap-cloud-sdk/connectivity": "^3.2.0",
+        "@sap-cloud-sdk/http-client": "^3.3.0"
     },
     ```
 
@@ -619,9 +620,9 @@ BAS: Edit the Fiori Element annotations of the web app in file `./app/authorread
         @UI.Hidden : { $edmJson : 
             { $If : 
                 [
-                    { $Eq : [ {$Path : 'createByDProjectEnabled'}, false ] },
-                    true,
-                    false
+                    { $Eq : [ {$Path : 'createByDProjectEnabled'}, true ] },
+                    false,
+                    true
                 ]
             }   
         }

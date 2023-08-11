@@ -1,0 +1,24 @@
+{
+    "services": [
+      {
+        "name": "authorreadings",
+        "id": "1aac0de3-bc10-42bc-a950-00a9fbec536e",
+        "description": "Author Readings API",
+        "bindable": true,
+        "plans": [
+          {
+            "name": "standard",
+            "id": "358813f4-6ed2-47e1-90b1-dd9fefda4b1f",
+            "description": "standard",
+            "metadata": {
+             "supportedPlatforms": [
+                 "cloudfoundry",
+                 "sapcp"
+             ]
+            }       
+          }
+        ]
+        
+      }
+    ]
+  }

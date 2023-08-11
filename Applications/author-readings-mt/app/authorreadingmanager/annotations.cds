@@ -103,9 +103,9 @@ annotate service.AuthorReadings with @(UI : {
             @UI.Hidden : { $edmJson : 
                 { $If : 
                     [
-                        { $Eq : [ {$Path : 'createByDProjectEnabled'}, false ] },
-                        true,
-                        false
+                        { $Eq : [ {$Path : 'createByDProjectEnabled'}, true ] },
+                        false,
+                        true
                     ]
                 }   
             }
@@ -117,9 +117,23 @@ annotate service.AuthorReadings with @(UI : {
             @UI.Hidden : { $edmJson : 
                 { $If : 
                     [
-                        { $Eq : [ {$Path : 'createS4HCProjectEnabled'}, false ] },
-                        true,
-                        false
+                        { $Eq : [ {$Path : 'createS4HCProjectEnabled'}, true ] },
+                        false,
+                        true
+                    ]
+                }   
+            }
+        },
+        {
+            $Type  : 'UI.DataFieldForAction',
+            Label  : '{i18n>createProject}',
+            Action : 'AuthorReadingManager.createC4PProject',            
+            @UI.Hidden : { $edmJson : 
+                { $If : 
+                    [
+                        { $Eq : [ {$Path : 'createC4PProjectEnabled'}, true ] },
+                        false,
+                        true
                     ]
                 }   
             }
@@ -369,6 +383,37 @@ annotate service.AuthorReadings with @(UI : {
             Label : '{i18n>projectEndDateTime}',
             Value : toS4HCProject.ProjectEndDate,
             @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'S4HC' ] }, false, true ] } }
+        },
+
+        // C4P specific fields
+        {
+            $Type : 'UI.DataField',
+            Value : toC4PProject.displayId,
+            @UI.Hidden : true 
+        },
+        {
+            $Type : 'UI.DataField',
+            Label : '{i18n>projectName}',
+            Value : toC4PProject.projectName,
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'C4P' ] }, false, true ] } }
+        },
+        {
+            $Type : 'UI.DataField',
+            Label : '{i18n>projectStatus}',
+            Value : toC4PProject.status,
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'C4P' ] }, false, true ] } }
+        },
+        {
+            $Type : 'UI.DataField',
+            Label : '{i18n>projectStartDateTime}',
+            Value : toC4PProject.startDate,
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'C4P' ] }, false, true ] } }
+        },
+        {
+            $Type : 'UI.DataField',
+            Label : '{i18n>projectEndDateTime}',
+            Value : toC4PProject.endDate,
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'C4P' ] }, false, true ] } }
         }
     ]},
     FieldGroup #AdminData : {Data : [

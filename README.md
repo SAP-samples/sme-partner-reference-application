@@ -7,9 +7,9 @@
 The *SME Partner Reference Application* provides a "golden path" to build, run and integrate full-stack cloud applications on the *SAP Business Technology Platform*.
 
 With this repository we want to provide guidance for SAP partners in the market for small and midsize enterprises (SME) to extend SAP ERP solutions by side-by-side cloud applications running on the *SAP Business Technology Platform* (BTP). This guidance comprises
-- an opinionated pre-selection of BTP components with architecture guidance tailored for the SME market, 
+- an opinionated selection of BTP components with architecture guidance tailored for the SME market, 
 - best practices ("golden paths") to build, deploy and provision full-stack BTP applications, and
-- we pay special attention to the interoperability and integration with cloud ERP solutions such as *SAP Business ByDesign* and *S/4HANA Cloud*.
+- we pay special attention to the interoperability and integration with SAP cloud solutions such as *SAP Business ByDesign*, *S/4HANA Cloud* and *Cloud for Projects*.
 
 The repository includes a sample application that is ready to deploy and run, and tutorials to re-build the sample application from scratch following an incremental development approach from one-off to multi-consumer solutions.
 
@@ -48,6 +48,14 @@ Additionally, the sample showcases qualities relevant for enterprise-grade partn
 15.	Delivering “open solutions” by integration-ready OData APIs and business events following SAP technology alignments
 16. Deployment as one-off and multi-customer solution 
 
+**Which BTP resources do we use for the partner reference application?**
+
+The partner reference application is basically a NodeJS-application deployed on Cloud Foundry. 
+We are using the *SAP Business Application Studio* as development environment and Github as code repository.
+The *SAP Cloud Application Programming Model* (CAP) and *Fiori Elements* provide a model-driven development approach and empower us to focus on business objects, business logic and UI content. 
+The use of BTP services save development- and application management effort and provide a trusted runtime in line with SAP standards.
+<img src="./Tutorials/images/readme_bom.jpg" width="100%">
+
 **Join our community!**
 
 Do you like to share your own ideas and best practices? Please feel welcome to a vivid conversation about the *SME Partner Reference Application* in our [SAP Community](https://blogs.sap.com/2022/06/03/build-and-run-cloud-applications-on-the-sap-btp/).
@@ -70,9 +78,7 @@ You can start your journey following two paths:
 
 2. Re-build the application from scratch following the guidelines step-by-step starting with tutorial "*Build a full-stack BTP Application with One-off Deployment in a Customer BTP Account*".
 
-I would recommend to take the first approach and deploy the multi-tenant version of the sample application ([../Applications/author-readings-mt](Applications/author-readings-mt)) as is, and then use the tutorials as retrospect to understand the steps taken to reach this state. 
-
-> **Note: We plan to publish a new version 1.1 of the partner reference application based on latest package versions soon.** Additionally to the updated package versions, the version 1.1 contains some major enhancements incl. the service broker to enable 3rd-party integrations and _SAP Build_ extensions, and an integration with _SAP S/4HANA Cloud for projects, collaborative project management_. You find the version 1.1 under construction in branch "[development](https://github.com/SAP-samples/sme-partner-reference-application/tree/development)"; we plan to merge back the development branch into the main branch once we completed the version upgrades and tutorials.
+I would recommend to take the first approach and deploy the multi-tenant version of the sample application ([./Applications/author-readings-mt](./Applications/author-readings-mt)) as is, and then use the tutorials as retrospect to understand the steps taken to reach this state.
 
 ## Tutorials
 
@@ -99,13 +105,28 @@ Enhance the application to support multiple customers using shared BTP resources
 
 6. [Provision Tenants of the Multi-Tenant Application to Customers](Tutorials/45-Multi-Tenancy-Provisioning.md)
 
-7. [Connect a Tenant to *SAP Business ByDesign*](Tutorials/46-Multi-Tenancy-Provisioning-Connect-ByD.md)
+7. [Connect a Tenant with *SAP Business ByDesign*](Tutorials/46-Multi-Tenancy-Provisioning-Connect-ByD.md)
 
 Enhance your market reach and add *S/4HANA Cloud, public edition* as ERP-backend:
 
 8. [Integrate the BTP Application with *S/4HANA Cloud, public edition*](Tutorials/51-S4HC-Integration.md)
 
-9. [Connect a Tenant to *S/4HANA Cloud, public edition*](Tutorials/52-Multi-Tenancy-Provisioning-Connect-S4HC.md)
+9. [Connect a Tenant with *S/4HANA Cloud, public edition*](Tutorials/52-Multi-Tenancy-Provisioning-Connect-S4HC.md)
+
+Enhance your market reach and add *S/4HANA Cloud for Projects, collaborative project management* as backend project management solution:
+
+10. [Integrate the BTP Application with *S/4HANA Cloud for Projects, collaborative project management*](Tutorials/61-C4P-Integration.md)
+
+11. [Connect a Tenant with *S/4HANA Cloud for Projects, collaborative project management*](Tutorials/62-Multi-Tenancy-Provisioning-Connect-C4P.md)
+
+Open the APIs of the BTP application for 3rd-party integrations:
+
+12. [Enhance the BTP Application by a Service Broker](Tutorials/71-Multi-Tenancy-Service-Broker.md)
+
+13. [Configure and Consume the APIs of the BTP Application](Tutorials/72-Multi-Tenancy-Provisioning-Service-Broker.md)
+
+After completing all steps you may have a scalable application with multiple customer subscriptions:
+<img src="./Tutorials/images/readme_sample-deployment.jpg" width="100%">
 
 Related resources:
 - [SAP Cloud Application Programming Model](https://cap.cloud.sap/docs/)

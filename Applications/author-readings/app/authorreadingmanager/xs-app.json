@@ -5,7 +5,7 @@
         {
             "authenticationType": "none",
             "csrfProtection": false,
-            "source": "^/authorreadingmanager/",
+            "source": "^/odata/v4/authorreadingmanager/",
             "destination": "launchpad"
         },
         {

@@ -1,33 +1,35 @@
 {
     "name": "author-readings",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "SAP-SME Partner Reference Application",
     "repository": "https://github.com/SAP-samples/sme-partner-reference-application",
     "author": "SAP",
     "license": "SAP SAMPLE CODE LICENSE",
     "dependencies": {
-        "@sap-cloud-sdk/connectivity": "^2.8.0",
-        "@sap/cds": "^5.9.4",
-        "express": "4.17.1",
-        "hdb": "0.19.1",
+        "@sap-cloud-sdk/connectivity": "^3.2.0",
+        "@sap/cds": "^7.0.2",
+        "@sap/cds-dk": "^7.0.2",
+        "express": "^4.17.1",
+        "hdb": "^0.19.1",
         "passport": "^0.6.0",
         "cors": "^2.8.5",
-        "request": "^2.88.2",
         "@sap/xb-msg-amqp-v100": "^0.9.51",
-        "@sap/audit-logging": "^5.1.0"
+        "@sap/audit-logging": "^5.1.0",
+        "moment": "^2.29.4",
+        "@sap-cloud-sdk/http-client": "^3.3.0"
     },
     "devDependencies": {
-        "@sap/ux-specification": "^1.96.9",
-        "chai": "^4.3.4",
-        "chai-http": "^4.3.0",
-        "mocha": "^9.2.2",
-        "sqlite3": "^5.0.2"
+        "@sap/ux-specification": "^1.108.9",
+        "chai": "^4.3.7",
+        "chai-http": "^4.4.0",
+        "mocha": "^10.2.0",
+        "sqlite3": "^5.1.6"
     },
     "engines": {
-        "node": "^14"
+        "node": ">=16.17.1 <19.0.0"
     },
     "scripts": {
-        "start": "cds run",
+        "start": "cds-serve",
         "test": "mocha 'test/*.test.js' --recursive --timeout 10000 --exit",
         "undeploy": "cf undeploy author-readings --delete-services --delete-service-keys"
     },
