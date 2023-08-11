@@ -1,4 +1,5 @@
 # Enhance the BTP Application by a Service Broker
+
 Service Broker is used to enable access to application OData services using tenant specific credentials and authorizations taking into account the tenant isolation in an multi-tenant application.
 
 >Note: Remote access to the OData services of the application is not possible by default, service broker will enable remote access of OData services. 
@@ -67,7 +68,7 @@ Service Broker configuration in an application involves following steps:
                     "bindable": true,
                     "plans": [
                         {
-                        "name": "authorreadingsintegration",
+                        "name": "standard",
                         "id": "358813f4-6ed2-47e1-90b1-dd9fefda4b1f",
                         "description": "standard"          
                         }
@@ -146,12 +147,12 @@ Service Broker configuration in an application involves following steps:
                 authorreadings:             
                     extend_xssecurity: 
                         per_plan: 
-                            authorreadingsintegration: 
+                            standard: 
                                 authorities: 
                                     - "$XSMASTERAPPNAME.authorreadingsapi"
                     extend_credentials:
                         per_plan:
-                            authorreadingsintegration:
+                            standard:
                                 endpoints:
                                     authorreadings: "~{srv-api/srv-url}" # Tenant-specific OData endpoint for remote integrations   
 

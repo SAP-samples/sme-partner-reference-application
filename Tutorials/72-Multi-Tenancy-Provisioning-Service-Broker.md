@@ -8,6 +8,8 @@ In this tutorial we describe the steps to configure and consume the APIs of the 
 
 ## Service Broker configuration in an subscriber BTP subaccount involves following steps:
 
+In general there are two approaches to create a service broker instance in the consumer subaccount: You can use the Cloud Foundry CLI or the BTP CLI. In our example here we use the CF CLI because using the BTP CLI would require additional steps to install BTP CLI and run the BTP commands.
+
 BTP Cockpit - consumer subaccount:
 
 1. Activate Cloud Foundry (without quota)
@@ -33,12 +35,16 @@ Business Application Studio:
 
 BTP Cockpit - consumer subaccount:
 
-3. Open the CF space and navigate to the CF space *Service Marketspace*: Create instance of the *Author Readings API*-service.
+3. Open the CF space and navigate to the CF space *Service Marketspace*: Create instance of the *Author Readings API*-service and choose a suitable instance name, for example "author-readings-api".
 
-4. Open the *Instances and Subscriptions* and create a *Service Key* for the new service broker instance
-        - Click on *Create* button in the *Service Keys* section
-        - Enter arbitary *Service Key Name* (e.g. "api-key")
-        - Click on *Create* button
-        - Click on the above created *Service Key*, copy the details *clientid*, *clientsecret*, *url*, *apiurl* , the details are used in next step to call the APIs from consumer application like Postman.
+4. Open the *Instances and Subscriptions* and create a *Service Key* for the newly craeted service broker instance
+    - Click on *Create* button in the *Service Keys* section
+    - Enter arbitary *Service Key Name* (e.g. "api-key")
+    - Click on *Create* button
+    - Click on the above created *Service Key*, check the service key json and take note of the following elements:
+        - *endpoints.authorreadings* (in the first line of the json) as **Service Key API-Endpoint**
+        - *uaa.clientid* as **Service Key UAA Client-ID**
+        - *uaa.clientsecret* as **Service Key UAA Client-Secret**
+        - *uaa.url* as **Service Key UAA-URL**
 
-5. Access the service from Postman
+With these steps you are ready to explore and test the OData services using Postman. In folder [api-samples](./api-samples/) you find a Postman collection and a Postman environment with some examples. Check the documentation of the Postman collection for further details about how to run the examples.

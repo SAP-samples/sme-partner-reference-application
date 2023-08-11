@@ -7,7 +7,7 @@
         "bindable": true,
         "plans": [
           {
-            "name": "authorreadingsintegration",
+            "name": "standard",
             "id": "358813f4-6ed2-47e1-90b1-dd9fefda4b1f",
             "description": "standard",
             "metadata": {
