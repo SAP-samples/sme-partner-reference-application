@@ -31,7 +31,7 @@ async function projectDataRecord(authorReadingIdentifier, authorReadingTitle, au
         // Assemble project payload
         const projectRecord = {
             "displayId": generatedID,
-            "name": authorReadingTitle,
+            "projectName": authorReadingTitle,
             "startDate": generatedStartDate,
             "endDate": generatedEndDate,
             "location": "Dietmar-Hopp-Allee 15a, 69190 Walldorf, Germany",

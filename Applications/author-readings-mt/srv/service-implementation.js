@@ -644,7 +644,7 @@ srv.on("createC4PProject", async (req) => {
                     var c4pRemoteSystem = await reuse.getDestinationURL(req , 'c4p-url'); 
                     
                     // Set the URL of C4P project overview screen for UI navigation
-                    var c4pRemoteProjectExternalURL = "/cp.portal/site#CollaborativeProject-manage?sap-ui-app-id-hint=com.sap.copin.project.ui&/Projects/" + projectRecord.id;
+                    var c4pRemoteProjectExternalURL = "/cp.portal/site#CollaborativeProject-manage?sap-ui-app-id-hint=com.sap.copin.project.ui&/Projects/" + remoteProjectObjectID;
                     var c4pRemoteProjectExternalCompleteURL = c4pRemoteSystem.concat( c4pRemoteProjectExternalURL );
                     
                     // Update project elements in entity AuthorReadings
@@ -662,8 +662,9 @@ srv.on("createC4PProject", async (req) => {
             req.error(400, "ACTION_CREATE_PROJECT_DRAFT");
         }
     } catch (error) {
-        // App reacts error tolerant in case of calling the remote service, mostly if the remote service is not available or if the destination is missing
-        console.log("ACTION_CREATE_PROJECT_CONNECTION" + "; " + error);
+        // App reacts error tolerant in case of calling the remote service, mostly if the remote service is not available or if the destination is missing or any issue in calling remote service
+        console.log("ACTION_CREATE_PROJECT_CONNECTION" + "; " + error + ", Exception Stack Trace: "+ error.stack);
+
     }
 });
 
