@@ -1,15 +1,15 @@
-# SME Partner Reference Application
+# Partner Reference Application
 
 [![REUSE status](https://api.reuse.software/badge/github.com/SAP-samples/sme-partner-reference-application)](https://api.reuse.software/info/github.com/SAP-samples/sme-partner-reference-application)
 
 ## Description
 
-The *SME Partner Reference Application* provides a "golden path" to build, run and integrate full-stack cloud applications on the *SAP Business Technology Platform*.
+The *Partner Reference Application* provides a "golden path" to build, run and integrate full-stack cloud applications on the *SAP Business Technology Platform*.
 
-With this repository we want to provide guidance for SAP partners in the market for small and midsize enterprises (SME) to extend SAP ERP solutions by side-by-side cloud applications running on the *SAP Business Technology Platform* (BTP). This guidance comprises
-- an opinionated selection of BTP components with architecture guidance tailored for the SME market, 
+With this repository we want to provide guidance for SAP partners to extend SAP ERP solutions by side-by-side cloud applications running on the *SAP Business Technology Platform* (BTP) in a scalable model. This guidance comprises
+- an opinionated selection of BTP components with architecture guidance, 
 - best practices ("golden paths") to build, deploy and provision full-stack BTP applications, and
-- we pay special attention to the interoperability and integration with SAP cloud solutions such as *SAP Business ByDesign*, *S/4HANA Cloud* and *Cloud for Projects*.
+- we pay special attention to the interoperability and integration with SAP cloud solutions such as *S/4HANA Cloud*, *Cloud for Projects* and *SAP Business ByDesign*.
 
 The repository includes a sample application that is ready to deploy and run, and tutorials to re-build the sample application from scratch following an incremental development approach from one-off to multi-consumer solutions.
 
@@ -58,15 +58,14 @@ The use of BTP services save development- and application management effort and 
 
 **Join our community!**
 
-Do you like to share your own ideas and best practices? Please feel welcome to a vivid conversation about the *SME Partner Reference Application* in our [SAP Community](https://blogs.sap.com/2022/06/03/build-and-run-cloud-applications-on-the-sap-btp/).
+Do you like to share your own ideas and best practices? Please feel welcome to a vivid conversation about the *Partner Reference Application* in our [SAP Community](https://blogs.sap.com/2022/06/03/build-and-run-cloud-applications-on-the-sap-btp/).
 
 ## Requirements
 
-The application is based on the *SAP Business Technology Platform* (BTP) and SAP Cloud ERP Solutions. Therefore you need 
-- administrative access to a BTP account with entitlements for *SAP Business Application Studio*, *Cloud Foundry Runtime*, *SAP HANA Cloud*, *SAP HANA Schemas & HDI Containers*, *SAP Build Work Zone*, *SAP Event Mesh*, *Auditlog Service*, *Audit Log Viewer Service*,
-- access to an *SAP Business ByDesign* tenant and authorizations for work centers *Application and User Management* and *Project Management*,
-- access to an *SAP S/4HANA Cloud, public edition* tenant and authorizations for administration and project management apps,
-- administrator access to an *SAP Identity Authentication Service* tenant (IAS).
+The application is based on the *SAP Business Technology Platform* (BTP) and integrated with SAP Cloud ERP Solutions. Therefore you need access to the following SAP solutions:
+- *SAP Business Technology Platform* (BTP) account for test, demo and development (TDD account) or a BTP account for productive use,
+- SAP Cloud ERP solution such as *SAP S/4HANA Cloud, public edition* or *SAP Business ByDesign* (you can focus on the integration with the ERP solution of your choice and skip the integration with other ERP solutions if not available),
+- *SAP Identity Authentication Service* (IAS).
 
 We are using the *Business Application Studio* as standardized development environment and *Github* as code repository.
 
