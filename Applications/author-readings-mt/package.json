@@ -6,23 +6,22 @@
   "author": "SAP",
   "license": "SAP SAMPLE CODE LICENSE",
   "dependencies": {
-    "@sap-cloud-sdk/connectivity": "^3.2.0",
-    "@sap/audit-logging": "^5.1.0",
-    "@sap/cds": "^7.0.2",
-    "@sap/cds-dk": "^7.0.2",
-    "@sap/cds-mtxs": "^1.10.0",
-    "@sap/xssec": "^3.2.17",
+    "@sap-cloud-sdk/connectivity": "^3.6.0",
+    "@sap-cloud-sdk/http-client": "^3.3.0",
+    "@sap/audit-logging": "^5.7.2",
+    "@sap/cds": "^7.3.0",
+    "@sap/cds-dk": "^7.3.0",
+    "@sap/cds-mtxs": "^1.12.0",
+    "@sap/xssec": "^3.3.5",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "hdb": "^0.19.1",
-    "npx": "^10.2.2",
     "passport": "^0.6.0",
-    "moment": "^2.29.4",
-    "@sap-cloud-sdk/http-client": "3.3.0"
+    "moment": "^2.29.4"
   },
   "devDependencies": {
-    "@sap/ux-specification": "^1.108.9",
-    "chai": "^4.3.7",
+    "@sap/ux-specification": "^1.108.16",
+    "chai": "^4.3.10",
     "chai-http": "^4.4.0",
     "mocha": "^10.2.0",
     "sqlite3": "^5.1.6"
