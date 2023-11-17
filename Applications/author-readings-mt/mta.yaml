@@ -40,8 +40,7 @@ modules:
   provides:
   - name: approuter-binding
     properties:
-      app-fqdn: ${approuter-url}.${domain}
-      app-url: ${protocol}://~{approuter-binding/app-fqdn}
+      app-url: ${protocol}://${approuter-url}.${domain}
   requires:
     - name: srv-api
       group: destinations
@@ -109,8 +108,7 @@ modules:
   provides:
   - name: mtx-binding
     properties:
-      app-fqdn: ${mtx-srv-url}.${domain}
-      app-url: ${protocol}://~{mtx-binding/app-fqdn}  
+      app-url: ${protocol}://${mtx-srv-url}.${domain} 
   - name: author-readings-mtx-srv-destination
     public: true
     properties:
