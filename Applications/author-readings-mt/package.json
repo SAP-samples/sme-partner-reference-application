@@ -173,6 +173,24 @@
             "path": "/TaskService/v1"
           }
         }
+      },
+      "b1_sbs_v2": {
+        "kind": "odata",
+        "model": "srv/external/b1_sbs_v2",
+        "[sandbox]": {
+          "credentials": {
+            "url": "https://{{b1-hostname}}/b1s/v2/PurchaseOrders",
+            "authentication": "BasicAuthentication",
+            "username": "{{test-user}}",
+            "password": "{{test-password}}"
+          }
+        },
+        "[production]": {
+          "credentials": {
+            "destination": "b1",
+            "path": "/b1s/v2/PurchaseOrders"
+          }
+        }
       }
     },
     "hana": {

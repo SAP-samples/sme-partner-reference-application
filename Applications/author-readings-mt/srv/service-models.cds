@@ -27,11 +27,15 @@ service AuthorReadingManager @(
 
             // C4P projects: Mix-in of C4P project data
             toC4PProject: Association to RemoteC4PProject.Projects on toC4PProject.displayId = $projection.projectID;
+
+            // B1 purchase orders: Mix-in of B1 purchase order data
+            toB1PurchaseOrder: Association to RemoteB1.PurchaseOrders on toB1PurchaseOrder.DocNum = $projection.purchaseOrderID;
         } 
         into  {
             *,
             virtual null as statusCriticality    : Integer @title : '{i18n>statusCriticality}',
             virtual null as projectSystemName    : String  @title : '{i18n>projectSystemName}' @odata.Type : 'Edm.String',
+            virtual null as purchaseOrderSystemName : String  @title : '{i18n>purchaseOrderSystemName}' @odata.Type : 'Edm.String',
 
             // ByD projects: visibility of button "Create project in ByD"
             virtual null as createByDProjectEnabled : Boolean  @title : '{i18n>createByDProjectEnabled}'  @odata.Type : 'Edm.Boolean',
@@ -46,6 +50,10 @@ service AuthorReadingManager @(
             // C4P projects: visibility of button "Create project in C4P"
             virtual null as createC4PProjectEnabled : Boolean  @title : '{i18n>createC4PProjectEnabled}'  @odata.Type : 'Edm.Boolean',
             toC4PProject,
+
+            // B1 purchase order: visibility of button "Create Purchase Order in B1"
+            virtual null as createB1PurchaseOrderEnabled : Boolean  @title : '{i18n>createB1PurchaseOrderEnabled}'  @odata.Type : 'Edm.Boolean',
+            toB1PurchaseOrder,
         }
         actions {
 
@@ -83,6 +91,13 @@ service AuthorReadingManager @(
                 cds.odata.bindingparameter.name : '_authorreading'
             )
             action createC4PProject() returns AuthorReadings;
+
+            // B1 purchase order: action to create a purchase order in B1
+            @(
+                Common.SideEffects              : {TargetEntities: ['_authorreading','_authorreading/toB1PurchaseOrder']},
+                cds.odata.bindingparameter.name : '_authorreading'
+            )
+            action createB1PurchaseOrder() returns AuthorReadings;
         };
 
     // Participants
@@ -301,6 +316,32 @@ extend service AuthorReadingManager with {
         effortUnit as effortUnit
     }    
 };
+
+/ -------------------------------------------------------------------------------
+// Extend service AuthorReadingManager by C4P Tasks
+
+using { b1_sbs_v2 as RemoteB1 } from './external/b1_sbs_v2';
+
+extend service AuthorReadingManager with {
+    entity B1PurchaseOrder as projection on RemoteB1.PurchaseOrders {
+        key DocEntry as DocEntry,
+        DocNum as DocNum,
+        DocType as DocType,
+        DocDate as DocDate,
+        DocDueDate as DocDueDate,
+        CardCode as CardCode,
+        DocumentLines as DocumentLines : redirected to B1DocumentLines  
+    }
+    
+    entity B1DocumentLines as projection on RemoteB1.DocumentLines {
+        LineNum as LineNum,
+        ItemCode as ItemCode,
+        Quantity as Quantity,
+        Price as Price
+    }
+    
+    
+}
 
 // -------------------------------------------------------------------------------
 // Annotations for data privacy

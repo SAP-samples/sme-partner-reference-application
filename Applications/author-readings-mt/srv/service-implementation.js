@@ -6,14 +6,17 @@ const reuse = require("./reuse");
 const connectorByD = require("./connector-byd");
 const connectorS4HC = require("./connector-s4hc");
 const connectorC4P = require("./connector-c4p");
+const connectorB1 = require("./connector-b1");
 
 // Buffer status and name of project management systems
 var ByDIsConnectedIndicator;  
 var S4HCIsConnectedIndicator;
 var C4PIsConnectedIndicator;
+var B1IsConnectedIndicator;  
 var ByDSystemName;
 var S4HCSystemName;
 var C4PSystemName;
+var B1SystemName;
 
 module.exports = cds.service.impl(async (srv) => {
 
@@ -100,6 +103,14 @@ srv.before("READ", "AuthorReadings", async (req) => {
     // C4P
     C4PIsConnectedIndicator  = await reuse.checkDestination(req,"c4p"); 
     C4PSystemName            = await reuse.getDestinationDescription(req,"c4p-url");
+
+    // C4P
+    C4PIsConnectedIndicator  = await reuse.checkDestination(req,"c4p"); 
+    C4PSystemName            = await reuse.getDestinationDescription(req,"c4p-url");
+
+    //B1
+    B1IsConnectedIndicator   = await reuse.checkDestination(req,"b1"); 
+    B1SystemName            = await reuse.getDestinationDescription(req,"b1-url"); 
 });
 
 // Apply a colour code based on the author reading status
@@ -130,14 +141,22 @@ srv.after("READ", "AuthorReadings", (req) => {
         if (authorReading.projectID) {
             authorReading.createByDProjectEnabled = false;
             authorReading.createS4HCProjectEnabled = false;   
-            authorReading.createC4PProjectEnabled = false;   
+            authorReading.createC4PProjectEnabled = false;
             if(authorReading.projectSystem == 'ByD')  authorReading.projectSystemName = ByDSystemName;
             if(authorReading.projectSystem == 'S4HC') authorReading.projectSystemName = S4HCSystemName;        
-            if(authorReading.projectSystem == 'C4P') authorReading.projectSystemName = C4PSystemName;        
+            if(authorReading.projectSystem == 'C4P') authorReading.projectSystemName = C4PSystemName;    
         }else{            
             authorReading.createByDProjectEnabled = ByDIsConnectedIndicator;
             authorReading.createS4HCProjectEnabled = S4HCIsConnectedIndicator;
             authorReading.createC4PProjectEnabled = C4PIsConnectedIndicator;
+        }
+
+        // Update project system name and visibility of the "Create Purchase Order"-button
+        if (authorReading.purchaseOrderID) {
+            authorReading.createB1PurchaseOrderEnabled = false; 
+            if(authorReading.purchaseOrderSystem == 'B1') authorReading.purchaseOrderSystemName = B1SystemName;      
+        }else{ 
+            authorReading.createB1PurchaseOrderEnabled = B1IsConnectedIndicator;
         }
     };
 });
@@ -668,6 +687,81 @@ srv.on("createC4PProject", async (req) => {
     }
 });
 
+
+// Entity action: Create ByD Project
+srv.on("createB1PurchaseOrder", async (req) => {
+    try {
+        const authorReadingID = (req.params.pop()).ID;
+        const authorReadings = await SELECT.from("sap.samples.authorreadings.AuthorReadings").where({ ID: authorReadingID });
+        // Allow action for active entity instances only
+        if ( authorReadings.length === 1 ) {
+            let authorReadingIdentifier, authorReadingDescription, authorReadingTitle, authorReadingDate, authorReadingPurchaseOrderSystem;
+            authorReadings.forEach((authorReading) => {
+                authorReadingIdentifier = authorReading.identifier;
+                authorReadingDescription = authorReading.description;
+                authorReadingTitle = authorReading.title;
+                authorReadingDate = authorReading.date;
+                authorReadingPurchaseOrderSystem = authorReading.purchaseOrderSystem;
+            });
+
+            if ( authorReadingPurchaseOrderSystem == "B1" || (!authorReadingPurchaseOrderSystem) ) {
+                
+                var purchaseOrderRecord = await connectorB1.purchaseOrderDataRecord(authorReadingIdentifier, authorReadingTitle, authorReadingDate);
+
+                // Check and create the project instance
+                // If the project already exist, then read and update the local project elements in entity AuthorReadings
+                
+                // Get the entity service (entity "ByDProjects")
+                const { B1PurchaseOrder } = srv.entities;
+                var remotePurchaseOrderID, remotePurchaseOrderObjectID;
+                // GET service call on remote project entity
+                const existingPurchaseOrder = await srv.run( SELECT.from(B1PurchaseOrder).where({ displayId: authorReadings.purchaseOrderID }) );
+
+                if (existingPurchaseOrder.length === 1) {
+                    remotePurchaseOrderID = existingPurchaseOrder[0].DocEntry;
+                    remotePurchaseOrderObjectID = existingPurchaseOrder[0].DocNum;
+                } else {
+                    // POST request to create the project via remote service
+                    const remoteCreatedPurchaseOrder = await srv.run( INSERT.into(B1PurchaseOrder).entries(purchaseOrderRecord) );
+                    if (remoteCreatedPurchaseOrder) {
+                        remotePurchaseOrderID = remoteCreatedPurchaseOrder.DocEntry;
+                        remotePurchaseOrderObjectID = remoteCreatedPurchaseOrder.DocNum;
+                    }
+                }
+                
+
+                // Generate remote ByD Project URL and update the URL
+                if (remotePurchaseOrderID) {
+                    
+                    // Read the ByD system URL dynamically from BTP destination "byd-url"
+                    var b1RemoteSystem = await reuse.getDestinationURL(req , 'b1-url'); 
+                    
+                    // Set the URL of ByD project overview screen for UI navigation
+                    var b1RemotePurchaseOrderExternalURL =
+                        "/webx/index.html#webclient-OPOR&/Objects/OPOR/Detail?view=OPOR.detailView&id=OPOR%252C" + remotePurchaseOrderID ;
+                    var b1RemotePurchaseOrderExternalCompleteURL = b1RemoteSystem.concat( b1RemotePurchaseOrderExternalURL );
+                    
+                    // Update project elements in entity AuthorReadings
+                    await UPDATE("sap.samples.authorreadings.AuthorReadings")
+                        .set({
+                            purchaseOrderID: remotePurchaseOrderID,
+                            purchaseOrderObjectID: remotePurchaseOrderObjectID,
+                            purchaseOrderURL: b1RemotePurchaseOrderExternalCompleteURL,
+                            purchaseOrderSystem : "B1"
+                        })
+                        .where({ ID: authorReadingID });
+                }
+            }                   
+        } else {
+            req.error(400, "ACTION_CREATE_PURCHASE_ORDER_DRAFT");
+        }
+    } catch (error) {
+        // App reacts error tolerant in case of calling the remote service, mostly if the remote service is not available of if the destination is missing
+        console.log("ACTION_CREATE_PURCHASE_ORDER_CONNECTION" + "; " + error);
+    }
+});
+
+
 // Expand author readings to remote projects
 srv.on("READ", "AuthorReadings", async (req, next) => {
 
@@ -687,6 +781,11 @@ srv.on("READ", "AuthorReadings", async (req, next) => {
     // Check and Read C4P project related data 
     if ( C4PIsConnectedIndicator ){
         authorReadings =  await connectorC4P.readProject(authorReadings);  
+    };
+
+    // Check and Read B1 purchaseorder related data 
+    if ( B1IsConnectedIndicator ){
+        authorReadings =  await connectorB1.readPurchaseOrder(authorReadings);  
     };
     
     // Return remote project data
@@ -856,6 +955,22 @@ srv.on("DELETE", "C4PTask", async (req) => {
     return await connectorC4P.delegateODataRequests(req,"c4p_TaskService");
 });
 
+// ----------------------------------------------------------------------------
+// Implementation of remote OData services (back-channel integration with B1)
+
+// Delegate OData requests to ByD remote project entities
+srv.on("READ", "B1PurchaseOrder", async (req) => {
+    return await connectorB1.delegateODataRequests(req,"b1_sbs_v2");
+});
+srv.on("CREATE", "B1PurchaseOrder", async (req) => {
+    return await connectorB1.delegateODataRequests(req,"b1_sbs_v2");
+});
+srv.on("UPDATE", "B1PurchaseOrder", async (req) => {
+    return await connectorB1.delegateODataRequests(req,"b1_sbs_v2");
+});
+srv.on("DELETE", "B1PurchaseOrder", async (req) => {
+    return await connectorB1.delegateODataRequests(req,"b1_sbs_v2");
+});
 
 // ----------------------------------------------------------------------------
 // Event-based integration with ByD

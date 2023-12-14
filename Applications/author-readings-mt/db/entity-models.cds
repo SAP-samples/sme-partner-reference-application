@@ -23,6 +23,10 @@ entity AuthorReadings : managed, cuid {
     projectObjectID         : String;
     projectURL              : String;
     projectSystem           : String;
+    purchaseOrderID         : String;
+    purchaseOrderObjectID   : String;
+    purchaseOrderURL        : String;
+    purchaseOrderSystem     : String;
     eventMeshMessage        : String;
 }
 
@@ -69,6 +73,10 @@ annotate AuthorReadings with @fiori.draft.enabled {
     projectObjectID         @title : '{i18n>projectObjectID}';
     projectURL              @title : '{i18n>projectURL}';
     projectSystem           @title : '{i18n>projectSystem}';
+    purchaseOrderID         @title : '{i18n>purchaseOrderID}';
+    purchaseOrderObjectID   @title : '{i18n>purchaseOrderObjectID}';
+    purchaseOrderURL        @title : '{i18n>purchaseOrderURL}';
+    purchaseOrderSystem     @title : '{i18n>purchaseOrderSystem}';
     eventMeshMessage        @title : '{i18n>eventMeshMessage}';
 }
 

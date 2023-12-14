@@ -177,3 +177,27 @@ annotate AuthorReadingManager.C4PTask with @(restrict : [
         to    : 'AuthorReadingAdminRole'
     }
 ]);
+
+// b1 PO: Managers and Administrators can read and create remote projects
+annotate AuthorReadingManager.B1PurchaseOrder with @(restrict : [
+    {
+        grant : ['*'],
+        to    : 'AuthorReadingManagerRole',
+    },
+    {
+        grant : ['*'],
+        to    : 'AuthorReadingAdminRole'
+    }
+]);
+
+// B1 PO item: Managers and Administrators can read and create remote projects
+annotate AuthorReadingManager.B1DocumentLines with @(restrict : [
+    {
+        grant : ['*'],
+        to    : 'AuthorReadingManagerRole',
+    },
+    {
+        grant : ['*'],
+        to    : 'AuthorReadingAdminRole'
+    }
+]);
