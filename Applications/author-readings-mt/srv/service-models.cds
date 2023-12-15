@@ -317,7 +317,7 @@ extend service AuthorReadingManager with {
     }    
 };
 
-/ -------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------
 // Extend service AuthorReadingManager by C4P Tasks
 
 using { b1_sbs_v2 as RemoteB1 } from './external/b1_sbs_v2';

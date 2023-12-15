@@ -2106,7 +2106,7 @@ entity b1_sbs_v2.U_AUTO_INCRE {
 @cds.external : true
 @cds.persistence.skip : true
 @open : true
-entity b1_sbs_v2.![My Item2] {
+entity b1_sbs_v2.MyItem2 {
   key Code : LargeString not null;
   Name : LargeString;
   DocEntry : Integer;
@@ -2130,19 +2130,19 @@ entity b1_sbs_v2.![My Item2] {
   U_UDF_LinkToTable : LargeString;
   U_UDF_Num2 : Integer;
   U_UDF_Quantity_NotEditable : Double;
-  ![2_OITM_R1Collection] : many b1_sbs_v2.![2_OITM_R1];
-  ![2_OITM_R2Collection] : many b1_sbs_v2.![2_OITM_R2];
-  ![2_OITM_R3Collection] : many b1_sbs_v2.![2_OITM_R3];
+  _OITM_R1Collection : many b1_sbs_v2._OITM_R1;
+  _OITM_R2Collection : many b1_sbs_v2._OITM_R2;
+  _OITM_R3Collection : many b1_sbs_v2._OITM_R3;
 } actions {
   action Cancel(
-    ![My Item2Params] : $self
+    MyItem2Params : $self
   );
 };
 
 @cds.external : true
 @cds.persistence.skip : true
 @open : true
-entity b1_sbs_v2.![My Item] {
+entity b1_sbs_v2.MyItem {
   key Code : LargeString not null;
   Name : LargeString;
   DocEntry : Integer;
@@ -2168,7 +2168,7 @@ entity b1_sbs_v2.![My Item] {
 @cds.external : true
 @cds.persistence.skip : true
 @open : true
-entity b1_sbs_v2.![My Doc2] {
+entity b1_sbs_v2.MyDoc2 {
   DocNum : Integer;
   Period : Integer;
   Instance : Integer;
@@ -2200,22 +2200,22 @@ entity b1_sbs_v2.![My Doc2] {
   U_UDF_Date_MDT : DateTime not null;
   U_UDF_Price_NotEditable : Double;
   U_UDF_Quantity_Invisible : Double;
-  ![2_ODOC_R1Collection] : many b1_sbs_v2.![2_ODOC_R1];
-  ![2_ODOC_R2Collection] : many b1_sbs_v2.![2_ODOC_R2];
-  ![2_ODOC_R3Collection] : many b1_sbs_v2.![2_ODOC_R3];
+  _ODOC_R1Collection : many b1_sbs_v2._ODOC_R1;
+  _ODOC_R2Collection : many b1_sbs_v2._ODOC_R2;
+  _ODOC_R3Collection : many b1_sbs_v2._ODOC_R3;
 } actions {
   action Cancel(
-    ![My Doc2Params] : $self
+    MyDoc2Params : $self
   );
   action Close(
-    ![My Doc2Params] : $self
+    MyDoc2Params : $self
   );
 };
 
 @cds.external : true
 @cds.persistence.skip : true
 @open : true
-entity b1_sbs_v2.![My Doc] {
+entity b1_sbs_v2.MyDoc {
   DocNum : Integer;
   Period : Integer;
   Instance : Integer;
@@ -2248,7 +2248,7 @@ entity b1_sbs_v2.![My Doc] {
 @cds.external : true
 @cds.persistence.skip : true
 @open : true
-entity b1_sbs_v2.![My BP] {
+entity b1_sbs_v2.MyBP {
   key Code : LargeString not null;
   Name : LargeString;
   DocEntry : Integer;
@@ -2275,7 +2275,7 @@ entity b1_sbs_v2.![My BP] {
   OCD1Collection : many b1_sbs_v2.OCD1;
 } actions {
   action Cancel(
-    ![My BPParams] : $self
+    MyBPParams : $self
   );
 };
 
@@ -2834,7 +2834,7 @@ entity b1_sbs_v2.InventoryCycles {
 @cds.external : true
 @cds.persistence.skip : true
 @open : true
-entity b1_sbs_v2.![My Tax] {
+entity b1_sbs_v2.MyTax {
   key Code : LargeString not null;
   Name : LargeString;
   DocEntry : Integer;
@@ -2856,7 +2856,7 @@ entity b1_sbs_v2.![My Tax] {
   U_OOVTH_Rate : Double not null;
 } actions {
   action Cancel(
-    ![My TaxParams] : $self
+    MyTaxParams : $self
   );
 };
 
@@ -4004,7 +4004,7 @@ type b1_sbs_v2.WorkflowTaskInputObject {
   TaskID : Integer;
   LineId : Integer;
   Type : LargeString;
-  ![Key] : LargeString;
+   ![Key] : LargeString;
   SubType : LargeString;
   Detail : LargeString;
 };
@@ -4651,13 +4651,13 @@ type b1_sbs_v2.U_2_AUTO_INCREParams {
 };
 
 @cds.external : true
-type b1_sbs_v2.![My Item2Params] {
+type b1_sbs_v2.MyItem2Params {
   Code : LargeString;
 };
 
 @cds.external : true
 @open : true
-type b1_sbs_v2.![2_OITM_R3] {
+type b1_sbs_v2._OITM_R3 {
   Code : LargeString;
   LineId : Integer;
   Object : LargeString;
@@ -4668,7 +4668,7 @@ type b1_sbs_v2.![2_OITM_R3] {
 
 @cds.external : true
 @open : true
-type b1_sbs_v2.![2_ODOC_R2] {
+type b1_sbs_v2._ODOC_R2 {
   DocEntry : Integer;
   LineId : Integer;
   VisOrder : Integer;
@@ -4691,7 +4691,7 @@ type b1_sbs_v2.SalesAppSettingParams {
 
 @cds.external : true
 @open : true
-type b1_sbs_v2.![2_ODOC_R1] {
+type b1_sbs_v2._ODOC_R1 {
   DocEntry : Integer;
   LineId : Integer;
   VisOrder : Integer;
@@ -4999,7 +4999,7 @@ type b1_sbs_v2.ChecksforPaymentLine {
 };
 
 @cds.external : true
-type b1_sbs_v2.![My ItemParams] {
+type b1_sbs_v2.MyItemParams {
   Code : LargeString;
 };
 
@@ -5162,7 +5162,7 @@ type b1_sbs_v2.CostCenterTypeParams {
 };
 
 @cds.external : true
-type b1_sbs_v2.![My BPParams] {
+type b1_sbs_v2.MyBPParams {
   Code : LargeString;
 };
 
@@ -5192,7 +5192,7 @@ type b1_sbs_v2.ItemProject {
 };
 
 @cds.external : true
-type b1_sbs_v2.![My TaxParams] {
+type b1_sbs_v2.MyTaxParams {
   Code : LargeString;
 };
 
@@ -5904,7 +5904,7 @@ type b1_sbs_v2.DepreciationLevel {
 
 @cds.external : true
 @open : true
-type b1_sbs_v2.![2_OITM_R2] {
+type b1_sbs_v2._OITM_R2 {
   Code : LargeString;
   LineId : Integer;
   Object : LargeString;
@@ -7910,7 +7910,7 @@ type b1_sbs_v2.EDFEntryListInputParams {
 
 @cds.external : true
 @open : true
-type b1_sbs_v2.![2_ODOC_R3] {
+type b1_sbs_v2._ODOC_R3 {
   DocEntry : Integer;
   LineId : Integer;
   VisOrder : Integer;
@@ -10900,7 +10900,7 @@ type b1_sbs_v2.CESTCodeParams {
 };
 
 @cds.external : true
-type b1_sbs_v2.![My Doc2Params] {
+type b1_sbs_v2.MyDoc2Params {
   DocEntry : Integer;
 };
 
@@ -11270,7 +11270,7 @@ type b1_sbs_v2.WTDFreight {
 };
 
 @cds.external : true
-type b1_sbs_v2.![My DocParams] {
+type b1_sbs_v2.MyDocParams {
   DocEntry : Integer;
 };
 
@@ -11522,7 +11522,7 @@ type b1_sbs_v2.PM_WorkOrderData {
 
 @cds.external : true
 @open : true
-type b1_sbs_v2.![2_OITM_R1] {
+type b1_sbs_v2._OITM_R1 {
   Code : LargeString;
   LineId : Integer;
   Object : LargeString;
@@ -13427,7 +13427,7 @@ type b1_sbs_v2.AssetOriginalTypeEnum : Integer enum {
 
 @cds.external : true
 type b1_sbs_v2.AssetStatusEnum : Integer enum {
-  ![New] = 0;
+  New = 0;
   Active = 1;
   Inactive = 2;
 };
@@ -36089,7 +36089,7 @@ entity b1_sbs_v2.PurchaseTaxInvoices {
   @odata.Type : 'Edm.DateTimeOffset'
   DocDueDate : DateTime;
   Series : Integer;
-  Segment : Integer;docu
+  Segment : Integer;
   ContactPersonCode : Integer;
   @odata.Precision : 0
   @odata.Type : 'Edm.DateTimeOffset'
