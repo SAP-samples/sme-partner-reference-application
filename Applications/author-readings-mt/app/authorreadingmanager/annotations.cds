@@ -137,6 +137,20 @@ annotate service.AuthorReadings with @(UI : {
                     ]
                 }   
             }
+        }, 
+        {
+            $Type  : 'UI.DataFieldForAction',
+            Label  : '{i18n>createPurchaseOrder}',
+            Action : 'AuthorReadingManager.createB1PurchaseOrder',            
+            @UI.Hidden : { $edmJson : 
+                { $If : 
+                    [
+                        { $Eq : [ {$Path : 'createB1PurchaseOrderEnabled'}, true ] },
+                        false,
+                        true
+                    ]
+                }   
+            }
         }
     ],
     
@@ -420,13 +434,7 @@ annotate service.AuthorReadings with @(UI : {
             $Type : 'UI.DataField',
             Value : toB1PurchaseOrder.DocNum,
             @UI.Hidden : true 
-        },
-         {
-            $Type : 'UI.DataField',
-            Label : '{i18n>projectStatus}',
-            Value : toB1PurchaseOrder.purchaseOrderNumber,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, false, true ] } }
-        },
+        },        
         {
             $Type : 'UI.DataField',
             Label : '{i18n>purchaseOrderID}',

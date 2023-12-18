@@ -111,6 +111,8 @@ srv.before("READ", "AuthorReadings", async (req) => {
     //B1
     B1IsConnectedIndicator   = await reuse.checkDestination(req,"b1"); 
     B1SystemName            = await reuse.getDestinationDescription(req,"b1-url"); 
+
+   
 });
 
 // Apply a colour code based on the author reading status
@@ -151,12 +153,17 @@ srv.after("READ", "AuthorReadings", (req) => {
             authorReading.createC4PProjectEnabled = C4PIsConnectedIndicator;
         }
 
+       
+
         // Update project system name and visibility of the "Create Purchase Order"-button
         if (authorReading.purchaseOrderID) {
             authorReading.createB1PurchaseOrderEnabled = false; 
+
+           
             if(authorReading.purchaseOrderSystem == 'B1') authorReading.purchaseOrderSystemName = B1SystemName;      
         }else{ 
             authorReading.createB1PurchaseOrderEnabled = B1IsConnectedIndicator;
+           
         }
     };
 });
@@ -714,8 +721,9 @@ srv.on("createB1PurchaseOrder", async (req) => {
                 // Get the entity service (entity "ByDProjects")
                 const { B1PurchaseOrder } = srv.entities;
                 var remotePurchaseOrderID, remotePurchaseOrderObjectID;
+                authorReadings.purchaseOrderID = 458
                 // GET service call on remote project entity
-                const existingPurchaseOrder = await srv.run( SELECT.from(B1PurchaseOrder).where({ displayId: authorReadings.purchaseOrderID }) );
+                const existingPurchaseOrder = await srv.run( SELECT.from(B1PurchaseOrder).where({ DocEntry: authorReadings.purchaseOrderID }) );
 
                 if (existingPurchaseOrder.length === 1) {
                     remotePurchaseOrderID = existingPurchaseOrder[0].DocEntry;
@@ -783,7 +791,7 @@ srv.on("READ", "AuthorReadings", async (req, next) => {
         authorReadings =  await connectorC4P.readProject(authorReadings);  
     };
 
-    // Check and Read B1 purchaseorder related data 
+    // Check and Read B1 purchaseorder related data
     if ( B1IsConnectedIndicator ){
         authorReadings =  await connectorB1.readPurchaseOrder(authorReadings);  
     };
