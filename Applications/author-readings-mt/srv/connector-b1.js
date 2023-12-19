@@ -63,11 +63,11 @@ async function readPurchaseOrder(authorReadings) {
         if(isPurchaseOrderIDs){
 
             // Request all associated purchase orders        
-            const purchaseOrders = await b1PurchaseOrder.run( SELECT.from('AuthorReadingManager.B1PurchaseOrder').where({ purchaseOrderID: purchaseOrderIDs }) );
+            const purchaseOrders = await b1PurchaseOrder.run( SELECT.from('AuthorReadingManager.B1PurchaseOrder').where({ DocNum: purchaseOrderIDs }) );
 
             // Convert in a map for easier lookup
             const purchaseOrderMap = {};
-            for (const purchaseOrder of purchaseOrders) purchaseOrderMap[purchaseOrders.purchaseOrderID] = purchaseOrder;
+            for (const purchaseOrder of purchaseOrders) purchaseOrderMap[purchaseOrders.DocNum] = purchaseOrder;
 
             // Assemble result
             for (const authorReading of asArray(authorReadings)) {

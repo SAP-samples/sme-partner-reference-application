@@ -430,15 +430,18 @@ annotate service.AuthorReadings with @(UI : {
             @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'C4P' ] }, false, true ] } }
         },
         // B1 specific fields
-       {
-            $Type : 'UI.DataField',
-            Value : toB1PurchaseOrder.DocNum,
-            @UI.Hidden : true 
-        },        
+
+        {
+            $Type : 'UI.DataFieldWithUrl',
+            Label : '{i18n>purchaseOrderID}',
+            Value : purchaseOrderID,
+            Url   : purchaseOrderURL,
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, false, true ] } }
+        },
         {
             $Type : 'UI.DataField',
-            Label : '{i18n>purchaseOrderID}',
-            Value : toB1PurchaseOrder.DocNum,
+            Label : 'Purchase Order System',
+            Value : purchaseOrderSystem,
             @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, false, true ] } }
         },
         {

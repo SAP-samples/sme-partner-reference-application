@@ -702,13 +702,15 @@ srv.on("createB1PurchaseOrder", async (req) => {
         const authorReadings = await SELECT.from("sap.samples.authorreadings.AuthorReadings").where({ ID: authorReadingID });
         // Allow action for active entity instances only
         if ( authorReadings.length === 1 ) {
-            let authorReadingIdentifier, authorReadingDescription, authorReadingTitle, authorReadingDate, authorReadingPurchaseOrderSystem;
+            let authorReadingIdentifier, authorReadingDescription, authorReadingTitle, authorReadingDate, authorReadingPurchaseOrderSystem, authorReadingPurchaseOrderObjectID;
             authorReadings.forEach((authorReading) => {
                 authorReadingIdentifier = authorReading.identifier;
                 authorReadingDescription = authorReading.description;
                 authorReadingTitle = authorReading.title;
                 authorReadingDate = authorReading.date;
                 authorReadingPurchaseOrderSystem = authorReading.purchaseOrderSystem;
+                authorReadingPurchaseOrderObjectID = authorReading.purchaseOrderObjectID;
+
             });
 
             if ( authorReadingPurchaseOrderSystem == "B1" || (!authorReadingPurchaseOrderSystem) ) {
@@ -721,43 +723,44 @@ srv.on("createB1PurchaseOrder", async (req) => {
                 // Get the entity service (entity "ByDProjects")
                 const { B1PurchaseOrder } = srv.entities;
                 var remotePurchaseOrderID, remotePurchaseOrderObjectID;
-                authorReadings.purchaseOrderID = 458
-                // GET service call on remote project entity
-                const existingPurchaseOrder = await srv.run( SELECT.from(B1PurchaseOrder).where({ DocEntry: authorReadings.purchaseOrderID }) );
+                
+                // GET B1 purchase order 
+                const existingPurchaseOrder = await srv.run( SELECT.from(B1PurchaseOrder).where({ DocEntry: authorReadingPurchaseOrderObjectID }) );
 
-                if (existingPurchaseOrder.length === 1) {
-                    remotePurchaseOrderID = existingPurchaseOrder[0].DocEntry;
-                    remotePurchaseOrderObjectID = existingPurchaseOrder[0].DocNum;
-                } else {
+                if(existingPurchaseOrder && existingPurchaseOrder.length === 1){                    
+                    remotePurchaseOrderObjectID = existingPurchaseOrder[0].DocEntry;
+                    remotePurchaseOrderID = existingPurchaseOrder[0].DocNum;
+                }
+                else {
                     // POST request to create the project via remote service
                     const remoteCreatedPurchaseOrder = await srv.run( INSERT.into(B1PurchaseOrder).entries(purchaseOrderRecord) );
                     if (remoteCreatedPurchaseOrder) {
-                        remotePurchaseOrderID = remoteCreatedPurchaseOrder.DocEntry;
-                        remotePurchaseOrderObjectID = remoteCreatedPurchaseOrder.DocNum;
+                        remotePurchaseOrderObjectID = remoteCreatedPurchaseOrder.DocEntry;
+                        remotePurchaseOrderID = remoteCreatedPurchaseOrder.DocNum;
                     }
                 }
                 
-
                 // Generate remote ByD Project URL and update the URL
-                if (remotePurchaseOrderID) {
-                    
+                if (remotePurchaseOrderObjectID) {
                     // Read the ByD system URL dynamically from BTP destination "byd-url"
-                    var b1RemoteSystem = await reuse.getDestinationURL(req , 'b1-url'); 
-                    
+                    var b1RemoteSystem = await reuse.getDestinationURL(req , 'b1-url');
                     // Set the URL of ByD project overview screen for UI navigation
                     var b1RemotePurchaseOrderExternalURL =
-                        "/webx/index.html#webclient-OPOR&/Objects/OPOR/Detail?view=OPOR.detailView&id=OPOR%252C" + remotePurchaseOrderID ;
+                        "/webx/index.html#webclient-OPOR&/Objects/OPOR/Detail?view=OPOR.detailView&id=OPOR%252C" + remotePurchaseOrderObjectID ;
                     var b1RemotePurchaseOrderExternalCompleteURL = b1RemoteSystem.concat( b1RemotePurchaseOrderExternalURL );
-                    
+                    var remotePurchaseOrderIDs = String(remotePurchaseOrderID);
+                    var remotePurchaseOrderObjectIDs = String(remotePurchaseOrderObjectID);
+                    var b1RemotePurchaseOrderExternalCompleteURLs = String(b1RemotePurchaseOrderExternalCompleteURL);
                     // Update project elements in entity AuthorReadings
-                    await UPDATE("sap.samples.authorreadings.AuthorReadings")
+                   const updateStatus =  await UPDATE("sap.samples.authorreadings.AuthorReadings")
                         .set({
-                            purchaseOrderID: remotePurchaseOrderID,
-                            purchaseOrderObjectID: remotePurchaseOrderObjectID,
-                            purchaseOrderURL: b1RemotePurchaseOrderExternalCompleteURL,
+                            purchaseOrderID: remotePurchaseOrderIDs,
+                            purchaseOrderObjectID: remotePurchaseOrderObjectIDs,
+                            purchaseOrderURL: b1RemotePurchaseOrderExternalCompleteURLs,
                             purchaseOrderSystem : "B1"
                         })
                         .where({ ID: authorReadingID });
+
                 }
             }                   
         } else {
