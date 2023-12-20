@@ -329,7 +329,11 @@ extend service AuthorReadingManager with {
         DocType as DocType,
         DocDate as DocDate,
         DocDueDate as DocDueDate,
+        CreationDate as CreationDate,
         CardCode as CardCode,
+        CardName as CardName,
+        DocTotal as DocTotal,
+        DocCurrency as DocCurrency,
         DocumentLines as DocumentLines : redirected to B1DocumentLines  
     }
     

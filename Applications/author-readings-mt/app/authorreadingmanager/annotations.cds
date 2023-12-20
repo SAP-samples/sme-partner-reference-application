@@ -51,15 +51,25 @@ annotate service.AuthorReadings with @(UI : {
         {
             $Type : 'UI.DataFieldWithUrl',
             Value : projectID,
-            Url   : projectURL
+            Url   : projectURL,
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, true, false ] } } //Hide column in case of B1 backend
         },
         {
             $Type : 'UI.DataField',
-            Value : projectSystemName
+            Value : projectSystemName,
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, true, false ] } } //Hide column in case of B1 backend
         },
         {
             $Type : 'UI.DataField',
-            Value : projectSystem
+            Value : projectSystem,
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, true, false ] } } //Hide column in case of B1 backend
+        },
+        {
+            $Type : 'UI.DataFieldWithUrl',
+            Label : 'Purchase Order',
+            Value : purchaseOrderID,
+            Url   : purchaseOrderURL,
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, false, true ] } } //Display column in case of B1 backend
         },
         {
             $Type : 'UI.DataField',
@@ -140,7 +150,7 @@ annotate service.AuthorReadings with @(UI : {
         }, 
         {
             $Type  : 'UI.DataFieldForAction',
-            Label  : '{i18n>createPurchaseOrder}',
+            Label  : 'Create Purchase Order',
             Action : 'AuthorReadingManager.createB1PurchaseOrder',            
             @UI.Hidden : { $edmJson : 
                 { $If : 
@@ -241,7 +251,19 @@ annotate service.AuthorReadings with @(UI : {
                 Target : ![@UI.FieldGroup#ProjectData],
                 ID     : 'ProjectData'
             }],
-        },        
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, true, false ] } }  //Hide ProjectData FieldGroup in case of B1 backend
+        },  
+        {
+            $Type  : 'UI.CollectionFacet',
+            Label  : 'Purchase Order Data',
+            ID     : 'PurchaseOrderData',
+            Facets : [{
+                $Type  : 'UI.ReferenceFacet',
+                Target : ![@UI.FieldGroup#PurchaseOrderData],
+                ID     : 'PurchaseOrderData'
+            }],
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, false, true ] } } //Display PurchaseOrderData FieldGroup in case of B1 backend
+        },       
         {
             $Type  : 'UI.CollectionFacet',
             Label  : '{i18n>administativeData}',
@@ -289,18 +311,36 @@ annotate service.AuthorReadings with @(UI : {
         {
             $Type : 'UI.DataFieldWithUrl',
             Value : projectID,
-            Url   : projectURL
+            Url   : projectURL,
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, true, false ] } }
         },
         {
             $Type : 'UI.DataField',
-            Value : projectSystemName
+            Value : projectSystemName,
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, true, false ] } }
         } ,
         {
             $Type : 'UI.DataField',
-            Value : projectSystem
-        }
+            Value : projectSystem,
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, true, false ] } }
+        },
+        // B1 specific fields
+        {
+            $Type : 'UI.DataFieldWithUrl',
+            Label : 'Purchase Order',
+            Value : purchaseOrderID,
+            Url   : purchaseOrderURL,
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, false, true ] } }
+        },
+        {
+            $Type : 'UI.DataField',
+            Label : 'Purchase Order System',
+            Value : purchaseOrderSystem,
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, false, true ] } }
+        },   
     ]},    
     FieldGroup #ProjectData : {Data : [
+
         // Project system independend fields:
         {
             $Type : 'UI.DataFieldWithUrl',
@@ -429,26 +469,52 @@ annotate service.AuthorReadings with @(UI : {
             Value : toC4PProject.endDate,
             @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'C4P' ] }, false, true ] } }
         },
-        // B1 specific fields
+        
+        
+    ]},
+    FieldGroup #PurchaseOrderData : {Data : [
 
+        // B1 specific fields
         {
             $Type : 'UI.DataFieldWithUrl',
-            Label : '{i18n>purchaseOrderID}',
+            Label : 'Purchase Order',
             Value : purchaseOrderID,
-            Url   : purchaseOrderURL,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, false, true ] } }
+            Url   : purchaseOrderURL
         },
         {
             $Type : 'UI.DataField',
             Label : 'Purchase Order System',
-            Value : purchaseOrderSystem,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, false, true ] } }
+            Value : purchaseOrderSystem
+        },       
+        {
+            $Type : 'UI.DataField',
+            Label : 'Delivery Date',
+            Value : toB1PurchaseOrder.DocDueDate
         },
         {
             $Type : 'UI.DataField',
-            Label : '{i18n>purchaseOrderDate}',
-            Value : toB1PurchaseOrder.DocDate,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, false, true ] } }
+            Label : 'Creation Date',
+            Value : toB1PurchaseOrder.CreationDate
+        },
+        {
+            $Type : 'UI.DataField',
+            Label : 'Service Provider ID',
+            Value : toB1PurchaseOrder.CardCode
+        },
+        {
+            $Type : 'UI.DataField',
+            Label : 'Service Provider Name',
+            Value : toB1PurchaseOrder.CardName
+        },
+        {
+            $Type : 'UI.DataField',
+            Label : 'Purchase Order Value',
+            Value : toB1PurchaseOrder.DocTotal
+        },
+        {
+            $Type : 'UI.DataField',
+            Label : 'Purchase Order Currency',
+            Value : toB1PurchaseOrder.DocCurrency
         },
         
     ]},

@@ -702,7 +702,7 @@ srv.on("createB1PurchaseOrder", async (req) => {
         const authorReadings = await SELECT.from("sap.samples.authorreadings.AuthorReadings").where({ ID: authorReadingID });
         // Allow action for active entity instances only
         if ( authorReadings.length === 1 ) {
-            let authorReadingIdentifier, authorReadingDescription, authorReadingTitle, authorReadingDate, authorReadingPurchaseOrderSystem, authorReadingPurchaseOrderObjectID;
+            let authorReadingIdentifier, authorReadingDescription, authorReadingTitle, authorReadingDate, authorReadingPurchaseOrderSystem, authorReadingPurchaseOrderObjectID, authorReadingPurchaseOrderID, authorReadingMaxParticipantsNumber, authorReadingsParticipantFeeAmount;
             authorReadings.forEach((authorReading) => {
                 authorReadingIdentifier = authorReading.identifier;
                 authorReadingDescription = authorReading.description;
@@ -710,22 +710,31 @@ srv.on("createB1PurchaseOrder", async (req) => {
                 authorReadingDate = authorReading.date;
                 authorReadingPurchaseOrderSystem = authorReading.purchaseOrderSystem;
                 authorReadingPurchaseOrderObjectID = authorReading.purchaseOrderObjectID;
+                authorReadingPurchaseOrderID = authorReading.purchaseOrderID;
+                authorReadingMaxParticipantsNumber = authorReading.maxParticipantsNumber;
+                authorReadingsParticipantFeeAmount = authorReading.participantsFeeAmount;
+
 
             });
 
             if ( authorReadingPurchaseOrderSystem == "B1" || (!authorReadingPurchaseOrderSystem) ) {
                 
-                var purchaseOrderRecord = await connectorB1.purchaseOrderDataRecord(authorReadingIdentifier, authorReadingTitle, authorReadingDate);
+                var purchaseOrderRecord = await connectorB1.purchaseOrderDataRecord(authorReadingIdentifier, authorReadingTitle, authorReadingDescription, authorReadingDate, authorReadingMaxParticipantsNumber, authorReadingsParticipantFeeAmount);
 
                 // Check and create the project instance
                 // If the project already exist, then read and update the local project elements in entity AuthorReadings
                 
                 // Get the entity service (entity "ByDProjects")
                 const { B1PurchaseOrder } = srv.entities;
-                var remotePurchaseOrderID, remotePurchaseOrderObjectID;
-                
-                // GET B1 purchase order 
-                const existingPurchaseOrder = await srv.run( SELECT.from(B1PurchaseOrder).where({ DocEntry: authorReadingPurchaseOrderObjectID }) );
+                var remotePurchaseOrderID, remotePurchaseOrderObjectID, existingPurchaseOrder;
+
+               
+                if(authorReadingPurchaseOrderID && authorReadingPurchaseOrderID.trim().length != 0){                
+                    // GET B1 purchase order 
+                    existingPurchaseOrder = await srv.run( SELECT.from(B1PurchaseOrder).where({ DocNum: authorReadingPurchaseOrderID }) );
+
+                    console.log("b2-debug inside if to check PO ID is not null");
+                }
 
                 if(existingPurchaseOrder && existingPurchaseOrder.length === 1){                    
                     remotePurchaseOrderObjectID = existingPurchaseOrder[0].DocEntry;
@@ -741,7 +750,7 @@ srv.on("createB1PurchaseOrder", async (req) => {
                 }
                 
                 // Generate remote ByD Project URL and update the URL
-                if (remotePurchaseOrderObjectID) {
+                if (remotePurchaseOrderID) {
                     // Read the ByD system URL dynamically from BTP destination "byd-url"
                     var b1RemoteSystem = await reuse.getDestinationURL(req , 'b1-url');
                     // Set the URL of ByD project overview screen for UI navigation

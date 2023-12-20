@@ -18,24 +18,45 @@ async function delegateODataRequests(req,remoteService) {
 }
 
 // Return json-payload to create B1 purchase order 
-async function purchaseOrderDataRecord(authorReadingIdentifier, authorReadingTitle, authorReadingDate) {
+async function purchaseOrderDataRecord(authorReadingIdentifier, authorReadingTitle, authorReadingDescription, authorReadingDate,authorReadingMaxParticipantsNumber, authorReadingsParticipantFeeAmount) {
     try{
-   
+
+        var purchaseOrderDeliveryDate = authorReadingDate;
+        console.log("b1-debug inside purchaseOrderDataRecord , DocDueDate:"+purchaseOrderDeliveryDate);
+        var purchaseOrderRemarks = "Author Reading: "+authorReadingIdentifier +" - "+authorReadingTitle +"\n"+authorReadingDescription;
+        console.log("b1-debug inside purchaseOrderDataRecord , Comments:"+purchaseOrderRemarks);
+        var purchaseOrderItem1Amount = 0.0;
+        var purchaseOrderItem2Amount = 0.0;
+        var authorReadingEventValue = (authorReadingMaxParticipantsNumber * authorReadingsParticipantFeeAmount);
+        var authorReadingEventExpense = ( authorReadingEventValue  * .50 ) ;
+
+        purchaseOrderItem1Amount = ( authorReadingEventExpense * .33 )  ;
+        purchaseOrderItem2Amount = ( authorReadingEventExpense * .66 )  ;
+        console.log("b1-debug inside purchaseOrderDataRecord , purchaseOrderItem1Amount:"+purchaseOrderItem1Amount);
+        console.log("b1-debug inside purchaseOrderDataRecord , purchaseOrderItem2Amount:"+purchaseOrderItem2Amount);
+
         const purchaseOrderRecord = {
-            "DocType": "Document_Items",
-            "DocDate": "2023-12-01T00:00:00Z",
-            "DocDueDate": "2023-12-6T00:00:00Z",
+            "DocType": "dDocument_Service",
+            "DocDueDate": purchaseOrderDeliveryDate,
             "CardCode": "V10000",
+            "Comments": purchaseOrderRemarks,
             "DocumentLines": [
-                    {
-                        "LineNum": 0,
-                        "ItemCode": "A00001",
-                        "Quantity": 10,
-                        "Price": 400
-                                            }              
+                                {
+                                    "LineNum": 0,
+                                    "ItemDescription": "Event planning and preparations",
+                                    "AccountCode": "_SYS00000000001",
+                                    "LineTotal": purchaseOrderItem1Amount
+                                },
+                                {
+                                    "LineNum": 1,
+                                    "ItemDescription": "Event administration and execution",
+                                    "AccountCode": "_SYS00000000001",
+                                    "LineTotal": purchaseOrderItem2Amount
+                                }               
                             ]
-            
         };
+
+        console.log("b1-debug inside purchaseOrderDataRecord , purchaseOrderRecord"+JSON.stringify(purchaseOrderRecord));
         return purchaseOrderRecord;
     }catch (error) {
         console.log(error);
@@ -64,14 +85,16 @@ async function readPurchaseOrder(authorReadings) {
 
             // Request all associated purchase orders        
             const purchaseOrders = await b1PurchaseOrder.run( SELECT.from('AuthorReadingManager.B1PurchaseOrder').where({ DocNum: purchaseOrderIDs }) );
-
+            console.log("b1-debug inside if , purchase order string "+JSON.stringify(purchaseOrders));
             // Convert in a map for easier lookup
             const purchaseOrderMap = {};
-            for (const purchaseOrder of purchaseOrders) purchaseOrderMap[purchaseOrders.DocNum] = purchaseOrder;
+            for (const purchaseOrder of purchaseOrders) { purchaseOrderMap[purchaseOrder.DocNum] = purchaseOrder; console.log("b1-debug inside for , purchaseOrder.DocNum "+purchaseOrder.DocNum); }
 
             // Assemble result
             for (const authorReading of asArray(authorReadings)) {
                 authorReading.toB1PurchaseOrder = purchaseOrderMap[authorReading.purchaseOrderID];
+                console.log("b1-debug inside assemple result authorReading.toB1PurchaseOrder"+authorReading.toB1PurchaseOrder);
+                console.log("b1-debug inside assemple result authorReading.purchaseOrderID"+authorReading.purchaseOrderID);
             };
         }
         return authorReadings;    
