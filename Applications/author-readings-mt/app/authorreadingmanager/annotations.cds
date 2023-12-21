@@ -66,7 +66,7 @@ annotate service.AuthorReadings with @(UI : {
         },
         {
             $Type : 'UI.DataFieldWithUrl',
-            Label : 'Purchase Order',
+            Label : '{i18n>purchaseOrder}',
             Value : purchaseOrderID,
             Url   : purchaseOrderURL,
             @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, false, true ] } } //Display column in case of B1 backend
@@ -150,7 +150,7 @@ annotate service.AuthorReadings with @(UI : {
         }, 
         {
             $Type  : 'UI.DataFieldForAction',
-            Label  : 'Create Purchase Order',
+            Label  : '{i18n>createPurchaseOrder}',
             Action : 'AuthorReadingManager.createB1PurchaseOrder',            
             @UI.Hidden : { $edmJson : 
                 { $If : 
@@ -327,14 +327,14 @@ annotate service.AuthorReadings with @(UI : {
         // B1 specific fields
         {
             $Type : 'UI.DataFieldWithUrl',
-            Label : 'Purchase Order',
+            Label : '{i18n>purchaseOrder}',
             Value : purchaseOrderID,
             Url   : purchaseOrderURL,
             @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, false, true ] } }
         },
         {
             $Type : 'UI.DataField',
-            Label : 'Purchase Order System',
+            Label : '{i18n>purchaseOrderSystemName}',
             Value : purchaseOrderSystem,
             @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, false, true ] } }
         },   
@@ -477,43 +477,43 @@ annotate service.AuthorReadings with @(UI : {
         // B1 specific fields
         {
             $Type : 'UI.DataFieldWithUrl',
-            Label : 'Purchase Order',
+            Label : '{i18n>purchaseOrder}',
             Value : purchaseOrderID,
             Url   : purchaseOrderURL
         },
         {
             $Type : 'UI.DataField',
-            Label : 'Purchase Order System',
+            Label : '{i18n>purchaseOrderSystemName}',
             Value : purchaseOrderSystem
         },       
         {
             $Type : 'UI.DataField',
-            Label : 'Delivery Date',
+            Label : '{i18n>deliveryDate}',
             Value : toB1PurchaseOrder.DocDueDate
         },
         {
             $Type : 'UI.DataField',
-            Label : 'Creation Date',
+            Label : '{i18n>creationDate}',
             Value : toB1PurchaseOrder.CreationDate
         },
         {
             $Type : 'UI.DataField',
-            Label : 'Service Provider ID',
+            Label : '{i18n>serviceProviderID}',
             Value : toB1PurchaseOrder.CardCode
         },
         {
             $Type : 'UI.DataField',
-            Label : 'Service Provider Name',
+            Label : '{i18n>serviceProviderName}',
             Value : toB1PurchaseOrder.CardName
         },
         {
             $Type : 'UI.DataField',
-            Label : 'Purchase Order Value',
+            Label : '{i18n>purchaseOrderValue}',
             Value : toB1PurchaseOrder.DocTotal
         },
         {
             $Type : 'UI.DataField',
-            Label : 'Purchase Order Currency',
+            Label : '{i18n>purchaseOrderCurrency}',
             Value : toB1PurchaseOrder.DocCurrency
         },
         

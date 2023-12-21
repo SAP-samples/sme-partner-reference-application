@@ -978,7 +978,7 @@ srv.on("DELETE", "C4PTask", async (req) => {
 // ----------------------------------------------------------------------------
 // Implementation of remote OData services (back-channel integration with B1)
 
-// Delegate OData requests to ByD remote project entities
+// Delegate OData requests to B1 remote purchase order entities
 srv.on("READ", "B1PurchaseOrder", async (req) => {
     return await connectorB1.delegateODataRequests(req,"b1_sbs_v2");
 });
