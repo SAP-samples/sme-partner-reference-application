@@ -52,24 +52,24 @@ annotate service.AuthorReadings with @(UI : {
             $Type : 'UI.DataFieldWithUrl',
             Value : projectID,
             Url   : projectURL,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, true, false ] } } //Hide column in case of B1 backend
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'isB1'}, true ] }, true, false ] } } //Display column in case of not B1 backend (back end could be ByD,S4HC,C4P)
         },
         {
             $Type : 'UI.DataField',
             Value : projectSystemName,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, true, false ] } } //Hide column in case of B1 backend
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'isB1'}, true ] }, true, false ] } } //Display column in case of not B1 backend (back end could be ByD,S4HC,C4P)
         },
         {
             $Type : 'UI.DataField',
             Value : projectSystem,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, true, false ] } } //Hide column in case of B1 backend
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'isB1'}, true ] }, true, false ] } } //Display column in case of not B1 backend (back end could be ByD,S4HC,C4P)
         },
         {
             $Type : 'UI.DataFieldWithUrl',
             Label : '{i18n>purchaseOrder}',
             Value : purchaseOrderID,
             Url   : purchaseOrderURL,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, false, true ] } } //Display column in case of B1 backend
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'isB1'}, true ] }, false, true ] } } //Display column in case of B1 backend
         },
         {
             $Type : 'UI.DataField',
@@ -245,24 +245,46 @@ annotate service.AuthorReadings with @(UI : {
         {
             $Type  : 'UI.CollectionFacet',
             Label  : '{i18n>projectData}',
-            ID     : 'ProjectData',
+            ID     : 'ProjectDataByD',
             Facets : [{
                 $Type  : 'UI.ReferenceFacet',
-                Target : ![@UI.FieldGroup#ProjectData],
-                ID     : 'ProjectData'
+                Target : ![@UI.FieldGroup#ProjectDataByD],
+                ID     : 'ProjectDataByD'
             }],
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, true, false ] } }  //Hide ProjectData FieldGroup in case of B1 backend
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'isByD'}, true ] }, false, true ] } }  //Display ProjectDataByD FieldGroup in case of ByD backend
+        },
+        {
+            $Type  : 'UI.CollectionFacet',
+            Label  : '{i18n>projectData}',
+            ID     : 'ProjectDataS4HC',
+            Facets : [{
+                $Type  : 'UI.ReferenceFacet',
+                Target : ![@UI.FieldGroup#ProjectDataS4HC],
+                ID     : 'ProjectDataS4HC'
+            }],
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'isS4HC'}, true ] }, false, true ] } }  //Display ProjectDataS4HC FieldGroup in case of S4HC backend
+        },
+        {
+            $Type  : 'UI.CollectionFacet',
+            Label  : '{i18n>projectData}',
+            ID     : 'ProjectDataC4P',
+            Facets : [{
+                $Type  : 'UI.ReferenceFacet',
+                Target : ![@UI.FieldGroup#ProjectDataC4P],
+                ID     : 'ProjectDataC4P'
+            }],
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'isC4P'}, true ] }, false, true ] } }  //Display ProjectDataC4P FieldGroup in case of C4P backend
         },  
         {
             $Type  : 'UI.CollectionFacet',
-            Label  : 'Purchase Order Data',
-            ID     : 'PurchaseOrderData',
+            Label  : '{i18n>purchaseOrderData}',
+            ID     : 'PurchaseOrderDataB1',
             Facets : [{
                 $Type  : 'UI.ReferenceFacet',
-                Target : ![@UI.FieldGroup#PurchaseOrderData],
-                ID     : 'PurchaseOrderData'
+                Target : ![@UI.FieldGroup#PurchaseOrderDataB1],
+                ID     : 'PurchaseOrderDataB1'
             }],
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, false, true ] } } //Display PurchaseOrderData FieldGroup in case of B1 backend
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'isB1'}, true ] }, false, true ] } } //Display PurchaseOrderDataB1 FieldGroup in case of B1 backend
         },       
         {
             $Type  : 'UI.CollectionFacet',
@@ -308,38 +330,39 @@ annotate service.AuthorReadings with @(UI : {
             $Type : 'UI.DataField',
             Value : participantsFeeAmount,
         },
+        // Display project related fields in case of backend systems ByD, S4HC, C4P (in case of B1 hide the project related fields)
         {
             $Type : 'UI.DataFieldWithUrl',
             Value : projectID,
             Url   : projectURL,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, true, false ] } }
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'isB1'}, true ] }, true, false ] } } //Display field in case of not B1 backend (back end could be ByD,S4HC,C4P)
         },
         {
             $Type : 'UI.DataField',
             Value : projectSystemName,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, true, false ] } }
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'isB1'}, true ] }, true, false ] } } //Display field in case of not B1 backend (back end could be ByD,S4HC,C4P)
         } ,
         {
             $Type : 'UI.DataField',
             Value : projectSystem,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, true, false ] } }
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'isB1'}, true ] }, true, false ] } } //Display field in case of not B1 backend (back end could be ByD,S4HC,C4P)
         },
-        // B1 specific fields
+        // display B1 specific fields (hide the purchase order related fields incase of backend systems ByD, S4HC, C4P)
         {
             $Type : 'UI.DataFieldWithUrl',
             Label : '{i18n>purchaseOrder}',
             Value : purchaseOrderID,
             Url   : purchaseOrderURL,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, false, true ] } }
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'isB1'}, true ] }, false, true ] } } //Display field in case of B1 backend (back end is not ByD,S4HC,C4P)
         },
         {
             $Type : 'UI.DataField',
             Label : '{i18n>purchaseOrderSystemName}',
             Value : purchaseOrderSystem,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, false, true ] } }
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'isB1'}, true ] }, false, true ] } } //Display field in case of  B1 backend (back end is not ByD,S4HC,C4P)
         },   
     ]},    
-    FieldGroup #ProjectData : {Data : [
+    FieldGroup #ProjectDataByD : {Data : [
 
         // Project system independend fields:
         {
@@ -368,34 +391,49 @@ annotate service.AuthorReadings with @(UI : {
         {
             $Type : 'UI.DataField',
             Label : '{i18n>projectTypeCodeText}',
-            Value : toByDProject.typeCodeText,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'ByD' ] }, false, true ] } }
+            Value : toByDProject.typeCodeText
         },
         {
             $Type : 'UI.DataField',
             Label : '{i18n>projectStatusCodeText}',
-            Value : toByDProject.statusCodeText,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'ByD' ] }, false, true ] } }
+            Value : toByDProject.statusCodeText
         },
         {
             $Type : 'UI.DataField',
             Label : '{i18n>projectCostCenter}',
-            Value : toByDProject.costCenter,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'ByD' ] }, false, true ] } }
+            Value : toByDProject.costCenter
         },
         {
             $Type : 'UI.DataField',
             Label : '{i18n>projectStartDateTime}',
-            Value : toByDProject.startDateTime,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'ByD' ] }, false, true ] } }
+            Value : toByDProject.startDateTime
         },
         {
             $Type : 'UI.DataField',
             Label : '{i18n>projectEndDateTime}',
-            Value : toByDProject.endDateTime,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'ByD' ] }, false, true ] } }
+            Value : toByDProject.endDateTime
         },
+    ]},
+    FieldGroup #ProjectDataS4HC : {Data : [
 
+        // Project system independend fields:
+        {
+            $Type : 'UI.DataFieldWithUrl',
+            Value : projectID,
+            Url   : projectURL,
+            @UI.Hidden : false
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : projectSystemName,
+            @UI.Hidden : false
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : projectSystem,
+            @UI.Hidden : false
+        },
+       
         // S4HC specific fields
         {
             $Type : 'UI.DataField',
@@ -405,38 +443,52 @@ annotate service.AuthorReadings with @(UI : {
         {
             $Type : 'UI.DataField',
             Label : '{i18n>projectDescription}',
-            Value : toS4HCProject.ProjectDescription,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'S4HC' ] }, false, true ] } }
+            Value : toS4HCProject.ProjectDescription
         },
         {
             $Type : 'UI.DataField',
             Label : '{i18n>projectProfile}',
-            Value : projectProfileCodeText,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'S4HC' ] }, false, true ] } }
+            Value : projectProfileCodeText
         },
         {
             $Type : 'UI.DataField',
             Label : '{i18n>responsibleCostCenter}',
-            Value : toS4HCProject.ResponsibleCostCenter,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'S4HC' ] }, false, true ] } }
+            Value : toS4HCProject.ResponsibleCostCenter
         },
          {
             $Type : 'UI.DataField',
             Label : '{i18n>processingStatus}',
-            Value : processingStatusText,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'S4HC' ] }, false, true ] } }
+            Value : processingStatusText
         },
         {
             $Type : 'UI.DataField',
             Label : '{i18n>projectStartDateTime}',
-            Value : toS4HCProject.ProjectStartDate,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'S4HC' ] }, false, true ] } }
+            Value : toS4HCProject.ProjectStartDate
         },
         {
             $Type : 'UI.DataField',
             Label : '{i18n>projectEndDateTime}',
-            Value : toS4HCProject.ProjectEndDate,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'S4HC' ] }, false, true ] } }
+            Value : toS4HCProject.ProjectEndDate
+        },
+    ]},
+    FieldGroup #ProjectDataC4P : {Data : [
+
+        // Project system independend fields:
+        {
+            $Type : 'UI.DataFieldWithUrl',
+            Value : projectID,
+            Url   : projectURL,
+            @UI.Hidden : false
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : projectSystemName,
+            @UI.Hidden : false
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : projectSystem,
+            @UI.Hidden : false
         },
 
         // C4P specific fields
@@ -448,31 +500,27 @@ annotate service.AuthorReadings with @(UI : {
         {
             $Type : 'UI.DataField',
             Label : '{i18n>projectName}',
-            Value : toC4PProject.projectName,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'C4P' ] }, false, true ] } }
+            Value : toC4PProject.projectName
         },
         {
             $Type : 'UI.DataField',
             Label : '{i18n>projectStatus}',
-            Value : toC4PProject.status,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'C4P' ] }, false, true ] } }
+            Value : toC4PProject.status
         },
         {
             $Type : 'UI.DataField',
             Label : '{i18n>projectStartDateTime}',
-            Value : toC4PProject.startDate,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'C4P' ] }, false, true ] } }
+            Value : toC4PProject.startDate
         },
         {
             $Type : 'UI.DataField',
             Label : '{i18n>projectEndDateTime}',
-            Value : toC4PProject.endDate,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'projectSystem'}, 'C4P' ] }, false, true ] } }
+            Value : toC4PProject.endDate
         },
         
         
     ]},
-    FieldGroup #PurchaseOrderData : {Data : [
+    FieldGroup #PurchaseOrderDataB1 : {Data : [
 
         // B1 specific fields
         {

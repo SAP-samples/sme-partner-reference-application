@@ -91,7 +91,7 @@ srv.after("UPDATE", "AuthorReadings", async (req) => {
 
 // Check connected backend systems
 srv.before("READ", "AuthorReadings", async (req) => {
-
+    
     // ByD
     ByDIsConnectedIndicator  = await reuse.checkDestination(req,"byd"); 
     ByDSystemName            = await reuse.getDestinationDescription(req,"byd-url");
@@ -151,9 +151,7 @@ srv.after("READ", "AuthorReadings", (req) => {
             authorReading.createByDProjectEnabled = ByDIsConnectedIndicator;
             authorReading.createS4HCProjectEnabled = S4HCIsConnectedIndicator;
             authorReading.createC4PProjectEnabled = C4PIsConnectedIndicator;
-        }
-
-       
+        }       
 
         // Update project system name and visibility of the "Create Purchase Order"-button
         if (authorReading.purchaseOrderID) {
@@ -165,6 +163,12 @@ srv.after("READ", "AuthorReadings", (req) => {
             authorReading.createB1PurchaseOrderEnabled = B1IsConnectedIndicator;
            
         }
+
+        // Update the backend system connected indicator used in UI for controlling visibility of UI elements
+        authorReading.isByD  = ByDIsConnectedIndicator;
+        authorReading.isS4HC = S4HCIsConnectedIndicator;
+        authorReading.isC4P  = C4PIsConnectedIndicator;
+        authorReading.isB1   = B1IsConnectedIndicator;
     };
 });
 

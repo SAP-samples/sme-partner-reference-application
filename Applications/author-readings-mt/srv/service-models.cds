@@ -39,20 +39,24 @@ service AuthorReadingManager @(
 
             // ByD projects: visibility of button "Create project in ByD"
             virtual null as createByDProjectEnabled : Boolean  @title : '{i18n>createByDProjectEnabled}'  @odata.Type : 'Edm.Boolean',
+            virtual null as isByD : Boolean  @odata.Type : 'Edm.Boolean',
             toByDProject,
 
             // S4HC projects: visibility of button "Create project in S4HC", code texts
             virtual null as createS4HCProjectEnabled : Boolean  @title : '{i18n>createS4HCProjectEnabled}'  @odata.Type : 'Edm.Boolean',
+            virtual null as isS4HC : Boolean  @odata.Type : 'Edm.Boolean',
             toS4HCProject,
             virtual null as projectProfileCodeText : String @title : '{i18n>projectProfile}' @odata.Type : 'Edm.String',
             virtual null as processingStatusText   : String @title : '{i18n>processingStatus}' @odata.Type : 'Edm.String',
 
             // C4P projects: visibility of button "Create project in C4P"
             virtual null as createC4PProjectEnabled : Boolean  @title : '{i18n>createC4PProjectEnabled}'  @odata.Type : 'Edm.Boolean',
+            virtual null as isC4P : Boolean  @odata.Type : 'Edm.Boolean',
             toC4PProject,
 
             // B1 purchase order: visibility of button "Create Purchase Order in B1"
             virtual null as createB1PurchaseOrderEnabled : Boolean  @title : '{i18n>createB1PurchaseOrderEnabled}'  @odata.Type : 'Edm.Boolean',
+            virtual null as isB1 : Boolean  @odata.Type : 'Edm.Boolean',
             toB1PurchaseOrder,
         }
         actions {
