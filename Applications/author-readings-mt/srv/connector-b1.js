@@ -80,7 +80,7 @@ async function readPurchaseOrder(authorReadings) {
             }
         }
         
-        // Read ByD purcha data
+        // Read B1 purchase order data
         if(isPurchaseOrderIDs){
 
             // Request all associated purchase orders        

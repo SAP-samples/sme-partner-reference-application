@@ -335,17 +335,17 @@ annotate service.AuthorReadings with @(UI : {
             $Type : 'UI.DataFieldWithUrl',
             Value : projectID,
             Url   : projectURL,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'isB1'}, true ] }, true, false ] } } //Display field in case of not B1 backend (back end could be ByD,S4HC,C4P)
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, true, false ] } } //Display field in case of not B1 backend (back end could be ByD,S4HC,C4P)
         },
         {
             $Type : 'UI.DataField',
             Value : projectSystemName,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'isB1'}, true ] }, true, false ] } } //Display field in case of not B1 backend (back end could be ByD,S4HC,C4P)
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, true, false ] } } //Display field in case of not B1 backend (back end could be ByD,S4HC,C4P)
         } ,
         {
             $Type : 'UI.DataField',
             Value : projectSystem,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'isB1'}, true ] }, true, false ] } } //Display field in case of not B1 backend (back end could be ByD,S4HC,C4P)
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, true, false ] } } //Display field in case of not B1 backend (back end could be ByD,S4HC,C4P)
         },
         // display B1 specific fields (hide the purchase order related fields incase of backend systems ByD, S4HC, C4P)
         {
@@ -353,13 +353,13 @@ annotate service.AuthorReadings with @(UI : {
             Label : '{i18n>purchaseOrder}',
             Value : purchaseOrderID,
             Url   : purchaseOrderURL,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'isB1'}, true ] }, false, true ] } } //Display field in case of B1 backend (back end is not ByD,S4HC,C4P)
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, false, true ] } } //Display field in case of B1 backend (back end is not ByD,S4HC,C4P)
         },
         {
             $Type : 'UI.DataField',
             Label : '{i18n>purchaseOrderSystemName}',
             Value : purchaseOrderSystem,
-            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'isB1'}, true ] }, false, true ] } } //Display field in case of  B1 backend (back end is not ByD,S4HC,C4P)
+            @UI.Hidden : { $edmJson : { $If : [ { $Eq : [ {$Path : 'purchaseOrderSystem'}, 'B1' ] }, false, true ] } } //Display field in case of  B1 backend (back end is not ByD,S4HC,C4P)
         },   
     ]},    
     FieldGroup #ProjectDataByD : {Data : [
