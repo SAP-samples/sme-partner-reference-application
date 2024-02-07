@@ -337,18 +337,8 @@ extend service AuthorReadingManager with {
         CardCode as CardCode,
         CardName as CardName,
         DocTotal as DocTotal,
-        DocCurrency as DocCurrency,
-        DocumentLines as DocumentLines : redirected to B1DocumentLines  
-    }
-    
-    entity B1DocumentLines as projection on RemoteB1.DocumentLines {
-        LineNum as LineNum,
-        ItemCode as ItemCode,
-        Quantity as Quantity,
-        Price as Price
-    }
-    
-    
+        DocCurrency as DocCurrency 
+    }    
 }
 
 // -------------------------------------------------------------------------------
