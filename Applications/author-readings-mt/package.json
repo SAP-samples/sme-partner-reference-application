@@ -11,7 +11,7 @@
     "@sap/audit-logging": "^5.8.1",
     "@sap/cds": "^7.4.0",
     "@sap/cds-dk": "^7.4.0",
-    "@sap/cds-mtxs": "^1.13.0",
+    "@sap/cds-mtxs": "^1.13.4",
     "@sap/xssec": "^3.5.0",
     "cors": "^2.8.5",
     "express": "^4.18.2",
