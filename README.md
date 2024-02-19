@@ -1,8 +1,11 @@
-# Partner Reference Application
+# Partner Reference Application (version 1, deprecated)
 
 [![REUSE status](https://api.reuse.software/badge/github.com/SAP-samples/sme-partner-reference-application)](https://api.reuse.software/info/github.com/SAP-samples/sme-partner-reference-application)
 
 ## Description
+
+> [!note]
+> **This repository is deprecated; no updates are planned anymore. You find the successor of this repository in the SAP Samples repository [*Partner Reference Application*, version 2](https://github.com/SAP-samples/partner-reference-application). The new Partner Reference Application provides a much simpler developer journey, a stronger focus on multitenancy, and a better fit for B1- and S/4HANA Cloud partners.**
 
 The *Partner Reference Application* provides a "golden path" to build, run and integrate full-stack cloud applications on the *SAP Business Technology Platform*.
 
